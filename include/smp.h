@@ -2,8 +2,6 @@
 #ifndef __SMP_H__
 #define __SMP_H__
 
-#define PSCI_CPU_ON 0xC4000003  // PSCI CPU_ON SMC 调用
-#define CPU1_ID 1               // 次核的 ID
 
 #include <aj_types.h>
 

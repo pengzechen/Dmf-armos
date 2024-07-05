@@ -285,7 +285,7 @@ int vprintf(const char *fmt, va_list va)
     return r;
 }
 
-int aj_printf(const char *fmt, ...)
+int printf(const char *fmt, ...)
 {
     va_list va;
     char buf[BUFSZ];
@@ -357,5 +357,5 @@ void print_binstr(uint32_t x)
 {
 	char out[BINSTR_SZ];
 	binstr(x, out);
-	aj_printf("%s", out);
+	printf("%s", out);
 }

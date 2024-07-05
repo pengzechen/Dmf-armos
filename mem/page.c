@@ -20,3 +20,9 @@ void init_page_table() {
     pt1[0] = (0          + PTE_DEVICE_MEMORY);  // 0x0000_0000 0x4000_0000
     pt1[1] = (0x40000000 + PTE_NORMAL_MEMORY);  // 0x4000_0000 0x8000_0000
 }
+
+extern void init_mmu(uint64_t*);
+
+void enable_mmu() {
+    init_mmu((uint64_t*)(void*)pt0);
+}

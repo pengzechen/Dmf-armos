@@ -1,11 +1,11 @@
 #include "mmu.h"
 
-.global enable_mmu
+.global init_mmu
 
 /* ldr x0, =0x40084000 need change */
-enable_mmu:
+init_mmu:
     // 设置 Translation Table Base Register 0 (TTBR0_EL1)
-    ldr x0, =0x40086000
+    // ldr x0, =0x40088000
     msr ttbr0_el1, x0
     msr ttbr1_el1, x0
     // 设置 Translation Control Register (TCR_EL1)

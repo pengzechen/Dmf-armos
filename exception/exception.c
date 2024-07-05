@@ -11,14 +11,46 @@ typedef struct {
     uint64_t spsr;          // Saved Process Status Register (SPSR_EL1)
 } TrapFrame;
 
+static inline uint32_t read_esr_el1(void)
+{
+    uint32_t esr;
+
+    // 使用内联汇编读取 ESR_EL1 寄存器
+    __asm__ volatile ("mrs %0, esr_el1" : "=r" (esr));
+
+    return esr;
+}
+
 // 示例使用方式：处理同步异常
 void handle_sync_exception(uint64_t *stack_pointer) {
     TrapFrame *context = (TrapFrame *)stack_pointer;
 
-    uint64_t x0_value = context->r[0];
-    uint64_t elr_el1_value = context->elr;
+    int el1_esr = read_esr_el1();
 
-    // 在这里实现处理同步异常的代码
+    int ec = (( el1_esr >> 26) & 0b111111);
+
+    printf("el1 esr: %x\n", el1_esr);
+    printf("ec: %x\n", ec);
+    
+
+    if ( ec == 0x17 ) {  // smc
+        printf("This is smc call handler\n");
+        return;
+    }
+
+    printf("This is handle_sync_exception: \n");
+    for(int i=0; i<31; i++) {
+        uint64_t value = context->r[i];
+        printf("General-purpose register: %d, value: %x\n", i, value);
+    }
+    
+    uint64_t elr_el1_value = context->elr;
+    uint64_t usp_value = context->usp;
+    uint64_t spsr_value = context->spsr;
+
+    printf("usp: %x, elr: %x, spsr: %x\n", usp_value, elr_el1_value, spsr_value);
+
+    while(1);
 }
 
 // 示例使用方式：处理 IRQ 异常
