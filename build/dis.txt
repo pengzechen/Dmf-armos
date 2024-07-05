@@ -1,0 +1,3321 @@
+
+build/kernel.elf:     file format elf64-littleaarch64
+build/kernel.elf
+architecture: aarch64, flags 0x00000112:
+EXEC_P, HAS_SYMS, D_PAGED
+start address 0x0000000040080000
+
+Program Header:
+    LOAD off    0x0000000000010000 vaddr 0x0000000040080000 paddr 0x0000000040080000 align 2**16
+         filesz 0x0000000000003008 memsz 0x0000000000008000 flags rwx
+   STACK off    0x0000000000000000 vaddr 0x0000000000000000 paddr 0x0000000000000000 align 2**4
+         filesz 0x0000000000000000 memsz 0x0000000000000000 flags rw-
+private flags = 0x0:
+
+Sections:
+Idx Name          Size      VMA               LMA               File off  Algn
+  0 .text         00002bc8  0000000040080000  0000000040080000  00010000  2**11
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .rodata       00000013  0000000040082bc8  0000000040082bc8  00012bc8  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  2 .eh_frame     00000410  0000000040082be0  0000000040082be0  00012be0  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .data         00000018  0000000040082ff0  0000000040082ff0  00012ff0  2**3
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .bss          00004000  0000000040084000  0000000040084000  00013008  2**12
+                  ALLOC
+  5 .debug_line   00000a15  0000000000000000  0000000000000000  00013008  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  6 .debug_line_str 00000127  0000000000000000  0000000000000000  00013a1d  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  7 .debug_info   00001230  0000000000000000  0000000000000000  00013b44  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  8 .debug_abbrev 0000070e  0000000000000000  0000000000000000  00014d74  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  9 .debug_aranges 000001b0  0000000000000000  0000000000000000  00015490  2**4
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 10 .debug_str    00000392  0000000000000000  0000000000000000  00015640  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 11 .comment      0000001b  0000000000000000  0000000000000000  000159d2  2**0
+                  CONTENTS, READONLY
+SYMBOL TABLE:
+0000000040080000 l    d  .text	0000000000000000 .text
+0000000040082bc8 l    d  .rodata	0000000000000000 .rodata
+0000000040082be0 l    d  .eh_frame	0000000000000000 .eh_frame
+0000000040082ff0 l    d  .data	0000000000000000 .data
+0000000040084000 l    d  .bss	0000000000000000 .bss
+0000000000000000 l    d  .debug_line	0000000000000000 .debug_line
+0000000000000000 l    d  .debug_line_str	0000000000000000 .debug_line_str
+0000000000000000 l    d  .debug_info	0000000000000000 .debug_info
+0000000000000000 l    d  .debug_abbrev	0000000000000000 .debug_abbrev
+0000000000000000 l    d  .debug_aranges	0000000000000000 .debug_aranges
+0000000000000000 l    d  .debug_str	0000000000000000 .debug_str
+0000000000000000 l    d  .comment	0000000000000000 .comment
+0000000000000000 l    df *ABS*	0000000000000000 boot.s.o
+0000000040080050 l       .text	0000000000000000 from_el2_to_el1
+000000004008004c l       .text	0000000000000000 from_el3_to_el1
+0000000040084000 l       .bss	0000000000000000 _stack_bottom
+0000000000000000 l    df *ABS*	0000000000000000 main.c
+0000000000000000 l    df *ABS*	0000000000000000 exception.s.o
+0000000000000000 l    df *ABS*	0000000000000000 exception.c
+0000000000000000 l    df *ABS*	0000000000000000 io.c
+0000000000000000 l    df *ABS*	0000000000000000 printf.c
+0000000040082ff8 l     O .data	0000000000000010 digits
+000000004008124c l     F .text	000000000000006c addchar
+00000000400812b8 l     F .text	0000000000000120 print_str
+00000000400813d8 l     F .text	00000000000001a4 print_int
+000000004008157c l     F .text	00000000000001f0 print_unsigned
+000000004008176c l     F .text	00000000000000b4 fmtnum
+0000000000000000 l    df *ABS*	0000000000000000 mmu.s.o
+0000000000000000 l    df *ABS*	0000000000000000 page.c
+0000000040086000 l     O .bss	0000000000001000 pt0
+0000000040087000 l     O .bss	0000000000001000 pt1
+0000000000000000 l    df *ABS*	0000000000000000 string.c
+0000000040082634 g     F .text	000000000000002c strcpy
+0000000040080800 g       .text	0000000000000000 exception_vector_base
+0000000040082960 g     F .text	00000000000000d8 memmove
+0000000040082000 g     F .text	00000000000000a8 snprintf
+0000000040082aa4 g     F .text	0000000000000124 atol
+0000000040082390 g     F .text	00000000000000bc binstr
+0000000040082860 g     F .text	0000000000000070 memcpy
+0000000040081040 g       .text	0000000000000000 trigger_exception
+00000000400811dc g     F .text	0000000000000044 uart_putstr
+000000004008108c g     F .text	0000000000000034 handle_irq_exception
+00000000400810c0 g     F .text	0000000000000030 invalid_exception
+0000000040081820 g     F .text	00000000000007e0 vsnprintf
+0000000040082488 g       .text	0000000000000000 enable_mmu
+0000000040080130 g     F .text	0000000000000040 kernel_main
+0000000040086000 g       .bss	0000000000000000 _stack_top
+00000000400825c4 g     F .text	0000000000000070 strcat
+000000004008244c g     F .text	000000000000003c print_binstr
+00000000400820a8 g     F .text	0000000000000060 vprintf
+00000000400810f0 g     F .text	00000000000000b0 uart_init
+0000000040082a38 g     F .text	000000000000006c memchr
+0000000040080000 g       .text	0000000000000000 _start
+000000004008276c g     F .text	0000000000000094 strstr
+0000000040082660 g     F .text	0000000000000090 strncmp
+0000000040081058 g     F .text	0000000000000034 handle_sync_exception
+00000000400828d0 g     F .text	0000000000000090 memcmp
+0000000040081220 g     F .text	000000000000002c uart_getc
+0000000040082800 g     F .text	0000000000000060 memset
+00000000400811a0 g     F .text	000000000000003c uart_putc
+0000000040082108 g     F .text	00000000000000d8 aj_printf
+00000000400826f0 g     F .text	0000000000000028 strcmp
+00000000400822b8 g     F .text	00000000000000d8 error
+00000000400824d8 g     F .text	00000000000000ac init_page_table
+00000000400821e0 g     F .text	00000000000000d8 warning
+0000000040080060 g     F .text	00000000000000d0 test_va
+0000000040082ff0 g     O .data	0000000000000008 str
+0000000040082584 g     F .text	0000000000000040 strlen
+0000000040082718 g     F .text	0000000000000054 strchr
+
+
+
+Disassembly of section .text:
+
+0000000040080000 <_start>:
+.extern exception_vector_base
+
+_start:
+
+    // 设置栈指针
+    ldr x0, =_stack_top
+    40080000:	580002c0 	ldr	x0, 40080058 <from_el2_to_el1+0x8>
+    mov sp, x0
+    40080004:	9100001f 	mov	sp, x0
+
+    mrs x0, CurrentEL          // Read current exception level
+    40080008:	d5384240 	mrs	x0, currentel
+    lsr x0, x0, #2             // 右移两位
+    4008000c:	d342fc00 	lsr	x0, x0, #2
+    cmp x0, #2
+    40080010:	f100081f 	cmp	x0, #0x2
+    b.eq from_el2_to_el1       // Branch if we are in EL2
+    40080014:	540001e0 	b.eq	40080050 <from_el2_to_el1>  // b.none
+    cmp x0, #3
+    40080018:	f1000c1f 	cmp	x0, #0x3
+    b.eq from_el3_to_el1       // Branch if we are in EL3
+    4008001c:	54000180 	b.eq	4008004c <from_el3_to_el1>  // b.none
+
+// 此时CPU已经工作在EL1状态
+
+    bl init_page_table
+    40080020:	9400092e 	bl	400824d8 <init_page_table>
+    bl enable_mmu
+    40080024:	94000919 	bl	40082488 <enable_mmu>
+
+    // 设置栈指针
+    ldr x0, =_stack_top
+    40080028:	58000180 	ldr	x0, 40080058 <from_el2_to_el1+0x8>
+    mov sp, x0
+    4008002c:	9100001f 	mov	sp, x0
+
+    adrp    x0, exception_vector_base
+    40080030:	90000000 	adrp	x0, 40080000 <_start>
+    add     x0, x0, :lo12:exception_vector_base
+    40080034:	91200000 	add	x0, x0, #0x800
+    msr     vbar_el1, x0
+    40080038:	d518c000 	msr	vbar_el1, x0
+    dsb     sy      // 确保所有内存访问完成
+    4008003c:	d5033f9f 	dsb	sy
+    isb             // 确保所有指令都执行完成
+    40080040:	d5033fdf 	isb
+
+    // 调用 C 语言的 main 函数
+    bl kernel_main
+    40080044:	9400003b 	bl	40080130 <kernel_main>
+
+	b .
+    40080048:	14000000 	b	40080048 <_start+0x48>
+
+000000004008004c <from_el3_to_el1>:
+
+from_el3_to_el1:
+    b .
+    4008004c:	14000000 	b	4008004c <from_el3_to_el1>
+
+0000000040080050 <from_el2_to_el1>:
+from_el2_to_el1:
+    b .
+    40080050:	14000000 	b	40080050 <from_el2_to_el1>
+    40080054:	00000000 	udf	#0
+    40080058:	40086000 	.word	0x40086000
+    4008005c:	00000000 	.word	0x00000000
+
+0000000040080060 <test_va>:
+#include "aj_types.h"
+#include "io.h"
+
+char * str = "start core\n";
+
+void test_va(int x, ...) {
+    40080060:	d10403ff 	sub	sp, sp, #0x100
+    40080064:	b9000fe0 	str	w0, [sp, #12]
+    40080068:	f90067e1 	str	x1, [sp, #200]
+    4008006c:	f9006be2 	str	x2, [sp, #208]
+    40080070:	f9006fe3 	str	x3, [sp, #216]
+    40080074:	f90073e4 	str	x4, [sp, #224]
+    40080078:	f90077e5 	str	x5, [sp, #232]
+    4008007c:	f9007be6 	str	x6, [sp, #240]
+    40080080:	f9007fe7 	str	x7, [sp, #248]
+    40080084:	3d8013e0 	str	q0, [sp, #64]
+    40080088:	3d8017e1 	str	q1, [sp, #80]
+    4008008c:	3d801be2 	str	q2, [sp, #96]
+    40080090:	3d801fe3 	str	q3, [sp, #112]
+    40080094:	3d8023e4 	str	q4, [sp, #128]
+    40080098:	3d8027e5 	str	q5, [sp, #144]
+    4008009c:	3d802be6 	str	q6, [sp, #160]
+    400800a0:	3d802fe7 	str	q7, [sp, #176]
+    va_list va;
+
+    va_start(va, x);
+    400800a4:	910403e0 	add	x0, sp, #0x100
+    400800a8:	f9000fe0 	str	x0, [sp, #24]
+    400800ac:	910403e0 	add	x0, sp, #0x100
+    400800b0:	f90013e0 	str	x0, [sp, #32]
+    400800b4:	910303e0 	add	x0, sp, #0xc0
+    400800b8:	f90017e0 	str	x0, [sp, #40]
+    400800bc:	128006e0 	mov	w0, #0xffffffc8            	// #-56
+    400800c0:	b90033e0 	str	w0, [sp, #48]
+    400800c4:	12800fe0 	mov	w0, #0xffffff80            	// #-128
+    400800c8:	b90037e0 	str	w0, [sp, #52]
+
+    int res = va_arg(va, int);
+    400800cc:	b94033e1 	ldr	w1, [sp, #48]
+    400800d0:	f9400fe0 	ldr	x0, [sp, #24]
+    400800d4:	7100003f 	cmp	w1, #0x0
+    400800d8:	540000ab 	b.lt	400800ec <test_va+0x8c>  // b.tstop
+    400800dc:	91002c01 	add	x1, x0, #0xb
+    400800e0:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    400800e4:	f9000fe1 	str	x1, [sp, #24]
+    400800e8:	1400000d 	b	4008011c <test_va+0xbc>
+    400800ec:	11002022 	add	w2, w1, #0x8
+    400800f0:	b90033e2 	str	w2, [sp, #48]
+    400800f4:	b94033e2 	ldr	w2, [sp, #48]
+    400800f8:	7100005f 	cmp	w2, #0x0
+    400800fc:	540000ad 	b.le	40080110 <test_va+0xb0>
+    40080100:	91002c01 	add	x1, x0, #0xb
+    40080104:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40080108:	f9000fe1 	str	x1, [sp, #24]
+    4008010c:	14000004 	b	4008011c <test_va+0xbc>
+    40080110:	f94013e2 	ldr	x2, [sp, #32]
+    40080114:	93407c20 	sxtw	x0, w1
+    40080118:	8b000040 	add	x0, x2, x0
+    4008011c:	b9400000 	ldr	w0, [x0]
+    40080120:	b9003fe0 	str	w0, [sp, #60]
+
+    va_end(va);
+}
+    40080124:	d503201f 	nop
+    40080128:	910403ff 	add	sp, sp, #0x100
+    4008012c:	d65f03c0 	ret
+
+0000000040080130 <kernel_main>:
+
+void kernel_main(void) {
+    40080130:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    40080134:	910003fd 	mov	x29, sp
+	uart_init();
+    40080138:	940003ee 	bl	400810f0 <uart_init>
+
+    uart_putstr(str);
+    4008013c:	d0000000 	adrp	x0, 40082000 <snprintf>
+    40080140:	913fc000 	add	x0, x0, #0xff0
+    40080144:	f9400000 	ldr	x0, [x0]
+    40080148:	94000425 	bl	400811dc <uart_putstr>
+
+    test_va(0, 1, 2);
+    4008014c:	52800042 	mov	w2, #0x2                   	// #2
+    40080150:	52800021 	mov	w1, #0x1                   	// #1
+    40080154:	52800000 	mov	w0, #0x0                   	// #0
+    40080158:	97ffffc2 	bl	40080060 <test_va>
+
+    while(1) 
+    {
+        char c = uart_getc();
+    4008015c:	94000431 	bl	40081220 <uart_getc>
+    40080160:	39007fe0 	strb	w0, [sp, #31]
+        uart_putc(c);
+    40080164:	39407fe0 	ldrb	w0, [sp, #31]
+    40080168:	9400040e 	bl	400811a0 <uart_putc>
+    {
+    4008016c:	17fffffc 	b	4008015c <kernel_main+0x2c>
+	...
+
+0000000040080800 <exception_vector_base>:
+.extern handle_sync_exception
+.extern handle_irq_exception
+
+exception_vector_base:
+    // current EL, with SP_EL0
+    INVALID_EXCP 0 0
+    40080800:	d10443ff 	sub	sp, sp, #0x110
+    40080804:	a90007e0 	stp	x0, x1, [sp]
+    40080808:	a9010fe2 	stp	x2, x3, [sp, #16]
+    4008080c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080810:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080814:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080818:	a9052fea 	stp	x10, x11, [sp, #80]
+    4008081c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080820:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080824:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080828:	a9094ff2 	stp	x18, x19, [sp, #144]
+    4008082c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080830:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080834:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080838:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    4008083c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080840:	d5384109 	mrs	x9, sp_el0
+    40080844:	d538402a 	mrs	x10, elr_el1
+    40080848:	d538400b 	mrs	x11, spsr_el1
+    4008084c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080850:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080854:	910003e0 	mov	x0, sp
+    40080858:	d2800001 	mov	x1, #0x0                   	// #0
+    4008085c:	d2800002 	mov	x2, #0x0                   	// #0
+    40080860:	94000218 	bl	400810c0 <invalid_exception>
+    40080864:	140001e1 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080868:	d503201f 	nop
+    4008086c:	d503201f 	nop
+    40080870:	d503201f 	nop
+    40080874:	d503201f 	nop
+    40080878:	d503201f 	nop
+    4008087c:	d503201f 	nop
+    INVALID_EXCP 1 0
+    40080880:	d10443ff 	sub	sp, sp, #0x110
+    40080884:	a90007e0 	stp	x0, x1, [sp]
+    40080888:	a9010fe2 	stp	x2, x3, [sp, #16]
+    4008088c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080890:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080894:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080898:	a9052fea 	stp	x10, x11, [sp, #80]
+    4008089c:	a90637ec 	stp	x12, x13, [sp, #96]
+    400808a0:	a9073fee 	stp	x14, x15, [sp, #112]
+    400808a4:	a90847f0 	stp	x16, x17, [sp, #128]
+    400808a8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    400808ac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    400808b0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    400808b4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    400808b8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    400808bc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    400808c0:	d5384109 	mrs	x9, sp_el0
+    400808c4:	d538402a 	mrs	x10, elr_el1
+    400808c8:	d538400b 	mrs	x11, spsr_el1
+    400808cc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    400808d0:	a9102fea 	stp	x10, x11, [sp, #256]
+    400808d4:	910003e0 	mov	x0, sp
+    400808d8:	d2800021 	mov	x1, #0x1                   	// #1
+    400808dc:	d2800002 	mov	x2, #0x0                   	// #0
+    400808e0:	940001f8 	bl	400810c0 <invalid_exception>
+    400808e4:	140001c1 	b	40080fe8 <exception_vector_base+0x7e8>
+    400808e8:	d503201f 	nop
+    400808ec:	d503201f 	nop
+    400808f0:	d503201f 	nop
+    400808f4:	d503201f 	nop
+    400808f8:	d503201f 	nop
+    400808fc:	d503201f 	nop
+    INVALID_EXCP 2 0
+    40080900:	d10443ff 	sub	sp, sp, #0x110
+    40080904:	a90007e0 	stp	x0, x1, [sp]
+    40080908:	a9010fe2 	stp	x2, x3, [sp, #16]
+    4008090c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080910:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080914:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080918:	a9052fea 	stp	x10, x11, [sp, #80]
+    4008091c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080920:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080924:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080928:	a9094ff2 	stp	x18, x19, [sp, #144]
+    4008092c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080930:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080934:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080938:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    4008093c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080940:	d5384109 	mrs	x9, sp_el0
+    40080944:	d538402a 	mrs	x10, elr_el1
+    40080948:	d538400b 	mrs	x11, spsr_el1
+    4008094c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080950:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080954:	910003e0 	mov	x0, sp
+    40080958:	d2800041 	mov	x1, #0x2                   	// #2
+    4008095c:	d2800002 	mov	x2, #0x0                   	// #0
+    40080960:	940001d8 	bl	400810c0 <invalid_exception>
+    40080964:	140001a1 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080968:	d503201f 	nop
+    4008096c:	d503201f 	nop
+    40080970:	d503201f 	nop
+    40080974:	d503201f 	nop
+    40080978:	d503201f 	nop
+    4008097c:	d503201f 	nop
+    INVALID_EXCP 3 0
+    40080980:	d10443ff 	sub	sp, sp, #0x110
+    40080984:	a90007e0 	stp	x0, x1, [sp]
+    40080988:	a9010fe2 	stp	x2, x3, [sp, #16]
+    4008098c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080990:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080994:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080998:	a9052fea 	stp	x10, x11, [sp, #80]
+    4008099c:	a90637ec 	stp	x12, x13, [sp, #96]
+    400809a0:	a9073fee 	stp	x14, x15, [sp, #112]
+    400809a4:	a90847f0 	stp	x16, x17, [sp, #128]
+    400809a8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    400809ac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    400809b0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    400809b4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    400809b8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    400809bc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    400809c0:	d5384109 	mrs	x9, sp_el0
+    400809c4:	d538402a 	mrs	x10, elr_el1
+    400809c8:	d538400b 	mrs	x11, spsr_el1
+    400809cc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    400809d0:	a9102fea 	stp	x10, x11, [sp, #256]
+    400809d4:	910003e0 	mov	x0, sp
+    400809d8:	d2800061 	mov	x1, #0x3                   	// #3
+    400809dc:	d2800002 	mov	x2, #0x0                   	// #0
+    400809e0:	940001b8 	bl	400810c0 <invalid_exception>
+    400809e4:	14000181 	b	40080fe8 <exception_vector_base+0x7e8>
+    400809e8:	d503201f 	nop
+    400809ec:	d503201f 	nop
+    400809f0:	d503201f 	nop
+    400809f4:	d503201f 	nop
+    400809f8:	d503201f 	nop
+    400809fc:	d503201f 	nop
+
+    // current EL, with SP_ELx
+    HANDLE_SYNC
+    40080a00:	d10443ff 	sub	sp, sp, #0x110
+    40080a04:	a90007e0 	stp	x0, x1, [sp]
+    40080a08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080a0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080a10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080a14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080a18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080a1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080a20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080a24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080a28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080a2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080a30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080a34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080a38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080a3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080a40:	d5384109 	mrs	x9, sp_el0
+    40080a44:	d538402a 	mrs	x10, elr_el1
+    40080a48:	d538400b 	mrs	x11, spsr_el1
+    40080a4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080a50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080a54:	910003e0 	mov	x0, sp
+    40080a58:	94000180 	bl	40081058 <handle_sync_exception>
+    40080a5c:	14000163 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080a60:	d503201f 	nop
+    40080a64:	d503201f 	nop
+    40080a68:	d503201f 	nop
+    40080a6c:	d503201f 	nop
+    40080a70:	d503201f 	nop
+    40080a74:	d503201f 	nop
+    40080a78:	d503201f 	nop
+    40080a7c:	d503201f 	nop
+    HANDLE_IRQ
+    40080a80:	d10443ff 	sub	sp, sp, #0x110
+    40080a84:	a90007e0 	stp	x0, x1, [sp]
+    40080a88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080a8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080a90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080a94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080a98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080a9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080aa0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080aa4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080aa8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080aac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080ab0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080ab4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080ab8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080abc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080ac0:	d5384109 	mrs	x9, sp_el0
+    40080ac4:	d538402a 	mrs	x10, elr_el1
+    40080ac8:	d538400b 	mrs	x11, spsr_el1
+    40080acc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080ad0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080ad4:	910003e0 	mov	x0, sp
+    40080ad8:	9400016d 	bl	4008108c <handle_irq_exception>
+    40080adc:	14000143 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080ae0:	d503201f 	nop
+    40080ae4:	d503201f 	nop
+    40080ae8:	d503201f 	nop
+    40080aec:	d503201f 	nop
+    40080af0:	d503201f 	nop
+    40080af4:	d503201f 	nop
+    40080af8:	d503201f 	nop
+    40080afc:	d503201f 	nop
+    INVALID_EXCP 2 1
+    40080b00:	d10443ff 	sub	sp, sp, #0x110
+    40080b04:	a90007e0 	stp	x0, x1, [sp]
+    40080b08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080b0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080b10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080b14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080b18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080b1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080b20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080b24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080b28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080b2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080b30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080b34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080b38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080b3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080b40:	d5384109 	mrs	x9, sp_el0
+    40080b44:	d538402a 	mrs	x10, elr_el1
+    40080b48:	d538400b 	mrs	x11, spsr_el1
+    40080b4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080b50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080b54:	910003e0 	mov	x0, sp
+    40080b58:	d2800041 	mov	x1, #0x2                   	// #2
+    40080b5c:	d2800022 	mov	x2, #0x1                   	// #1
+    40080b60:	94000158 	bl	400810c0 <invalid_exception>
+    40080b64:	14000121 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080b68:	d503201f 	nop
+    40080b6c:	d503201f 	nop
+    40080b70:	d503201f 	nop
+    40080b74:	d503201f 	nop
+    40080b78:	d503201f 	nop
+    40080b7c:	d503201f 	nop
+    INVALID_EXCP 3 1
+    40080b80:	d10443ff 	sub	sp, sp, #0x110
+    40080b84:	a90007e0 	stp	x0, x1, [sp]
+    40080b88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080b8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080b90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080b94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080b98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080b9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080ba0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080ba4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080ba8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080bac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080bb0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080bb4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080bb8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080bbc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080bc0:	d5384109 	mrs	x9, sp_el0
+    40080bc4:	d538402a 	mrs	x10, elr_el1
+    40080bc8:	d538400b 	mrs	x11, spsr_el1
+    40080bcc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080bd0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080bd4:	910003e0 	mov	x0, sp
+    40080bd8:	d2800061 	mov	x1, #0x3                   	// #3
+    40080bdc:	d2800022 	mov	x2, #0x1                   	// #1
+    40080be0:	94000138 	bl	400810c0 <invalid_exception>
+    40080be4:	14000101 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080be8:	d503201f 	nop
+    40080bec:	d503201f 	nop
+    40080bf0:	d503201f 	nop
+    40080bf4:	d503201f 	nop
+    40080bf8:	d503201f 	nop
+    40080bfc:	d503201f 	nop
+
+    // lower EL, aarch64
+    HANDLE_SYNC
+    40080c00:	d10443ff 	sub	sp, sp, #0x110
+    40080c04:	a90007e0 	stp	x0, x1, [sp]
+    40080c08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080c0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080c10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080c14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080c18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080c1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080c20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080c24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080c28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080c2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080c30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080c34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080c38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080c3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080c40:	d5384109 	mrs	x9, sp_el0
+    40080c44:	d538402a 	mrs	x10, elr_el1
+    40080c48:	d538400b 	mrs	x11, spsr_el1
+    40080c4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080c50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080c54:	910003e0 	mov	x0, sp
+    40080c58:	94000100 	bl	40081058 <handle_sync_exception>
+    40080c5c:	140000e3 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080c60:	d503201f 	nop
+    40080c64:	d503201f 	nop
+    40080c68:	d503201f 	nop
+    40080c6c:	d503201f 	nop
+    40080c70:	d503201f 	nop
+    40080c74:	d503201f 	nop
+    40080c78:	d503201f 	nop
+    40080c7c:	d503201f 	nop
+    HANDLE_IRQ
+    40080c80:	d10443ff 	sub	sp, sp, #0x110
+    40080c84:	a90007e0 	stp	x0, x1, [sp]
+    40080c88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080c8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080c90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080c94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080c98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080c9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080ca0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080ca4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080ca8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080cac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080cb0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080cb4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080cb8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080cbc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080cc0:	d5384109 	mrs	x9, sp_el0
+    40080cc4:	d538402a 	mrs	x10, elr_el1
+    40080cc8:	d538400b 	mrs	x11, spsr_el1
+    40080ccc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080cd0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080cd4:	910003e0 	mov	x0, sp
+    40080cd8:	940000ed 	bl	4008108c <handle_irq_exception>
+    40080cdc:	140000c3 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080ce0:	d503201f 	nop
+    40080ce4:	d503201f 	nop
+    40080ce8:	d503201f 	nop
+    40080cec:	d503201f 	nop
+    40080cf0:	d503201f 	nop
+    40080cf4:	d503201f 	nop
+    40080cf8:	d503201f 	nop
+    40080cfc:	d503201f 	nop
+    INVALID_EXCP 2 2
+    40080d00:	d10443ff 	sub	sp, sp, #0x110
+    40080d04:	a90007e0 	stp	x0, x1, [sp]
+    40080d08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080d0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080d10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080d14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080d18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080d1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080d20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080d24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080d28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080d2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080d30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080d34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080d38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080d3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080d40:	d5384109 	mrs	x9, sp_el0
+    40080d44:	d538402a 	mrs	x10, elr_el1
+    40080d48:	d538400b 	mrs	x11, spsr_el1
+    40080d4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080d50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080d54:	910003e0 	mov	x0, sp
+    40080d58:	d2800041 	mov	x1, #0x2                   	// #2
+    40080d5c:	d2800042 	mov	x2, #0x2                   	// #2
+    40080d60:	940000d8 	bl	400810c0 <invalid_exception>
+    40080d64:	140000a1 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080d68:	d503201f 	nop
+    40080d6c:	d503201f 	nop
+    40080d70:	d503201f 	nop
+    40080d74:	d503201f 	nop
+    40080d78:	d503201f 	nop
+    40080d7c:	d503201f 	nop
+    INVALID_EXCP 3 2
+    40080d80:	d10443ff 	sub	sp, sp, #0x110
+    40080d84:	a90007e0 	stp	x0, x1, [sp]
+    40080d88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080d8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080d90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080d94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080d98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080d9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080da0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080da4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080da8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080dac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080db0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080db4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080db8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080dbc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080dc0:	d5384109 	mrs	x9, sp_el0
+    40080dc4:	d538402a 	mrs	x10, elr_el1
+    40080dc8:	d538400b 	mrs	x11, spsr_el1
+    40080dcc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080dd0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080dd4:	910003e0 	mov	x0, sp
+    40080dd8:	d2800061 	mov	x1, #0x3                   	// #3
+    40080ddc:	d2800042 	mov	x2, #0x2                   	// #2
+    40080de0:	940000b8 	bl	400810c0 <invalid_exception>
+    40080de4:	14000081 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080de8:	d503201f 	nop
+    40080dec:	d503201f 	nop
+    40080df0:	d503201f 	nop
+    40080df4:	d503201f 	nop
+    40080df8:	d503201f 	nop
+    40080dfc:	d503201f 	nop
+
+    // lower EL, aarch32
+    INVALID_EXCP 0 3
+    40080e00:	d10443ff 	sub	sp, sp, #0x110
+    40080e04:	a90007e0 	stp	x0, x1, [sp]
+    40080e08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080e0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080e10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080e14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080e18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080e1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080e20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080e24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080e28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080e2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080e30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080e34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080e38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080e3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080e40:	d5384109 	mrs	x9, sp_el0
+    40080e44:	d538402a 	mrs	x10, elr_el1
+    40080e48:	d538400b 	mrs	x11, spsr_el1
+    40080e4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080e50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080e54:	910003e0 	mov	x0, sp
+    40080e58:	d2800001 	mov	x1, #0x0                   	// #0
+    40080e5c:	d2800062 	mov	x2, #0x3                   	// #3
+    40080e60:	94000098 	bl	400810c0 <invalid_exception>
+    40080e64:	14000061 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080e68:	d503201f 	nop
+    40080e6c:	d503201f 	nop
+    40080e70:	d503201f 	nop
+    40080e74:	d503201f 	nop
+    40080e78:	d503201f 	nop
+    40080e7c:	d503201f 	nop
+    INVALID_EXCP 1 3
+    40080e80:	d10443ff 	sub	sp, sp, #0x110
+    40080e84:	a90007e0 	stp	x0, x1, [sp]
+    40080e88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080e8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080e90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080e94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080e98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080e9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080ea0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080ea4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080ea8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080eac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080eb0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080eb4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080eb8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080ebc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080ec0:	d5384109 	mrs	x9, sp_el0
+    40080ec4:	d538402a 	mrs	x10, elr_el1
+    40080ec8:	d538400b 	mrs	x11, spsr_el1
+    40080ecc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080ed0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080ed4:	910003e0 	mov	x0, sp
+    40080ed8:	d2800021 	mov	x1, #0x1                   	// #1
+    40080edc:	d2800062 	mov	x2, #0x3                   	// #3
+    40080ee0:	94000078 	bl	400810c0 <invalid_exception>
+    40080ee4:	14000041 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080ee8:	d503201f 	nop
+    40080eec:	d503201f 	nop
+    40080ef0:	d503201f 	nop
+    40080ef4:	d503201f 	nop
+    40080ef8:	d503201f 	nop
+    40080efc:	d503201f 	nop
+    INVALID_EXCP 2 3
+    40080f00:	d10443ff 	sub	sp, sp, #0x110
+    40080f04:	a90007e0 	stp	x0, x1, [sp]
+    40080f08:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080f0c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080f10:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080f14:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080f18:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080f1c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080f20:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080f24:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080f28:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080f2c:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080f30:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080f34:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080f38:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080f3c:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080f40:	d5384109 	mrs	x9, sp_el0
+    40080f44:	d538402a 	mrs	x10, elr_el1
+    40080f48:	d538400b 	mrs	x11, spsr_el1
+    40080f4c:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080f50:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080f54:	910003e0 	mov	x0, sp
+    40080f58:	d2800041 	mov	x1, #0x2                   	// #2
+    40080f5c:	d2800062 	mov	x2, #0x3                   	// #3
+    40080f60:	94000058 	bl	400810c0 <invalid_exception>
+    40080f64:	14000021 	b	40080fe8 <exception_vector_base+0x7e8>
+    40080f68:	d503201f 	nop
+    40080f6c:	d503201f 	nop
+    40080f70:	d503201f 	nop
+    40080f74:	d503201f 	nop
+    40080f78:	d503201f 	nop
+    40080f7c:	d503201f 	nop
+    INVALID_EXCP 3 3
+    40080f80:	d10443ff 	sub	sp, sp, #0x110
+    40080f84:	a90007e0 	stp	x0, x1, [sp]
+    40080f88:	a9010fe2 	stp	x2, x3, [sp, #16]
+    40080f8c:	a90217e4 	stp	x4, x5, [sp, #32]
+    40080f90:	a9031fe6 	stp	x6, x7, [sp, #48]
+    40080f94:	a90427e8 	stp	x8, x9, [sp, #64]
+    40080f98:	a9052fea 	stp	x10, x11, [sp, #80]
+    40080f9c:	a90637ec 	stp	x12, x13, [sp, #96]
+    40080fa0:	a9073fee 	stp	x14, x15, [sp, #112]
+    40080fa4:	a90847f0 	stp	x16, x17, [sp, #128]
+    40080fa8:	a9094ff2 	stp	x18, x19, [sp, #144]
+    40080fac:	a90a57f4 	stp	x20, x21, [sp, #160]
+    40080fb0:	a90b5ff6 	stp	x22, x23, [sp, #176]
+    40080fb4:	a90c67f8 	stp	x24, x25, [sp, #192]
+    40080fb8:	a90d6ffa 	stp	x26, x27, [sp, #208]
+    40080fbc:	a90e77fc 	stp	x28, x29, [sp, #224]
+    40080fc0:	d5384109 	mrs	x9, sp_el0
+    40080fc4:	d538402a 	mrs	x10, elr_el1
+    40080fc8:	d538400b 	mrs	x11, spsr_el1
+    40080fcc:	a90f27fe 	stp	x30, x9, [sp, #240]
+    40080fd0:	a9102fea 	stp	x10, x11, [sp, #256]
+    40080fd4:	910003e0 	mov	x0, sp
+    40080fd8:	d2800061 	mov	x1, #0x3                   	// #3
+    40080fdc:	d2800062 	mov	x2, #0x3                   	// #3
+    40080fe0:	94000038 	bl	400810c0 <invalid_exception>
+    40080fe4:	14000001 	b	40080fe8 <exception_vector_base+0x7e8>
+
+.Lexception_return:
+    RESTORE_REGS
+    40080fe8:	a9502fea 	ldp	x10, x11, [sp, #256]
+    40080fec:	a94f27fe 	ldp	x30, x9, [sp, #240]
+    40080ff0:	d5184109 	msr	sp_el0, x9
+    40080ff4:	d518402a 	msr	elr_el1, x10
+    40080ff8:	d518400b 	msr	spsr_el1, x11
+    40080ffc:	a94e77fc 	ldp	x28, x29, [sp, #224]
+    40081000:	a94d6ffa 	ldp	x26, x27, [sp, #208]
+    40081004:	a94c67f8 	ldp	x24, x25, [sp, #192]
+    40081008:	a94b5ff6 	ldp	x22, x23, [sp, #176]
+    4008100c:	a94a57f4 	ldp	x20, x21, [sp, #160]
+    40081010:	a9494ff2 	ldp	x18, x19, [sp, #144]
+    40081014:	a94847f0 	ldp	x16, x17, [sp, #128]
+    40081018:	a9473fee 	ldp	x14, x15, [sp, #112]
+    4008101c:	a94637ec 	ldp	x12, x13, [sp, #96]
+    40081020:	a9452fea 	ldp	x10, x11, [sp, #80]
+    40081024:	a94427e8 	ldp	x8, x9, [sp, #64]
+    40081028:	a9431fe6 	ldp	x6, x7, [sp, #48]
+    4008102c:	a94217e4 	ldp	x4, x5, [sp, #32]
+    40081030:	a9410fe2 	ldp	x2, x3, [sp, #16]
+    40081034:	a94007e0 	ldp	x0, x1, [sp]
+    40081038:	910443ff 	add	sp, sp, #0x110
+    eret
+    4008103c:	d69f03e0 	eret
+
+0000000040081040 <trigger_exception>:
+
+.global trigger_exception
+trigger_exception:
+    ldr x0, =0xFFFFFFFF
+    40081040:	58000080 	ldr	x0, 40081050 <trigger_exception+0x10>
+    ldr x1, [x0] // 触发数据中止异常
+    40081044:	f9400001 	ldr	x1, [x0]
+    40081048:	d65f03c0 	ret
+    4008104c:	00000000 	udf	#0
+    40081050:	ffffffff 	.word	0xffffffff
+    40081054:	00000000 	.word	0x00000000
+
+0000000040081058 <handle_sync_exception>:
+    uint64_t elr;           // Exception Link Register (ELR_EL1)
+    uint64_t spsr;          // Saved Process Status Register (SPSR_EL1)
+} TrapFrame;
+
+// 示例使用方式：处理同步异常
+void handle_sync_exception(uint64_t *stack_pointer) {
+    40081058:	d100c3ff 	sub	sp, sp, #0x30
+    4008105c:	f90007e0 	str	x0, [sp, #8]
+    TrapFrame *context = (TrapFrame *)stack_pointer;
+    40081060:	f94007e0 	ldr	x0, [sp, #8]
+    40081064:	f90017e0 	str	x0, [sp, #40]
+
+    uint64_t x0_value = context->r[0];
+    40081068:	f94017e0 	ldr	x0, [sp, #40]
+    4008106c:	f9400000 	ldr	x0, [x0]
+    40081070:	f90013e0 	str	x0, [sp, #32]
+    uint64_t elr_el1_value = context->elr;
+    40081074:	f94017e0 	ldr	x0, [sp, #40]
+    40081078:	f9408000 	ldr	x0, [x0, #256]
+    4008107c:	f9000fe0 	str	x0, [sp, #24]
+
+    // 在这里实现处理同步异常的代码
+}
+    40081080:	d503201f 	nop
+    40081084:	9100c3ff 	add	sp, sp, #0x30
+    40081088:	d65f03c0 	ret
+
+000000004008108c <handle_irq_exception>:
+
+// 示例使用方式：处理 IRQ 异常
+void handle_irq_exception(uint64_t *stack_pointer) {
+    4008108c:	d100c3ff 	sub	sp, sp, #0x30
+    40081090:	f90007e0 	str	x0, [sp, #8]
+    TrapFrame *context = (TrapFrame *)stack_pointer;
+    40081094:	f94007e0 	ldr	x0, [sp, #8]
+    40081098:	f90017e0 	str	x0, [sp, #40]
+
+    uint64_t x1_value = context->r[1];
+    4008109c:	f94017e0 	ldr	x0, [sp, #40]
+    400810a0:	f9400400 	ldr	x0, [x0, #8]
+    400810a4:	f90013e0 	str	x0, [sp, #32]
+    uint64_t sp_el0_value = context->usp;
+    400810a8:	f94017e0 	ldr	x0, [sp, #40]
+    400810ac:	f9407c00 	ldr	x0, [x0, #248]
+    400810b0:	f9000fe0 	str	x0, [sp, #24]
+
+    // 在这里实现处理 IRQ 异常的代码
+}
+    400810b4:	d503201f 	nop
+    400810b8:	9100c3ff 	add	sp, sp, #0x30
+    400810bc:	d65f03c0 	ret
+
+00000000400810c0 <invalid_exception>:
+
+// 示例使用方式：处理无效异常
+void invalid_exception(uint64_t *stack_pointer, uint64_t kind, uint64_t source) {
+    400810c0:	d100c3ff 	sub	sp, sp, #0x30
+    400810c4:	f9000fe0 	str	x0, [sp, #24]
+    400810c8:	f9000be1 	str	x1, [sp, #16]
+    400810cc:	f90007e2 	str	x2, [sp, #8]
+    TrapFrame *context = (TrapFrame *)stack_pointer;
+    400810d0:	f9400fe0 	ldr	x0, [sp, #24]
+    400810d4:	f90017e0 	str	x0, [sp, #40]
+
+    uint64_t x2_value = context->r[2];
+    400810d8:	f94017e0 	ldr	x0, [sp, #40]
+    400810dc:	f9400800 	ldr	x0, [x0, #16]
+    400810e0:	f90013e0 	str	x0, [sp, #32]
+
+    // 在这里实现处理无效异常的代码
+    400810e4:	d503201f 	nop
+    400810e8:	9100c3ff 	add	sp, sp, #0x30
+    400810ec:	d65f03c0 	ret
+
+00000000400810f0 <uart_init>:
+
+#include <io.h>
+
+void uart_init() {
+    400810f0:	d10083ff 	sub	sp, sp, #0x20
+    // 禁用 UART
+    UART0_CR = 0x0;
+    400810f4:	d2800600 	mov	x0, #0x30                  	// #48
+    400810f8:	f2a12000 	movk	x0, #0x900, lsl #16
+    400810fc:	f900001f 	str	xzr, [x0]
+    // 设置波特率，例如 115200
+    // 波特率计算公式：
+    // 整数部分 = UARTCLK / (16 * 波特率)
+    // 小数部分 = 整数部分的小数部分 * 64 + 0.5
+    // 假设 UARTCLK 为 24MHz
+    uint32_t uartclk = 24000000;
+    40081100:	d286c000 	mov	x0, #0x3600                	// #13824
+    40081104:	f2a02dc0 	movk	x0, #0x16e, lsl #16
+    40081108:	f9000fe0 	str	x0, [sp, #24]
+    uint32_t baudrate = 115200;
+    4008110c:	d2984000 	mov	x0, #0xc200                	// #49664
+    40081110:	f2a00020 	movk	x0, #0x1, lsl #16
+    40081114:	f9000be0 	str	x0, [sp, #16]
+    uint32_t ibrd = uartclk / (16 * baudrate);
+    40081118:	f9400be0 	ldr	x0, [sp, #16]
+    4008111c:	d37cec00 	lsl	x0, x0, #4
+    40081120:	f9400fe1 	ldr	x1, [sp, #24]
+    40081124:	9ac00820 	udiv	x0, x1, x0
+    40081128:	f90007e0 	str	x0, [sp, #8]
+    uint32_t fbrd = (uartclk % (16 * baudrate)) * 4 / baudrate;
+    4008112c:	f9400be0 	ldr	x0, [sp, #16]
+    40081130:	d37cec01 	lsl	x1, x0, #4
+    40081134:	f9400fe0 	ldr	x0, [sp, #24]
+    40081138:	9ac10802 	udiv	x2, x0, x1
+    4008113c:	9b017c41 	mul	x1, x2, x1
+    40081140:	cb010000 	sub	x0, x0, x1
+    40081144:	d37ef401 	lsl	x1, x0, #2
+    40081148:	f9400be0 	ldr	x0, [sp, #16]
+    4008114c:	9ac00820 	udiv	x0, x1, x0
+    40081150:	f90003e0 	str	x0, [sp]
+
+    UART0_IBRD = ibrd;
+    40081154:	d2800480 	mov	x0, #0x24                  	// #36
+    40081158:	f2a12000 	movk	x0, #0x900, lsl #16
+    4008115c:	f94007e1 	ldr	x1, [sp, #8]
+    40081160:	f9000001 	str	x1, [x0]
+    UART0_FBRD = fbrd;
+    40081164:	d2800500 	mov	x0, #0x28                  	// #40
+    40081168:	f2a12000 	movk	x0, #0x900, lsl #16
+    4008116c:	f94003e1 	ldr	x1, [sp]
+    40081170:	f9000001 	str	x1, [x0]
+
+    // 配置线路控制寄存器: 8 bits, no parity, one stop bit
+    UART0_LCRH = (1 << 5) | (1 << 6);
+    40081174:	d2800580 	mov	x0, #0x2c                  	// #44
+    40081178:	f2a12000 	movk	x0, #0x900, lsl #16
+    4008117c:	d2800c01 	mov	x1, #0x60                  	// #96
+    40081180:	f9000001 	str	x1, [x0]
+
+    // 启用 UART，TX 和 RX
+    UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
+    40081184:	d2800600 	mov	x0, #0x30                  	// #48
+    40081188:	f2a12000 	movk	x0, #0x900, lsl #16
+    4008118c:	d2806021 	mov	x1, #0x301                 	// #769
+    40081190:	f9000001 	str	x1, [x0]
+}
+    40081194:	d503201f 	nop
+    40081198:	910083ff 	add	sp, sp, #0x20
+    4008119c:	d65f03c0 	ret
+
+00000000400811a0 <uart_putc>:
+
+
+void uart_putc(char c) {
+    400811a0:	d10043ff 	sub	sp, sp, #0x10
+    400811a4:	39003fe0 	strb	w0, [sp, #15]
+    // 等待发送 FIFO 不为满
+    while (UART0_FR & (1 << 5));
+    400811a8:	d503201f 	nop
+    400811ac:	d2800300 	mov	x0, #0x18                  	// #24
+    400811b0:	f2a12000 	movk	x0, #0x900, lsl #16
+    400811b4:	f9400000 	ldr	x0, [x0]
+    400811b8:	927b0000 	and	x0, x0, #0x20
+    400811bc:	f100001f 	cmp	x0, #0x0
+    400811c0:	54ffff61 	b.ne	400811ac <uart_putc+0xc>  // b.any
+    UART0_DR = c;
+    400811c4:	d2a12000 	mov	x0, #0x9000000             	// #150994944
+    400811c8:	39403fe1 	ldrb	w1, [sp, #15]
+    400811cc:	f9000001 	str	x1, [x0]
+}
+    400811d0:	d503201f 	nop
+    400811d4:	910043ff 	add	sp, sp, #0x10
+    400811d8:	d65f03c0 	ret
+
+00000000400811dc <uart_putstr>:
+
+void uart_putstr(const char* str) {
+    400811dc:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    400811e0:	910003fd 	mov	x29, sp
+    400811e4:	f9000fe0 	str	x0, [sp, #24]
+    while (*str) {
+    400811e8:	14000006 	b	40081200 <uart_putstr+0x24>
+        uart_putc(*str++);
+    400811ec:	f9400fe0 	ldr	x0, [sp, #24]
+    400811f0:	91000401 	add	x1, x0, #0x1
+    400811f4:	f9000fe1 	str	x1, [sp, #24]
+    400811f8:	39400000 	ldrb	w0, [x0]
+    400811fc:	97ffffe9 	bl	400811a0 <uart_putc>
+    while (*str) {
+    40081200:	f9400fe0 	ldr	x0, [sp, #24]
+    40081204:	39400000 	ldrb	w0, [x0]
+    40081208:	7100001f 	cmp	w0, #0x0
+    4008120c:	54ffff01 	b.ne	400811ec <uart_putstr+0x10>  // b.any
+    }
+}
+    40081210:	d503201f 	nop
+    40081214:	d503201f 	nop
+    40081218:	a8c27bfd 	ldp	x29, x30, [sp], #32
+    4008121c:	d65f03c0 	ret
+
+0000000040081220 <uart_getc>:
+
+char uart_getc() {
+    // 等待接收 FIFO 不为空
+    while (UART0_FR & (1 << 4));
+    40081220:	d503201f 	nop
+    40081224:	d2800300 	mov	x0, #0x18                  	// #24
+    40081228:	f2a12000 	movk	x0, #0x900, lsl #16
+    4008122c:	f9400000 	ldr	x0, [x0]
+    40081230:	927c0000 	and	x0, x0, #0x10
+    40081234:	f100001f 	cmp	x0, #0x0
+    40081238:	54ffff61 	b.ne	40081224 <uart_getc+0x4>  // b.any
+    return (char)UART0_DR;
+    4008123c:	d2a12000 	mov	x0, #0x9000000             	// #150994944
+    40081240:	f9400000 	ldr	x0, [x0]
+    40081244:	12001c00 	and	w0, w0, #0xff
+}
+    40081248:	d65f03c0 	ret
+
+000000004008124c <addchar>:
+    int npad;
+    bool alternate;
+} strprops_t;
+
+static void addchar(pstream_t *p, char c)
+{
+    4008124c:	d10043ff 	sub	sp, sp, #0x10
+    40081250:	f90007e0 	str	x0, [sp, #8]
+    40081254:	39001fe1 	strb	w1, [sp, #7]
+    if (p->remain) {
+    40081258:	f94007e0 	ldr	x0, [sp, #8]
+    4008125c:	b9400800 	ldr	w0, [x0, #8]
+    40081260:	7100001f 	cmp	w0, #0x0
+    40081264:	540001a0 	b.eq	40081298 <addchar+0x4c>  // b.none
+        *p->buffer++ = c;
+    40081268:	f94007e0 	ldr	x0, [sp, #8]
+    4008126c:	f9400000 	ldr	x0, [x0]
+    40081270:	91000402 	add	x2, x0, #0x1
+    40081274:	f94007e1 	ldr	x1, [sp, #8]
+    40081278:	f9000022 	str	x2, [x1]
+    4008127c:	39401fe1 	ldrb	w1, [sp, #7]
+    40081280:	39000001 	strb	w1, [x0]
+        --p->remain;
+    40081284:	f94007e0 	ldr	x0, [sp, #8]
+    40081288:	b9400800 	ldr	w0, [x0, #8]
+    4008128c:	51000401 	sub	w1, w0, #0x1
+    40081290:	f94007e0 	ldr	x0, [sp, #8]
+    40081294:	b9000801 	str	w1, [x0, #8]
+    }
+    ++p->added;
+    40081298:	f94007e0 	ldr	x0, [sp, #8]
+    4008129c:	b9400c00 	ldr	w0, [x0, #12]
+    400812a0:	11000401 	add	w1, w0, #0x1
+    400812a4:	f94007e0 	ldr	x0, [sp, #8]
+    400812a8:	b9000c01 	str	w1, [x0, #12]
+}
+    400812ac:	d503201f 	nop
+    400812b0:	910043ff 	add	sp, sp, #0x10
+    400812b4:	d65f03c0 	ret
+
+00000000400812b8 <print_str>:
+
+static void print_str(pstream_t *p, const char *s, strprops_t props)
+{
+    400812b8:	a9bb7bfd 	stp	x29, x30, [sp, #-80]!
+    400812bc:	910003fd 	mov	x29, sp
+    400812c0:	f9000bf3 	str	x19, [sp, #16]
+    400812c4:	f9001fe0 	str	x0, [sp, #56]
+    400812c8:	f9001be1 	str	x1, [sp, #48]
+    400812cc:	aa0203e0 	mov	x0, x2
+    400812d0:	aa0303e1 	mov	x1, x3
+    400812d4:	f90013e0 	str	x0, [sp, #32]
+    400812d8:	b9402be0 	ldr	w0, [sp, #40]
+    400812dc:	33007c20 	bfxil	w0, w1, #0, #32
+    400812e0:	b9002be0 	str	w0, [sp, #40]
+    const char *s_orig = s;
+    400812e4:	f9401be0 	ldr	x0, [sp, #48]
+    400812e8:	f90023e0 	str	x0, [sp, #64]
+    int npad = props.npad;
+    400812ec:	b94027e0 	ldr	w0, [sp, #36]
+    400812f0:	b9004fe0 	str	w0, [sp, #76]
+
+    if (npad > 0) {
+    400812f4:	b9404fe0 	ldr	w0, [sp, #76]
+    400812f8:	7100001f 	cmp	w0, #0x0
+    400812fc:	5400032d 	b.le	40081360 <print_str+0xa8>
+        npad -= strlen(s_orig);
+    40081300:	b9404ff3 	ldr	w19, [sp, #76]
+    40081304:	f94023e0 	ldr	x0, [sp, #64]
+    40081308:	9400049f 	bl	40082584 <strlen>
+    4008130c:	4b000260 	sub	w0, w19, w0
+    40081310:	b9004fe0 	str	w0, [sp, #76]
+        while (npad > 0) {
+    40081314:	14000008 	b	40081334 <print_str+0x7c>
+            addchar(p, props.pad);
+    40081318:	394083e0 	ldrb	w0, [sp, #32]
+    4008131c:	2a0003e1 	mov	w1, w0
+    40081320:	f9401fe0 	ldr	x0, [sp, #56]
+    40081324:	97ffffca 	bl	4008124c <addchar>
+            --npad;
+    40081328:	b9404fe0 	ldr	w0, [sp, #76]
+    4008132c:	51000400 	sub	w0, w0, #0x1
+    40081330:	b9004fe0 	str	w0, [sp, #76]
+        while (npad > 0) {
+    40081334:	b9404fe0 	ldr	w0, [sp, #76]
+    40081338:	7100001f 	cmp	w0, #0x0
+    4008133c:	54fffeec 	b.gt	40081318 <print_str+0x60>
+        }
+    }
+
+    while (*s)
+    40081340:	14000008 	b	40081360 <print_str+0xa8>
+	addchar(p, *s++);
+    40081344:	f9401be0 	ldr	x0, [sp, #48]
+    40081348:	91000401 	add	x1, x0, #0x1
+    4008134c:	f9001be1 	str	x1, [sp, #48]
+    40081350:	39400000 	ldrb	w0, [x0]
+    40081354:	2a0003e1 	mov	w1, w0
+    40081358:	f9401fe0 	ldr	x0, [sp, #56]
+    4008135c:	97ffffbc 	bl	4008124c <addchar>
+    while (*s)
+    40081360:	f9401be0 	ldr	x0, [sp, #48]
+    40081364:	39400000 	ldrb	w0, [x0]
+    40081368:	7100001f 	cmp	w0, #0x0
+    4008136c:	54fffec1 	b.ne	40081344 <print_str+0x8c>  // b.any
+
+    if (npad < 0) {
+    40081370:	b9404fe0 	ldr	w0, [sp, #76]
+    40081374:	7100001f 	cmp	w0, #0x0
+    40081378:	5400028a 	b.ge	400813c8 <print_str+0x110>  // b.tcont
+        props.pad = ' '; /* ignore '0' flag with '-' flag */
+    4008137c:	52800400 	mov	w0, #0x20                  	// #32
+    40081380:	390083e0 	strb	w0, [sp, #32]
+        npad += strlen(s_orig);
+    40081384:	f94023e0 	ldr	x0, [sp, #64]
+    40081388:	9400047f 	bl	40082584 <strlen>
+    4008138c:	2a0003e1 	mov	w1, w0
+    40081390:	b9404fe0 	ldr	w0, [sp, #76]
+    40081394:	0b000020 	add	w0, w1, w0
+    40081398:	b9004fe0 	str	w0, [sp, #76]
+        while (npad < 0) {
+    4008139c:	14000008 	b	400813bc <print_str+0x104>
+            addchar(p, props.pad);
+    400813a0:	394083e0 	ldrb	w0, [sp, #32]
+    400813a4:	2a0003e1 	mov	w1, w0
+    400813a8:	f9401fe0 	ldr	x0, [sp, #56]
+    400813ac:	97ffffa8 	bl	4008124c <addchar>
+            ++npad;
+    400813b0:	b9404fe0 	ldr	w0, [sp, #76]
+    400813b4:	11000400 	add	w0, w0, #0x1
+    400813b8:	b9004fe0 	str	w0, [sp, #76]
+        while (npad < 0) {
+    400813bc:	b9404fe0 	ldr	w0, [sp, #76]
+    400813c0:	7100001f 	cmp	w0, #0x0
+    400813c4:	54fffeeb 	b.lt	400813a0 <print_str+0xe8>  // b.tstop
+        }
+    }
+}
+    400813c8:	d503201f 	nop
+    400813cc:	f9400bf3 	ldr	x19, [sp, #16]
+    400813d0:	a8c57bfd 	ldp	x29, x30, [sp], #80
+    400813d4:	d65f03c0 	ret
+
+00000000400813d8 <print_int>:
+
+static void print_int(pstream_t *ps, long n, int base, strprops_t props){
+    400813d8:	a9b97bfd 	stp	x29, x30, [sp, #-112]!
+    400813dc:	910003fd 	mov	x29, sp
+    400813e0:	f9001fe0 	str	x0, [sp, #56]
+    400813e4:	f9001be1 	str	x1, [sp, #48]
+    400813e8:	b9002fe2 	str	w2, [sp, #44]
+    400813ec:	aa0303e0 	mov	x0, x3
+    400813f0:	aa0403e1 	mov	x1, x4
+    400813f4:	f801c3e0 	stur	x0, [sp, #28]
+    400813f8:	b94027e0 	ldr	w0, [sp, #36]
+    400813fc:	33007c20 	bfxil	w0, w1, #0, #32
+    40081400:	b90027e0 	str	w0, [sp, #36]
+
+    char buf[sizeof(long) * 3 + 2], *p = buf;
+    40081404:	910103e0 	add	x0, sp, #0x40
+    40081408:	f90037e0 	str	x0, [sp, #104]
+    int s = 0, i;
+    4008140c:	b90067ff 	str	wzr, [sp, #100]
+
+    if (n < 0) {
+    40081410:	f9401be0 	ldr	x0, [sp, #48]
+    40081414:	f100001f 	cmp	x0, #0x0
+    40081418:	540002ea 	b.ge	40081474 <print_int+0x9c>  // b.tcont
+        n = -n;
+    4008141c:	f9401be0 	ldr	x0, [sp, #48]
+    40081420:	cb0003e0 	neg	x0, x0
+    40081424:	f9001be0 	str	x0, [sp, #48]
+        s = 1;
+    40081428:	52800020 	mov	w0, #0x1                   	// #1
+    4008142c:	b90067e0 	str	w0, [sp, #100]
+    }
+
+    while (n) {
+    40081430:	14000011 	b	40081474 <print_int+0x9c>
+        *p++ = digits[n % base];
+    40081434:	b9802fe1 	ldrsw	x1, [sp, #44]
+    40081438:	f9401be0 	ldr	x0, [sp, #48]
+    4008143c:	9ac10c02 	sdiv	x2, x0, x1
+    40081440:	9b017c41 	mul	x1, x2, x1
+    40081444:	cb010001 	sub	x1, x0, x1
+    40081448:	f94037e0 	ldr	x0, [sp, #104]
+    4008144c:	91000402 	add	x2, x0, #0x1
+    40081450:	f90037e2 	str	x2, [sp, #104]
+    40081454:	b0000002 	adrp	x2, 40082000 <snprintf>
+    40081458:	913fe042 	add	x2, x2, #0xff8
+    4008145c:	38616841 	ldrb	w1, [x2, x1]
+    40081460:	39000001 	strb	w1, [x0]
+        n /= base;
+    40081464:	b9802fe0 	ldrsw	x0, [sp, #44]
+    40081468:	f9401be1 	ldr	x1, [sp, #48]
+    4008146c:	9ac00c20 	sdiv	x0, x1, x0
+    40081470:	f9001be0 	str	x0, [sp, #48]
+    while (n) {
+    40081474:	f9401be0 	ldr	x0, [sp, #48]
+    40081478:	f100001f 	cmp	x0, #0x0
+    4008147c:	54fffdc1 	b.ne	40081434 <print_int+0x5c>  // b.any
+    }
+
+    if (s)
+    40081480:	b94067e0 	ldr	w0, [sp, #100]
+    40081484:	7100001f 	cmp	w0, #0x0
+    40081488:	540000c0 	b.eq	400814a0 <print_int+0xc8>  // b.none
+	*p++ = '-';
+    4008148c:	f94037e0 	ldr	x0, [sp, #104]
+    40081490:	91000401 	add	x1, x0, #0x1
+    40081494:	f90037e1 	str	x1, [sp, #104]
+    40081498:	528005a1 	mov	w1, #0x2d                  	// #45
+    4008149c:	39000001 	strb	w1, [x0]
+
+    if (p == buf)
+    400814a0:	910103e0 	add	x0, sp, #0x40
+    400814a4:	f94037e1 	ldr	x1, [sp, #104]
+    400814a8:	eb00003f 	cmp	x1, x0
+    400814ac:	540000c1 	b.ne	400814c4 <print_int+0xec>  // b.any
+	*p++ = '0';
+    400814b0:	f94037e0 	ldr	x0, [sp, #104]
+    400814b4:	91000401 	add	x1, x0, #0x1
+    400814b8:	f90037e1 	str	x1, [sp, #104]
+    400814bc:	52800601 	mov	w1, #0x30                  	// #48
+    400814c0:	39000001 	strb	w1, [x0]
+
+    for (i = 0; i < (p - buf) / 2; ++i) {
+    400814c4:	b90063ff 	str	wzr, [sp, #96]
+    400814c8:	14000018 	b	40081528 <print_int+0x150>
+        char tmp;
+
+        tmp = buf[i];
+    400814cc:	b98063e0 	ldrsw	x0, [sp, #96]
+    400814d0:	910103e1 	add	x1, sp, #0x40
+    400814d4:	38606820 	ldrb	w0, [x1, x0]
+    400814d8:	39017fe0 	strb	w0, [sp, #95]
+        buf[i] = p[-1-i];
+    400814dc:	b94063e0 	ldr	w0, [sp, #96]
+    400814e0:	2a2003e0 	mvn	w0, w0
+    400814e4:	93407c00 	sxtw	x0, w0
+    400814e8:	f94037e1 	ldr	x1, [sp, #104]
+    400814ec:	8b000020 	add	x0, x1, x0
+    400814f0:	39400002 	ldrb	w2, [x0]
+    400814f4:	b98063e0 	ldrsw	x0, [sp, #96]
+    400814f8:	910103e1 	add	x1, sp, #0x40
+    400814fc:	38206822 	strb	w2, [x1, x0]
+        p[-1-i] = tmp;
+    40081500:	b94063e0 	ldr	w0, [sp, #96]
+    40081504:	2a2003e0 	mvn	w0, w0
+    40081508:	93407c00 	sxtw	x0, w0
+    4008150c:	f94037e1 	ldr	x1, [sp, #104]
+    40081510:	8b000020 	add	x0, x1, x0
+    40081514:	39417fe1 	ldrb	w1, [sp, #95]
+    40081518:	39000001 	strb	w1, [x0]
+    for (i = 0; i < (p - buf) / 2; ++i) {
+    4008151c:	b94063e0 	ldr	w0, [sp, #96]
+    40081520:	11000400 	add	w0, w0, #0x1
+    40081524:	b90063e0 	str	w0, [sp, #96]
+    40081528:	b98063e1 	ldrsw	x1, [sp, #96]
+    4008152c:	910103e0 	add	x0, sp, #0x40
+    40081530:	f94037e2 	ldr	x2, [sp, #104]
+    40081534:	cb000040 	sub	x0, x2, x0
+    40081538:	d37ffc02 	lsr	x2, x0, #63
+    4008153c:	8b000040 	add	x0, x2, x0
+    40081540:	9341fc00 	asr	x0, x0, #1
+    40081544:	eb00003f 	cmp	x1, x0
+    40081548:	54fffc2b 	b.lt	400814cc <print_int+0xf4>  // b.tstop
+    }
+
+    *p = 0;
+    4008154c:	f94037e0 	ldr	x0, [sp, #104]
+    40081550:	3900001f 	strb	wzr, [x0]
+
+    print_str(ps, buf, props);
+    40081554:	f841c3e2 	ldur	x2, [sp, #28]
+    40081558:	b94027e1 	ldr	w1, [sp, #36]
+    4008155c:	910103e0 	add	x0, sp, #0x40
+    40081560:	aa0103e3 	mov	x3, x1
+    40081564:	aa0003e1 	mov	x1, x0
+    40081568:	f9401fe0 	ldr	x0, [sp, #56]
+    4008156c:	97ffff53 	bl	400812b8 <print_str>
+}
+    40081570:	d503201f 	nop
+    40081574:	a8c77bfd 	ldp	x29, x30, [sp], #112
+    40081578:	d65f03c0 	ret
+
+000000004008157c <print_unsigned>:
+
+static void print_unsigned(pstream_t *ps, uint32_t n, int base,
+			   strprops_t props)
+{
+    4008157c:	a9b97bfd 	stp	x29, x30, [sp, #-112]!
+    40081580:	910003fd 	mov	x29, sp
+    40081584:	f9001fe0 	str	x0, [sp, #56]
+    40081588:	f9001be1 	str	x1, [sp, #48]
+    4008158c:	b9002fe2 	str	w2, [sp, #44]
+    40081590:	aa0303e0 	mov	x0, x3
+    40081594:	aa0403e1 	mov	x1, x4
+    40081598:	f801c3e0 	stur	x0, [sp, #28]
+    4008159c:	b94027e0 	ldr	w0, [sp, #36]
+    400815a0:	33007c20 	bfxil	w0, w1, #0, #32
+    400815a4:	b90027e0 	str	w0, [sp, #36]
+    char buf[sizeof(long) * 3 + 3], *p = buf;
+    400815a8:	910123e0 	add	x0, sp, #0x48
+    400815ac:	f90037e0 	str	x0, [sp, #104]
+    int i;
+
+    while (n) {
+    400815b0:	14000011 	b	400815f4 <print_unsigned+0x78>
+	*p++ = digits[n % base];
+    400815b4:	b9802fe1 	ldrsw	x1, [sp, #44]
+    400815b8:	f9401be0 	ldr	x0, [sp, #48]
+    400815bc:	9ac10802 	udiv	x2, x0, x1
+    400815c0:	9b017c41 	mul	x1, x2, x1
+    400815c4:	cb010001 	sub	x1, x0, x1
+    400815c8:	f94037e0 	ldr	x0, [sp, #104]
+    400815cc:	91000402 	add	x2, x0, #0x1
+    400815d0:	f90037e2 	str	x2, [sp, #104]
+    400815d4:	b0000002 	adrp	x2, 40082000 <snprintf>
+    400815d8:	913fe042 	add	x2, x2, #0xff8
+    400815dc:	38616841 	ldrb	w1, [x2, x1]
+    400815e0:	39000001 	strb	w1, [x0]
+	n /= base;
+    400815e4:	b9802fe0 	ldrsw	x0, [sp, #44]
+    400815e8:	f9401be1 	ldr	x1, [sp, #48]
+    400815ec:	9ac00820 	udiv	x0, x1, x0
+    400815f0:	f9001be0 	str	x0, [sp, #48]
+    while (n) {
+    400815f4:	f9401be0 	ldr	x0, [sp, #48]
+    400815f8:	f100001f 	cmp	x0, #0x0
+    400815fc:	54fffdc1 	b.ne	400815b4 <print_unsigned+0x38>  // b.any
+    }
+
+    if (p == buf)
+    40081600:	910123e0 	add	x0, sp, #0x48
+    40081604:	f94037e1 	ldr	x1, [sp, #104]
+    40081608:	eb00003f 	cmp	x1, x0
+    4008160c:	540000e1 	b.ne	40081628 <print_unsigned+0xac>  // b.any
+	*p++ = '0';
+    40081610:	f94037e0 	ldr	x0, [sp, #104]
+    40081614:	91000401 	add	x1, x0, #0x1
+    40081618:	f90037e1 	str	x1, [sp, #104]
+    4008161c:	52800601 	mov	w1, #0x30                  	// #48
+    40081620:	39000001 	strb	w1, [x0]
+    40081624:	14000024 	b	400816b4 <print_unsigned+0x138>
+    else if (props.alternate && base == 16) {
+    40081628:	394093e0 	ldrb	w0, [sp, #36]
+    4008162c:	7100001f 	cmp	w0, #0x0
+    40081630:	54000420 	b.eq	400816b4 <print_unsigned+0x138>  // b.none
+    40081634:	b9402fe0 	ldr	w0, [sp, #44]
+    40081638:	7100401f 	cmp	w0, #0x10
+    4008163c:	540003c1 	b.ne	400816b4 <print_unsigned+0x138>  // b.any
+	if (props.pad == '0') {
+    40081640:	394073e0 	ldrb	w0, [sp, #28]
+    40081644:	7100c01f 	cmp	w0, #0x30
+    40081648:	54000221 	b.ne	4008168c <print_unsigned+0x110>  // b.any
+	    addchar(ps, '0');
+    4008164c:	52800601 	mov	w1, #0x30                  	// #48
+    40081650:	f9401fe0 	ldr	x0, [sp, #56]
+    40081654:	97fffefe 	bl	4008124c <addchar>
+	    addchar(ps, 'x');
+    40081658:	52800f01 	mov	w1, #0x78                  	// #120
+    4008165c:	f9401fe0 	ldr	x0, [sp, #56]
+    40081660:	97fffefb 	bl	4008124c <addchar>
+
+	    if (props.npad > 0)
+    40081664:	b94023e0 	ldr	w0, [sp, #32]
+    40081668:	7100001f 	cmp	w0, #0x0
+    4008166c:	5400024d 	b.le	400816b4 <print_unsigned+0x138>
+		props.npad = MAX(props.npad - 2, 0);
+    40081670:	b94023e0 	ldr	w0, [sp, #32]
+    40081674:	52800041 	mov	w1, #0x2                   	// #2
+    40081678:	7100081f 	cmp	w0, #0x2
+    4008167c:	1a81a000 	csel	w0, w0, w1, ge  // ge = tcont
+    40081680:	51000800 	sub	w0, w0, #0x2
+    40081684:	b90023e0 	str	w0, [sp, #32]
+    40081688:	1400000b 	b	400816b4 <print_unsigned+0x138>
+	} else {
+	    *p++ = 'x';
+    4008168c:	f94037e0 	ldr	x0, [sp, #104]
+    40081690:	91000401 	add	x1, x0, #0x1
+    40081694:	f90037e1 	str	x1, [sp, #104]
+    40081698:	52800f01 	mov	w1, #0x78                  	// #120
+    4008169c:	39000001 	strb	w1, [x0]
+	    *p++ = '0';
+    400816a0:	f94037e0 	ldr	x0, [sp, #104]
+    400816a4:	91000401 	add	x1, x0, #0x1
+    400816a8:	f90037e1 	str	x1, [sp, #104]
+    400816ac:	52800601 	mov	w1, #0x30                  	// #48
+    400816b0:	39000001 	strb	w1, [x0]
+	}
+    }
+
+    for (i = 0; i < (p - buf) / 2; ++i) {
+    400816b4:	b90067ff 	str	wzr, [sp, #100]
+    400816b8:	14000018 	b	40081718 <print_unsigned+0x19c>
+	char tmp;
+
+	tmp = buf[i];
+    400816bc:	b98067e0 	ldrsw	x0, [sp, #100]
+    400816c0:	910123e1 	add	x1, sp, #0x48
+    400816c4:	38606820 	ldrb	w0, [x1, x0]
+    400816c8:	39018fe0 	strb	w0, [sp, #99]
+	buf[i] = p[-1-i];
+    400816cc:	b94067e0 	ldr	w0, [sp, #100]
+    400816d0:	2a2003e0 	mvn	w0, w0
+    400816d4:	93407c00 	sxtw	x0, w0
+    400816d8:	f94037e1 	ldr	x1, [sp, #104]
+    400816dc:	8b000020 	add	x0, x1, x0
+    400816e0:	39400002 	ldrb	w2, [x0]
+    400816e4:	b98067e0 	ldrsw	x0, [sp, #100]
+    400816e8:	910123e1 	add	x1, sp, #0x48
+    400816ec:	38206822 	strb	w2, [x1, x0]
+	p[-1-i] = tmp;
+    400816f0:	b94067e0 	ldr	w0, [sp, #100]
+    400816f4:	2a2003e0 	mvn	w0, w0
+    400816f8:	93407c00 	sxtw	x0, w0
+    400816fc:	f94037e1 	ldr	x1, [sp, #104]
+    40081700:	8b000020 	add	x0, x1, x0
+    40081704:	39418fe1 	ldrb	w1, [sp, #99]
+    40081708:	39000001 	strb	w1, [x0]
+    for (i = 0; i < (p - buf) / 2; ++i) {
+    4008170c:	b94067e0 	ldr	w0, [sp, #100]
+    40081710:	11000400 	add	w0, w0, #0x1
+    40081714:	b90067e0 	str	w0, [sp, #100]
+    40081718:	b98067e1 	ldrsw	x1, [sp, #100]
+    4008171c:	910123e0 	add	x0, sp, #0x48
+    40081720:	f94037e2 	ldr	x2, [sp, #104]
+    40081724:	cb000040 	sub	x0, x2, x0
+    40081728:	d37ffc02 	lsr	x2, x0, #63
+    4008172c:	8b000040 	add	x0, x2, x0
+    40081730:	9341fc00 	asr	x0, x0, #1
+    40081734:	eb00003f 	cmp	x1, x0
+    40081738:	54fffc2b 	b.lt	400816bc <print_unsigned+0x140>  // b.tstop
+    }
+
+    *p = 0;
+    4008173c:	f94037e0 	ldr	x0, [sp, #104]
+    40081740:	3900001f 	strb	wzr, [x0]
+
+    print_str(ps, buf, props);
+    40081744:	f841c3e2 	ldur	x2, [sp, #28]
+    40081748:	b94027e1 	ldr	w1, [sp, #36]
+    4008174c:	910123e0 	add	x0, sp, #0x48
+    40081750:	aa0103e3 	mov	x3, x1
+    40081754:	aa0003e1 	mov	x1, x0
+    40081758:	f9401fe0 	ldr	x0, [sp, #56]
+    4008175c:	97fffed7 	bl	400812b8 <print_str>
+}
+    40081760:	d503201f 	nop
+    40081764:	a8c77bfd 	ldp	x29, x30, [sp], #112
+    40081768:	d65f03c0 	ret
+
+000000004008176c <fmtnum>:
+
+static int fmtnum(const char **fmt)
+{
+    4008176c:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+    40081770:	910003fd 	mov	x29, sp
+    40081774:	f9000fe0 	str	x0, [sp, #24]
+    const char *f = *fmt;
+    40081778:	f9400fe0 	ldr	x0, [sp, #24]
+    4008177c:	f9400000 	ldr	x0, [x0]
+    40081780:	f90017e0 	str	x0, [sp, #40]
+    int len = 0, num;
+    40081784:	b90027ff 	str	wzr, [sp, #36]
+
+    if (*f == '-')
+    40081788:	f94017e0 	ldr	x0, [sp, #40]
+    4008178c:	39400000 	ldrb	w0, [x0]
+    40081790:	7100b41f 	cmp	w0, #0x2d
+    40081794:	540001c1 	b.ne	400817cc <fmtnum+0x60>  // b.any
+	++f, ++len;
+    40081798:	f94017e0 	ldr	x0, [sp, #40]
+    4008179c:	91000400 	add	x0, x0, #0x1
+    400817a0:	f90017e0 	str	x0, [sp, #40]
+    400817a4:	b94027e0 	ldr	w0, [sp, #36]
+    400817a8:	11000400 	add	w0, w0, #0x1
+    400817ac:	b90027e0 	str	w0, [sp, #36]
+
+    while (*f >= '0' && *f <= '9')
+    400817b0:	14000007 	b	400817cc <fmtnum+0x60>
+	++f, ++len;
+    400817b4:	f94017e0 	ldr	x0, [sp, #40]
+    400817b8:	91000400 	add	x0, x0, #0x1
+    400817bc:	f90017e0 	str	x0, [sp, #40]
+    400817c0:	b94027e0 	ldr	w0, [sp, #36]
+    400817c4:	11000400 	add	w0, w0, #0x1
+    400817c8:	b90027e0 	str	w0, [sp, #36]
+    while (*f >= '0' && *f <= '9')
+    400817cc:	f94017e0 	ldr	x0, [sp, #40]
+    400817d0:	39400000 	ldrb	w0, [x0]
+    400817d4:	7100bc1f 	cmp	w0, #0x2f
+    400817d8:	540000a9 	b.ls	400817ec <fmtnum+0x80>  // b.plast
+    400817dc:	f94017e0 	ldr	x0, [sp, #40]
+    400817e0:	39400000 	ldrb	w0, [x0]
+    400817e4:	7100e41f 	cmp	w0, #0x39
+    400817e8:	54fffe69 	b.ls	400817b4 <fmtnum+0x48>  // b.plast
+
+    num = atol(*fmt);
+    400817ec:	f9400fe0 	ldr	x0, [sp, #24]
+    400817f0:	f9400000 	ldr	x0, [x0]
+    400817f4:	940004ac 	bl	40082aa4 <atol>
+    400817f8:	b90023e0 	str	w0, [sp, #32]
+    *fmt += len;
+    400817fc:	f9400fe0 	ldr	x0, [sp, #24]
+    40081800:	f9400001 	ldr	x1, [x0]
+    40081804:	b98027e0 	ldrsw	x0, [sp, #36]
+    40081808:	8b000021 	add	x1, x1, x0
+    4008180c:	f9400fe0 	ldr	x0, [sp, #24]
+    40081810:	f9000001 	str	x1, [x0]
+    return num;
+    40081814:	b94023e0 	ldr	w0, [sp, #32]
+}
+    40081818:	a8c37bfd 	ldp	x29, x30, [sp], #48
+    4008181c:	d65f03c0 	ret
+
+0000000040081820 <vsnprintf>:
+
+int vsnprintf(char *buf, int size, const char *fmt, va_list va)
+{
+    40081820:	a9b97bfd 	stp	x29, x30, [sp, #-112]!
+    40081824:	910003fd 	mov	x29, sp
+    40081828:	f9000bf3 	str	x19, [sp, #16]
+    4008182c:	f9001fe0 	str	x0, [sp, #56]
+    40081830:	b90037e1 	str	w1, [sp, #52]
+    40081834:	f90017e2 	str	x2, [sp, #40]
+    40081838:	aa0303f3 	mov	x19, x3
+    pstream_t s;
+
+    s.buffer = buf;
+    4008183c:	f9401fe0 	ldr	x0, [sp, #56]
+    40081840:	f9002fe0 	str	x0, [sp, #88]
+    s.remain = size - 1;
+    40081844:	b94037e0 	ldr	w0, [sp, #52]
+    40081848:	51000400 	sub	w0, w0, #0x1
+    4008184c:	b90063e0 	str	w0, [sp, #96]
+    s.added = 0;
+    40081850:	b90067ff 	str	wzr, [sp, #100]
+    while (*fmt) {
+    40081854:	140001e1 	b	40081fd8 <vsnprintf+0x7b8>
+	char f = *fmt++;
+    40081858:	f94017e0 	ldr	x0, [sp, #40]
+    4008185c:	91000401 	add	x1, x0, #0x1
+    40081860:	f90017e1 	str	x1, [sp, #40]
+    40081864:	39400000 	ldrb	w0, [x0]
+    40081868:	3901afe0 	strb	w0, [sp, #107]
+	int nlong = 0;
+    4008186c:	b9006fff 	str	wzr, [sp, #108]
+	strprops_t props;
+	memset(&props, 0, sizeof(props));
+    40081870:	910123e0 	add	x0, sp, #0x48
+    40081874:	d2800182 	mov	x2, #0xc                   	// #12
+    40081878:	52800001 	mov	w1, #0x0                   	// #0
+    4008187c:	940003e1 	bl	40082800 <memset>
+	props.pad = ' ';
+    40081880:	52800400 	mov	w0, #0x20                  	// #32
+    40081884:	390123e0 	strb	w0, [sp, #72]
+
+	if (f != '%') {
+    40081888:	3941afe0 	ldrb	w0, [sp, #107]
+    4008188c:	7100941f 	cmp	w0, #0x25
+    40081890:	540000a0 	b.eq	400818a4 <vsnprintf+0x84>  // b.none
+	    addchar(&s, f);
+    40081894:	910163e0 	add	x0, sp, #0x58
+    40081898:	3941afe1 	ldrb	w1, [sp, #107]
+    4008189c:	97fffe6c 	bl	4008124c <addchar>
+    400818a0:	140001ce 	b	40081fd8 <vsnprintf+0x7b8>
+	    continue;
+	}
+    morefmt:
+    400818a4:	d503201f 	nop
+	f = *fmt++;
+    400818a8:	f94017e0 	ldr	x0, [sp, #40]
+    400818ac:	91000401 	add	x1, x0, #0x1
+    400818b0:	f90017e1 	str	x1, [sp, #40]
+    400818b4:	39400000 	ldrb	w0, [x0]
+    400818b8:	3901afe0 	strb	w0, [sp, #107]
+	switch (f) {
+    400818bc:	3941afe0 	ldrb	w0, [sp, #107]
+    400818c0:	7101e81f 	cmp	w0, #0x7a
+    400818c4:	54000d80 	b.eq	40081a74 <vsnprintf+0x254>  // b.none
+    400818c8:	7101e81f 	cmp	w0, #0x7a
+    400818cc:	540037ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    400818d0:	7101e01f 	cmp	w0, #0x78
+    400818d4:	540024a0 	b.eq	40081d68 <vsnprintf+0x548>  // b.none
+    400818d8:	7101e01f 	cmp	w0, #0x78
+    400818dc:	5400376c 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    400818e0:	7101d41f 	cmp	w0, #0x75
+    400818e4:	54001880 	b.eq	40081bf4 <vsnprintf+0x3d4>  // b.none
+    400818e8:	7101d41f 	cmp	w0, #0x75
+    400818ec:	540036ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    400818f0:	7101d01f 	cmp	w0, #0x74
+    400818f4:	54000c00 	b.eq	40081a74 <vsnprintf+0x254>  // b.none
+    400818f8:	7101d01f 	cmp	w0, #0x74
+    400818fc:	5400366c 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081900:	7101cc1f 	cmp	w0, #0x73
+    40081904:	540032e0 	b.eq	40081f60 <vsnprintf+0x740>  // b.none
+    40081908:	7101cc1f 	cmp	w0, #0x73
+    4008190c:	540035ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081910:	7101c01f 	cmp	w0, #0x70
+    40081914:	54002e40 	b.eq	40081edc <vsnprintf+0x6bc>  // b.none
+    40081918:	7101c01f 	cmp	w0, #0x70
+    4008191c:	5400356c 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081920:	7101b01f 	cmp	w0, #0x6c
+    40081924:	54000a00 	b.eq	40081a64 <vsnprintf+0x244>  // b.none
+    40081928:	7101b01f 	cmp	w0, #0x6c
+    4008192c:	540034ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081930:	7101901f 	cmp	w0, #0x64
+    40081934:	54000a60 	b.eq	40081a80 <vsnprintf+0x260>  // b.none
+    40081938:	7101901f 	cmp	w0, #0x64
+    4008193c:	5400346c 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081940:	71018c1f 	cmp	w0, #0x63
+    40081944:	54000380 	b.eq	400819b4 <vsnprintf+0x194>  // b.none
+    40081948:	71018c1f 	cmp	w0, #0x63
+    4008194c:	540033ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081950:	7100e41f 	cmp	w0, #0x39
+    40081954:	540033ac 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081958:	7100c41f 	cmp	w0, #0x31
+    4008195c:	5400076a 	b.ge	40081a48 <vsnprintf+0x228>  // b.tcont
+    40081960:	7100c01f 	cmp	w0, #0x30
+    40081964:	54000680 	b.eq	40081a34 <vsnprintf+0x214>  // b.none
+    40081968:	7100c01f 	cmp	w0, #0x30
+    4008196c:	540032ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081970:	7100b41f 	cmp	w0, #0x2d
+    40081974:	540006a0 	b.eq	40081a48 <vsnprintf+0x228>  // b.none
+    40081978:	7100b41f 	cmp	w0, #0x2d
+    4008197c:	5400326c 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081980:	7100941f 	cmp	w0, #0x25
+    40081984:	54000100 	b.eq	400819a4 <vsnprintf+0x184>  // b.none
+    40081988:	7100941f 	cmp	w0, #0x25
+    4008198c:	540031ec 	b.gt	40081fc8 <vsnprintf+0x7a8>
+    40081990:	7100001f 	cmp	w0, #0x0
+    40081994:	54000420 	b.eq	40081a18 <vsnprintf+0x1f8>  // b.none
+    40081998:	71008c1f 	cmp	w0, #0x23
+    4008199c:	54000460 	b.eq	40081a28 <vsnprintf+0x208>  // b.none
+    400819a0:	1400018a 	b	40081fc8 <vsnprintf+0x7a8>
+	case '%':
+	    addchar(&s, '%');
+    400819a4:	910163e0 	add	x0, sp, #0x58
+    400819a8:	528004a1 	mov	w1, #0x25                  	// #37
+    400819ac:	97fffe28 	bl	4008124c <addchar>
+	    break;
+    400819b0:	1400018a 	b	40081fd8 <vsnprintf+0x7b8>
+	case 'c':
+            addchar(&s, va_arg(va, int));
+    400819b4:	b9401a61 	ldr	w1, [x19, #24]
+    400819b8:	f9400260 	ldr	x0, [x19]
+    400819bc:	7100003f 	cmp	w1, #0x0
+    400819c0:	540000ab 	b.lt	400819d4 <vsnprintf+0x1b4>  // b.tstop
+    400819c4:	91002c01 	add	x1, x0, #0xb
+    400819c8:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    400819cc:	f9000261 	str	x1, [x19]
+    400819d0:	1400000d 	b	40081a04 <vsnprintf+0x1e4>
+    400819d4:	11002022 	add	w2, w1, #0x8
+    400819d8:	b9001a62 	str	w2, [x19, #24]
+    400819dc:	b9401a62 	ldr	w2, [x19, #24]
+    400819e0:	7100005f 	cmp	w2, #0x0
+    400819e4:	540000ad 	b.le	400819f8 <vsnprintf+0x1d8>
+    400819e8:	91002c01 	add	x1, x0, #0xb
+    400819ec:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    400819f0:	f9000261 	str	x1, [x19]
+    400819f4:	14000004 	b	40081a04 <vsnprintf+0x1e4>
+    400819f8:	f9400662 	ldr	x2, [x19, #8]
+    400819fc:	93407c20 	sxtw	x0, w1
+    40081a00:	8b000040 	add	x0, x2, x0
+    40081a04:	b9400000 	ldr	w0, [x0]
+    40081a08:	12001c01 	and	w1, w0, #0xff
+    40081a0c:	910163e0 	add	x0, sp, #0x58
+    40081a10:	97fffe0f 	bl	4008124c <addchar>
+	    break;
+    40081a14:	14000171 	b	40081fd8 <vsnprintf+0x7b8>
+	case '\0':
+	    --fmt;
+    40081a18:	f94017e0 	ldr	x0, [sp, #40]
+    40081a1c:	d1000400 	sub	x0, x0, #0x1
+    40081a20:	f90017e0 	str	x0, [sp, #40]
+	    break;
+    40081a24:	1400016d 	b	40081fd8 <vsnprintf+0x7b8>
+	case '#':
+	    props.alternate = true;
+    40081a28:	52800020 	mov	w0, #0x1                   	// #1
+    40081a2c:	390143e0 	strb	w0, [sp, #80]
+	    goto morefmt;
+    40081a30:	17ffff9e 	b	400818a8 <vsnprintf+0x88>
+	case '0':
+	    props.pad = '0';
+    40081a34:	52800600 	mov	w0, #0x30                  	// #48
+    40081a38:	390123e0 	strb	w0, [sp, #72]
+	    ++fmt;
+    40081a3c:	f94017e0 	ldr	x0, [sp, #40]
+    40081a40:	91000400 	add	x0, x0, #0x1
+    40081a44:	f90017e0 	str	x0, [sp, #40]
+	    /* fall through */
+	case '1'...'9':
+	case '-':
+	    --fmt;
+    40081a48:	f94017e0 	ldr	x0, [sp, #40]
+    40081a4c:	d1000400 	sub	x0, x0, #0x1
+    40081a50:	f90017e0 	str	x0, [sp, #40]
+	    props.npad = fmtnum(&fmt);
+    40081a54:	9100a3e0 	add	x0, sp, #0x28
+    40081a58:	97ffff45 	bl	4008176c <fmtnum>
+    40081a5c:	b9004fe0 	str	w0, [sp, #76]
+	    goto morefmt;
+    40081a60:	17ffff92 	b	400818a8 <vsnprintf+0x88>
+	case 'l':
+	    ++nlong;
+    40081a64:	b9406fe0 	ldr	w0, [sp, #108]
+    40081a68:	11000400 	add	w0, w0, #0x1
+    40081a6c:	b9006fe0 	str	w0, [sp, #108]
+	    goto morefmt;
+    40081a70:	17ffff8e 	b	400818a8 <vsnprintf+0x88>
+	    /* Here we only care that sizeof(size_t) == sizeof(long).
+	     * On a 32-bit platform it doesn't matter that size_t is
+	     * typedef'ed to int or long; va_arg will work either way.
+	     * Same for ptrdiff_t (%td).
+	     */
+	    nlong = 1;
+    40081a74:	52800020 	mov	w0, #0x1                   	// #1
+    40081a78:	b9006fe0 	str	w0, [sp, #108]
+	    goto morefmt;
+    40081a7c:	17ffff8b 	b	400818a8 <vsnprintf+0x88>
+    40081a80:	b9406fe0 	ldr	w0, [sp, #108]
+    40081a84:	7100001f 	cmp	w0, #0x0
+    40081a88:	540000a0 	b.eq	40081a9c <vsnprintf+0x27c>  // b.none
+    40081a8c:	b9406fe0 	ldr	w0, [sp, #108]
+    40081a90:	7100041f 	cmp	w0, #0x1
+    40081a94:	540003e0 	b.eq	40081b10 <vsnprintf+0x2f0>  // b.none
+    40081a98:	1400003a 	b	40081b80 <vsnprintf+0x360>
+	case 'd':
+	    switch (nlong) {
+	    case 0:
+		print_int(&s, va_arg(va, int), 10, props);
+    40081a9c:	b9401a61 	ldr	w1, [x19, #24]
+    40081aa0:	f9400260 	ldr	x0, [x19]
+    40081aa4:	7100003f 	cmp	w1, #0x0
+    40081aa8:	540000ab 	b.lt	40081abc <vsnprintf+0x29c>  // b.tstop
+    40081aac:	91002c01 	add	x1, x0, #0xb
+    40081ab0:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081ab4:	f9000261 	str	x1, [x19]
+    40081ab8:	1400000d 	b	40081aec <vsnprintf+0x2cc>
+    40081abc:	11002022 	add	w2, w1, #0x8
+    40081ac0:	b9001a62 	str	w2, [x19, #24]
+    40081ac4:	b9401a62 	ldr	w2, [x19, #24]
+    40081ac8:	7100005f 	cmp	w2, #0x0
+    40081acc:	540000ad 	b.le	40081ae0 <vsnprintf+0x2c0>
+    40081ad0:	91002c01 	add	x1, x0, #0xb
+    40081ad4:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081ad8:	f9000261 	str	x1, [x19]
+    40081adc:	14000004 	b	40081aec <vsnprintf+0x2cc>
+    40081ae0:	f9400662 	ldr	x2, [x19, #8]
+    40081ae4:	93407c20 	sxtw	x0, w1
+    40081ae8:	8b000040 	add	x0, x2, x0
+    40081aec:	b9400000 	ldr	w0, [x0]
+    40081af0:	93407c01 	sxtw	x1, w0
+    40081af4:	f94027e3 	ldr	x3, [sp, #72]
+    40081af8:	b94053e2 	ldr	w2, [sp, #80]
+    40081afc:	910163e0 	add	x0, sp, #0x58
+    40081b00:	aa0203e4 	mov	x4, x2
+    40081b04:	52800142 	mov	w2, #0xa                   	// #10
+    40081b08:	97fffe34 	bl	400813d8 <print_int>
+		break;
+    40081b0c:	14000039 	b	40081bf0 <vsnprintf+0x3d0>
+	    case 1:
+		print_int(&s, va_arg(va, long), 10, props);
+    40081b10:	b9401a61 	ldr	w1, [x19, #24]
+    40081b14:	f9400260 	ldr	x0, [x19]
+    40081b18:	7100003f 	cmp	w1, #0x0
+    40081b1c:	540000ab 	b.lt	40081b30 <vsnprintf+0x310>  // b.tstop
+    40081b20:	91003c01 	add	x1, x0, #0xf
+    40081b24:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081b28:	f9000261 	str	x1, [x19]
+    40081b2c:	1400000d 	b	40081b60 <vsnprintf+0x340>
+    40081b30:	11002022 	add	w2, w1, #0x8
+    40081b34:	b9001a62 	str	w2, [x19, #24]
+    40081b38:	b9401a62 	ldr	w2, [x19, #24]
+    40081b3c:	7100005f 	cmp	w2, #0x0
+    40081b40:	540000ad 	b.le	40081b54 <vsnprintf+0x334>
+    40081b44:	91003c01 	add	x1, x0, #0xf
+    40081b48:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081b4c:	f9000261 	str	x1, [x19]
+    40081b50:	14000004 	b	40081b60 <vsnprintf+0x340>
+    40081b54:	f9400662 	ldr	x2, [x19, #8]
+    40081b58:	93407c20 	sxtw	x0, w1
+    40081b5c:	8b000040 	add	x0, x2, x0
+    40081b60:	f9400001 	ldr	x1, [x0]
+    40081b64:	f94027e3 	ldr	x3, [sp, #72]
+    40081b68:	b94053e2 	ldr	w2, [sp, #80]
+    40081b6c:	910163e0 	add	x0, sp, #0x58
+    40081b70:	aa0203e4 	mov	x4, x2
+    40081b74:	52800142 	mov	w2, #0xa                   	// #10
+    40081b78:	97fffe18 	bl	400813d8 <print_int>
+		break;
+    40081b7c:	1400001d 	b	40081bf0 <vsnprintf+0x3d0>
+	    default:
+		print_int(&s, va_arg(va, long long), 10, props);
+    40081b80:	b9401a61 	ldr	w1, [x19, #24]
+    40081b84:	f9400260 	ldr	x0, [x19]
+    40081b88:	7100003f 	cmp	w1, #0x0
+    40081b8c:	540000ab 	b.lt	40081ba0 <vsnprintf+0x380>  // b.tstop
+    40081b90:	91003c01 	add	x1, x0, #0xf
+    40081b94:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081b98:	f9000261 	str	x1, [x19]
+    40081b9c:	1400000d 	b	40081bd0 <vsnprintf+0x3b0>
+    40081ba0:	11002022 	add	w2, w1, #0x8
+    40081ba4:	b9001a62 	str	w2, [x19, #24]
+    40081ba8:	b9401a62 	ldr	w2, [x19, #24]
+    40081bac:	7100005f 	cmp	w2, #0x0
+    40081bb0:	540000ad 	b.le	40081bc4 <vsnprintf+0x3a4>
+    40081bb4:	91003c01 	add	x1, x0, #0xf
+    40081bb8:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081bbc:	f9000261 	str	x1, [x19]
+    40081bc0:	14000004 	b	40081bd0 <vsnprintf+0x3b0>
+    40081bc4:	f9400662 	ldr	x2, [x19, #8]
+    40081bc8:	93407c20 	sxtw	x0, w1
+    40081bcc:	8b000040 	add	x0, x2, x0
+    40081bd0:	f9400001 	ldr	x1, [x0]
+    40081bd4:	f94027e3 	ldr	x3, [sp, #72]
+    40081bd8:	b94053e2 	ldr	w2, [sp, #80]
+    40081bdc:	910163e0 	add	x0, sp, #0x58
+    40081be0:	aa0203e4 	mov	x4, x2
+    40081be4:	52800142 	mov	w2, #0xa                   	// #10
+    40081be8:	97fffdfc 	bl	400813d8 <print_int>
+		break;
+    40081bec:	d503201f 	nop
+	    }
+	    break;
+    40081bf0:	140000fa 	b	40081fd8 <vsnprintf+0x7b8>
+    40081bf4:	b9406fe0 	ldr	w0, [sp, #108]
+    40081bf8:	7100001f 	cmp	w0, #0x0
+    40081bfc:	540000a0 	b.eq	40081c10 <vsnprintf+0x3f0>  // b.none
+    40081c00:	b9406fe0 	ldr	w0, [sp, #108]
+    40081c04:	7100041f 	cmp	w0, #0x1
+    40081c08:	540003e0 	b.eq	40081c84 <vsnprintf+0x464>  // b.none
+    40081c0c:	1400003a 	b	40081cf4 <vsnprintf+0x4d4>
+	case 'u':
+	    switch (nlong) {
+	    case 0:
+		print_unsigned(&s, va_arg(va, unsigned), 10, props);
+    40081c10:	b9401a61 	ldr	w1, [x19, #24]
+    40081c14:	f9400260 	ldr	x0, [x19]
+    40081c18:	7100003f 	cmp	w1, #0x0
+    40081c1c:	540000ab 	b.lt	40081c30 <vsnprintf+0x410>  // b.tstop
+    40081c20:	91002c01 	add	x1, x0, #0xb
+    40081c24:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081c28:	f9000261 	str	x1, [x19]
+    40081c2c:	1400000d 	b	40081c60 <vsnprintf+0x440>
+    40081c30:	11002022 	add	w2, w1, #0x8
+    40081c34:	b9001a62 	str	w2, [x19, #24]
+    40081c38:	b9401a62 	ldr	w2, [x19, #24]
+    40081c3c:	7100005f 	cmp	w2, #0x0
+    40081c40:	540000ad 	b.le	40081c54 <vsnprintf+0x434>
+    40081c44:	91002c01 	add	x1, x0, #0xb
+    40081c48:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081c4c:	f9000261 	str	x1, [x19]
+    40081c50:	14000004 	b	40081c60 <vsnprintf+0x440>
+    40081c54:	f9400662 	ldr	x2, [x19, #8]
+    40081c58:	93407c20 	sxtw	x0, w1
+    40081c5c:	8b000040 	add	x0, x2, x0
+    40081c60:	b9400000 	ldr	w0, [x0]
+    40081c64:	2a0003e1 	mov	w1, w0
+    40081c68:	f94027e3 	ldr	x3, [sp, #72]
+    40081c6c:	b94053e2 	ldr	w2, [sp, #80]
+    40081c70:	910163e0 	add	x0, sp, #0x58
+    40081c74:	aa0203e4 	mov	x4, x2
+    40081c78:	52800142 	mov	w2, #0xa                   	// #10
+    40081c7c:	97fffe40 	bl	4008157c <print_unsigned>
+		break;
+    40081c80:	14000039 	b	40081d64 <vsnprintf+0x544>
+	    case 1:
+		print_unsigned(&s, va_arg(va, uint32_t), 10, props);
+    40081c84:	b9401a61 	ldr	w1, [x19, #24]
+    40081c88:	f9400260 	ldr	x0, [x19]
+    40081c8c:	7100003f 	cmp	w1, #0x0
+    40081c90:	540000ab 	b.lt	40081ca4 <vsnprintf+0x484>  // b.tstop
+    40081c94:	91003c01 	add	x1, x0, #0xf
+    40081c98:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081c9c:	f9000261 	str	x1, [x19]
+    40081ca0:	1400000d 	b	40081cd4 <vsnprintf+0x4b4>
+    40081ca4:	11002022 	add	w2, w1, #0x8
+    40081ca8:	b9001a62 	str	w2, [x19, #24]
+    40081cac:	b9401a62 	ldr	w2, [x19, #24]
+    40081cb0:	7100005f 	cmp	w2, #0x0
+    40081cb4:	540000ad 	b.le	40081cc8 <vsnprintf+0x4a8>
+    40081cb8:	91003c01 	add	x1, x0, #0xf
+    40081cbc:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081cc0:	f9000261 	str	x1, [x19]
+    40081cc4:	14000004 	b	40081cd4 <vsnprintf+0x4b4>
+    40081cc8:	f9400662 	ldr	x2, [x19, #8]
+    40081ccc:	93407c20 	sxtw	x0, w1
+    40081cd0:	8b000040 	add	x0, x2, x0
+    40081cd4:	f9400001 	ldr	x1, [x0]
+    40081cd8:	f94027e3 	ldr	x3, [sp, #72]
+    40081cdc:	b94053e2 	ldr	w2, [sp, #80]
+    40081ce0:	910163e0 	add	x0, sp, #0x58
+    40081ce4:	aa0203e4 	mov	x4, x2
+    40081ce8:	52800142 	mov	w2, #0xa                   	// #10
+    40081cec:	97fffe24 	bl	4008157c <print_unsigned>
+		break;
+    40081cf0:	1400001d 	b	40081d64 <vsnprintf+0x544>
+	    default:
+		print_unsigned(&s, va_arg(va, uint32_t), 10, props);
+    40081cf4:	b9401a61 	ldr	w1, [x19, #24]
+    40081cf8:	f9400260 	ldr	x0, [x19]
+    40081cfc:	7100003f 	cmp	w1, #0x0
+    40081d00:	540000ab 	b.lt	40081d14 <vsnprintf+0x4f4>  // b.tstop
+    40081d04:	91003c01 	add	x1, x0, #0xf
+    40081d08:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081d0c:	f9000261 	str	x1, [x19]
+    40081d10:	1400000d 	b	40081d44 <vsnprintf+0x524>
+    40081d14:	11002022 	add	w2, w1, #0x8
+    40081d18:	b9001a62 	str	w2, [x19, #24]
+    40081d1c:	b9401a62 	ldr	w2, [x19, #24]
+    40081d20:	7100005f 	cmp	w2, #0x0
+    40081d24:	540000ad 	b.le	40081d38 <vsnprintf+0x518>
+    40081d28:	91003c01 	add	x1, x0, #0xf
+    40081d2c:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081d30:	f9000261 	str	x1, [x19]
+    40081d34:	14000004 	b	40081d44 <vsnprintf+0x524>
+    40081d38:	f9400662 	ldr	x2, [x19, #8]
+    40081d3c:	93407c20 	sxtw	x0, w1
+    40081d40:	8b000040 	add	x0, x2, x0
+    40081d44:	f9400001 	ldr	x1, [x0]
+    40081d48:	f94027e3 	ldr	x3, [sp, #72]
+    40081d4c:	b94053e2 	ldr	w2, [sp, #80]
+    40081d50:	910163e0 	add	x0, sp, #0x58
+    40081d54:	aa0203e4 	mov	x4, x2
+    40081d58:	52800142 	mov	w2, #0xa                   	// #10
+    40081d5c:	97fffe08 	bl	4008157c <print_unsigned>
+		break;
+    40081d60:	d503201f 	nop
+	    }
+	    break;
+    40081d64:	1400009d 	b	40081fd8 <vsnprintf+0x7b8>
+    40081d68:	b9406fe0 	ldr	w0, [sp, #108]
+    40081d6c:	7100001f 	cmp	w0, #0x0
+    40081d70:	540000a0 	b.eq	40081d84 <vsnprintf+0x564>  // b.none
+    40081d74:	b9406fe0 	ldr	w0, [sp, #108]
+    40081d78:	7100041f 	cmp	w0, #0x1
+    40081d7c:	540003e0 	b.eq	40081df8 <vsnprintf+0x5d8>  // b.none
+    40081d80:	1400003a 	b	40081e68 <vsnprintf+0x648>
+	case 'x':
+	    switch (nlong) {
+	    case 0:
+		print_unsigned(&s, va_arg(va, unsigned), 16, props);
+    40081d84:	b9401a61 	ldr	w1, [x19, #24]
+    40081d88:	f9400260 	ldr	x0, [x19]
+    40081d8c:	7100003f 	cmp	w1, #0x0
+    40081d90:	540000ab 	b.lt	40081da4 <vsnprintf+0x584>  // b.tstop
+    40081d94:	91002c01 	add	x1, x0, #0xb
+    40081d98:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081d9c:	f9000261 	str	x1, [x19]
+    40081da0:	1400000d 	b	40081dd4 <vsnprintf+0x5b4>
+    40081da4:	11002022 	add	w2, w1, #0x8
+    40081da8:	b9001a62 	str	w2, [x19, #24]
+    40081dac:	b9401a62 	ldr	w2, [x19, #24]
+    40081db0:	7100005f 	cmp	w2, #0x0
+    40081db4:	540000ad 	b.le	40081dc8 <vsnprintf+0x5a8>
+    40081db8:	91002c01 	add	x1, x0, #0xb
+    40081dbc:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081dc0:	f9000261 	str	x1, [x19]
+    40081dc4:	14000004 	b	40081dd4 <vsnprintf+0x5b4>
+    40081dc8:	f9400662 	ldr	x2, [x19, #8]
+    40081dcc:	93407c20 	sxtw	x0, w1
+    40081dd0:	8b000040 	add	x0, x2, x0
+    40081dd4:	b9400000 	ldr	w0, [x0]
+    40081dd8:	2a0003e1 	mov	w1, w0
+    40081ddc:	f94027e3 	ldr	x3, [sp, #72]
+    40081de0:	b94053e2 	ldr	w2, [sp, #80]
+    40081de4:	910163e0 	add	x0, sp, #0x58
+    40081de8:	aa0203e4 	mov	x4, x2
+    40081dec:	52800202 	mov	w2, #0x10                  	// #16
+    40081df0:	97fffde3 	bl	4008157c <print_unsigned>
+		break;
+    40081df4:	14000039 	b	40081ed8 <vsnprintf+0x6b8>
+	    case 1:
+		print_unsigned(&s, va_arg(va, uint32_t), 16, props);
+    40081df8:	b9401a61 	ldr	w1, [x19, #24]
+    40081dfc:	f9400260 	ldr	x0, [x19]
+    40081e00:	7100003f 	cmp	w1, #0x0
+    40081e04:	540000ab 	b.lt	40081e18 <vsnprintf+0x5f8>  // b.tstop
+    40081e08:	91003c01 	add	x1, x0, #0xf
+    40081e0c:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081e10:	f9000261 	str	x1, [x19]
+    40081e14:	1400000d 	b	40081e48 <vsnprintf+0x628>
+    40081e18:	11002022 	add	w2, w1, #0x8
+    40081e1c:	b9001a62 	str	w2, [x19, #24]
+    40081e20:	b9401a62 	ldr	w2, [x19, #24]
+    40081e24:	7100005f 	cmp	w2, #0x0
+    40081e28:	540000ad 	b.le	40081e3c <vsnprintf+0x61c>
+    40081e2c:	91003c01 	add	x1, x0, #0xf
+    40081e30:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081e34:	f9000261 	str	x1, [x19]
+    40081e38:	14000004 	b	40081e48 <vsnprintf+0x628>
+    40081e3c:	f9400662 	ldr	x2, [x19, #8]
+    40081e40:	93407c20 	sxtw	x0, w1
+    40081e44:	8b000040 	add	x0, x2, x0
+    40081e48:	f9400001 	ldr	x1, [x0]
+    40081e4c:	f94027e3 	ldr	x3, [sp, #72]
+    40081e50:	b94053e2 	ldr	w2, [sp, #80]
+    40081e54:	910163e0 	add	x0, sp, #0x58
+    40081e58:	aa0203e4 	mov	x4, x2
+    40081e5c:	52800202 	mov	w2, #0x10                  	// #16
+    40081e60:	97fffdc7 	bl	4008157c <print_unsigned>
+		break;
+    40081e64:	1400001d 	b	40081ed8 <vsnprintf+0x6b8>
+	    default:
+		print_unsigned(&s, va_arg(va, uint32_t), 16, props);
+    40081e68:	b9401a61 	ldr	w1, [x19, #24]
+    40081e6c:	f9400260 	ldr	x0, [x19]
+    40081e70:	7100003f 	cmp	w1, #0x0
+    40081e74:	540000ab 	b.lt	40081e88 <vsnprintf+0x668>  // b.tstop
+    40081e78:	91003c01 	add	x1, x0, #0xf
+    40081e7c:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081e80:	f9000261 	str	x1, [x19]
+    40081e84:	1400000d 	b	40081eb8 <vsnprintf+0x698>
+    40081e88:	11002022 	add	w2, w1, #0x8
+    40081e8c:	b9001a62 	str	w2, [x19, #24]
+    40081e90:	b9401a62 	ldr	w2, [x19, #24]
+    40081e94:	7100005f 	cmp	w2, #0x0
+    40081e98:	540000ad 	b.le	40081eac <vsnprintf+0x68c>
+    40081e9c:	91003c01 	add	x1, x0, #0xf
+    40081ea0:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081ea4:	f9000261 	str	x1, [x19]
+    40081ea8:	14000004 	b	40081eb8 <vsnprintf+0x698>
+    40081eac:	f9400662 	ldr	x2, [x19, #8]
+    40081eb0:	93407c20 	sxtw	x0, w1
+    40081eb4:	8b000040 	add	x0, x2, x0
+    40081eb8:	f9400001 	ldr	x1, [x0]
+    40081ebc:	f94027e3 	ldr	x3, [sp, #72]
+    40081ec0:	b94053e2 	ldr	w2, [sp, #80]
+    40081ec4:	910163e0 	add	x0, sp, #0x58
+    40081ec8:	aa0203e4 	mov	x4, x2
+    40081ecc:	52800202 	mov	w2, #0x10                  	// #16
+    40081ed0:	97fffdab 	bl	4008157c <print_unsigned>
+		break;
+    40081ed4:	d503201f 	nop
+	    }
+	    break;
+    40081ed8:	14000040 	b	40081fd8 <vsnprintf+0x7b8>
+	case 'p':
+	    props.alternate = true;
+    40081edc:	52800020 	mov	w0, #0x1                   	// #1
+    40081ee0:	390143e0 	strb	w0, [sp, #80]
+	    print_unsigned(&s, (uint32_t)va_arg(va, void *), 16, props);
+    40081ee4:	b9401a61 	ldr	w1, [x19, #24]
+    40081ee8:	f9400260 	ldr	x0, [x19]
+    40081eec:	7100003f 	cmp	w1, #0x0
+    40081ef0:	540000ab 	b.lt	40081f04 <vsnprintf+0x6e4>  // b.tstop
+    40081ef4:	91003c01 	add	x1, x0, #0xf
+    40081ef8:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081efc:	f9000261 	str	x1, [x19]
+    40081f00:	1400000d 	b	40081f34 <vsnprintf+0x714>
+    40081f04:	11002022 	add	w2, w1, #0x8
+    40081f08:	b9001a62 	str	w2, [x19, #24]
+    40081f0c:	b9401a62 	ldr	w2, [x19, #24]
+    40081f10:	7100005f 	cmp	w2, #0x0
+    40081f14:	540000ad 	b.le	40081f28 <vsnprintf+0x708>
+    40081f18:	91003c01 	add	x1, x0, #0xf
+    40081f1c:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081f20:	f9000261 	str	x1, [x19]
+    40081f24:	14000004 	b	40081f34 <vsnprintf+0x714>
+    40081f28:	f9400662 	ldr	x2, [x19, #8]
+    40081f2c:	93407c20 	sxtw	x0, w1
+    40081f30:	8b000040 	add	x0, x2, x0
+    40081f34:	f9400000 	ldr	x0, [x0]
+    40081f38:	aa0003e5 	mov	x5, x0
+    40081f3c:	f94027e2 	ldr	x2, [sp, #72]
+    40081f40:	b94053e1 	ldr	w1, [sp, #80]
+    40081f44:	910163e0 	add	x0, sp, #0x58
+    40081f48:	aa0203e3 	mov	x3, x2
+    40081f4c:	aa0103e4 	mov	x4, x1
+    40081f50:	52800202 	mov	w2, #0x10                  	// #16
+    40081f54:	aa0503e1 	mov	x1, x5
+    40081f58:	97fffd89 	bl	4008157c <print_unsigned>
+	    break;
+    40081f5c:	1400001f 	b	40081fd8 <vsnprintf+0x7b8>
+	case 's':
+	    print_str(&s, va_arg(va, const char *), props);
+    40081f60:	b9401a61 	ldr	w1, [x19, #24]
+    40081f64:	f9400260 	ldr	x0, [x19]
+    40081f68:	7100003f 	cmp	w1, #0x0
+    40081f6c:	540000ab 	b.lt	40081f80 <vsnprintf+0x760>  // b.tstop
+    40081f70:	91003c01 	add	x1, x0, #0xf
+    40081f74:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081f78:	f9000261 	str	x1, [x19]
+    40081f7c:	1400000d 	b	40081fb0 <vsnprintf+0x790>
+    40081f80:	11002022 	add	w2, w1, #0x8
+    40081f84:	b9001a62 	str	w2, [x19, #24]
+    40081f88:	b9401a62 	ldr	w2, [x19, #24]
+    40081f8c:	7100005f 	cmp	w2, #0x0
+    40081f90:	540000ad 	b.le	40081fa4 <vsnprintf+0x784>
+    40081f94:	91003c01 	add	x1, x0, #0xf
+    40081f98:	927df021 	and	x1, x1, #0xfffffffffffffff8
+    40081f9c:	f9000261 	str	x1, [x19]
+    40081fa0:	14000004 	b	40081fb0 <vsnprintf+0x790>
+    40081fa4:	f9400662 	ldr	x2, [x19, #8]
+    40081fa8:	93407c20 	sxtw	x0, w1
+    40081fac:	8b000040 	add	x0, x2, x0
+    40081fb0:	f9400001 	ldr	x1, [x0]
+    40081fb4:	f94027e2 	ldr	x2, [sp, #72]
+    40081fb8:	b94053e3 	ldr	w3, [sp, #80]
+    40081fbc:	910163e0 	add	x0, sp, #0x58
+    40081fc0:	97fffcbe 	bl	400812b8 <print_str>
+	    break;
+    40081fc4:	14000005 	b	40081fd8 <vsnprintf+0x7b8>
+	default:
+	    addchar(&s, f);
+    40081fc8:	910163e0 	add	x0, sp, #0x58
+    40081fcc:	3941afe1 	ldrb	w1, [sp, #107]
+    40081fd0:	97fffc9f 	bl	4008124c <addchar>
+	    break;
+    40081fd4:	d503201f 	nop
+    while (*fmt) {
+    40081fd8:	f94017e0 	ldr	x0, [sp, #40]
+    40081fdc:	39400000 	ldrb	w0, [x0]
+    40081fe0:	7100001f 	cmp	w0, #0x0
+    40081fe4:	54ffc3a1 	b.ne	40081858 <vsnprintf+0x38>  // b.any
+	}
+    }
+    *s.buffer = 0;
+    40081fe8:	f9402fe0 	ldr	x0, [sp, #88]
+    40081fec:	3900001f 	strb	wzr, [x0]
+    return s.added;
+    40081ff0:	b94067e0 	ldr	w0, [sp, #100]
+}
+    40081ff4:	f9400bf3 	ldr	x19, [sp, #16]
+    40081ff8:	a8c77bfd 	ldp	x29, x30, [sp], #112
+    40081ffc:	d65f03c0 	ret
+
+0000000040082000 <snprintf>:
+
+
+int snprintf(char *buf, int size, const char *fmt, ...)
+{
+    40082000:	a9ad7bfd 	stp	x29, x30, [sp, #-304]!
+    40082004:	910003fd 	mov	x29, sp
+    40082008:	f90027e0 	str	x0, [sp, #72]
+    4008200c:	b90047e1 	str	w1, [sp, #68]
+    40082010:	f9001fe2 	str	x2, [sp, #56]
+    40082014:	f90087e3 	str	x3, [sp, #264]
+    40082018:	f9008be4 	str	x4, [sp, #272]
+    4008201c:	f9008fe5 	str	x5, [sp, #280]
+    40082020:	f90093e6 	str	x6, [sp, #288]
+    40082024:	f90097e7 	str	x7, [sp, #296]
+    40082028:	3d8023e0 	str	q0, [sp, #128]
+    4008202c:	3d8027e1 	str	q1, [sp, #144]
+    40082030:	3d802be2 	str	q2, [sp, #160]
+    40082034:	3d802fe3 	str	q3, [sp, #176]
+    40082038:	3d8033e4 	str	q4, [sp, #192]
+    4008203c:	3d8037e5 	str	q5, [sp, #208]
+    40082040:	3d803be6 	str	q6, [sp, #224]
+    40082044:	3d803fe7 	str	q7, [sp, #240]
+    va_list va;
+    int r;
+
+    va_start(va, fmt);
+    40082048:	9104c3e0 	add	x0, sp, #0x130
+    4008204c:	f9002fe0 	str	x0, [sp, #88]
+    40082050:	9104c3e0 	add	x0, sp, #0x130
+    40082054:	f90033e0 	str	x0, [sp, #96]
+    40082058:	910403e0 	add	x0, sp, #0x100
+    4008205c:	f90037e0 	str	x0, [sp, #104]
+    40082060:	128004e0 	mov	w0, #0xffffffd8            	// #-40
+    40082064:	b90073e0 	str	w0, [sp, #112]
+    40082068:	12800fe0 	mov	w0, #0xffffff80            	// #-128
+    4008206c:	b90077e0 	str	w0, [sp, #116]
+    r = vsnprintf(buf, size, fmt, va);
+    40082070:	910043e0 	add	x0, sp, #0x10
+    40082074:	910163e1 	add	x1, sp, #0x58
+    40082078:	ad400420 	ldp	q0, q1, [x1]
+    4008207c:	ad000400 	stp	q0, q1, [x0]
+    40082080:	910043e0 	add	x0, sp, #0x10
+    40082084:	aa0003e3 	mov	x3, x0
+    40082088:	f9401fe2 	ldr	x2, [sp, #56]
+    4008208c:	b94047e1 	ldr	w1, [sp, #68]
+    40082090:	f94027e0 	ldr	x0, [sp, #72]
+    40082094:	97fffde3 	bl	40081820 <vsnprintf>
+    40082098:	b9007fe0 	str	w0, [sp, #124]
+    va_end(va);
+    return r;
+    4008209c:	b9407fe0 	ldr	w0, [sp, #124]
+}
+    400820a0:	a8d37bfd 	ldp	x29, x30, [sp], #304
+    400820a4:	d65f03c0 	ret
+
+00000000400820a8 <vprintf>:
+
+int vprintf(const char *fmt, va_list va)
+{
+    400820a8:	d120c3ff 	sub	sp, sp, #0x830
+    400820ac:	a9007bfd 	stp	x29, x30, [sp]
+    400820b0:	910003fd 	mov	x29, sp
+    400820b4:	f9000bf3 	str	x19, [sp, #16]
+    400820b8:	f90027e0 	str	x0, [sp, #72]
+    400820bc:	aa0103f3 	mov	x19, x1
+    char buf[BUFSZ];
+    int r;
+
+    r = vsnprintf(buf, sizeof(buf), fmt, va);
+    400820c0:	910083e0 	add	x0, sp, #0x20
+    400820c4:	aa1303e1 	mov	x1, x19
+    400820c8:	ad400420 	ldp	q0, q1, [x1]
+    400820cc:	ad000400 	stp	q0, q1, [x0]
+    400820d0:	910083e1 	add	x1, sp, #0x20
+    400820d4:	910163e0 	add	x0, sp, #0x58
+    400820d8:	aa0103e3 	mov	x3, x1
+    400820dc:	f94027e2 	ldr	x2, [sp, #72]
+    400820e0:	5280fa01 	mov	w1, #0x7d0                 	// #2000
+    400820e4:	97fffdcf 	bl	40081820 <vsnprintf>
+    400820e8:	b9082fe0 	str	w0, [sp, #2092]
+    puts(buf);
+    400820ec:	910163e0 	add	x0, sp, #0x58
+    400820f0:	97fffc3b 	bl	400811dc <uart_putstr>
+    return r;
+    400820f4:	b9482fe0 	ldr	w0, [sp, #2092]
+}
+    400820f8:	f9400bf3 	ldr	x19, [sp, #16]
+    400820fc:	a9407bfd 	ldp	x29, x30, [sp]
+    40082100:	9120c3ff 	add	sp, sp, #0x830
+    40082104:	d65f03c0 	ret
+
+0000000040082108 <aj_printf>:
+
+int aj_printf(const char *fmt, ...)
+{
+    40082108:	d12403ff 	sub	sp, sp, #0x900
+    4008210c:	a9007bfd 	stp	x29, x30, [sp]
+    40082110:	910003fd 	mov	x29, sp
+    40082114:	f9001fe0 	str	x0, [sp, #56]
+    40082118:	f90467e1 	str	x1, [sp, #2248]
+    4008211c:	f9046be2 	str	x2, [sp, #2256]
+    40082120:	f9046fe3 	str	x3, [sp, #2264]
+    40082124:	f90473e4 	str	x4, [sp, #2272]
+    40082128:	f90477e5 	str	x5, [sp, #2280]
+    4008212c:	f9047be6 	str	x6, [sp, #2288]
+    40082130:	f9047fe7 	str	x7, [sp, #2296]
+    40082134:	912003e0 	add	x0, sp, #0x800
+    40082138:	3d801000 	str	q0, [x0, #64]
+    4008213c:	912003e0 	add	x0, sp, #0x800
+    40082140:	3d801401 	str	q1, [x0, #80]
+    40082144:	912003e0 	add	x0, sp, #0x800
+    40082148:	3d801802 	str	q2, [x0, #96]
+    4008214c:	912003e0 	add	x0, sp, #0x800
+    40082150:	3d801c03 	str	q3, [x0, #112]
+    40082154:	912003e0 	add	x0, sp, #0x800
+    40082158:	3d802004 	str	q4, [x0, #128]
+    4008215c:	912003e0 	add	x0, sp, #0x800
+    40082160:	3d802405 	str	q5, [x0, #144]
+    40082164:	912003e0 	add	x0, sp, #0x800
+    40082168:	3d802806 	str	q6, [x0, #160]
+    4008216c:	912003e0 	add	x0, sp, #0x800
+    40082170:	3d802c07 	str	q7, [x0, #176]
+    va_list va;
+    char buf[BUFSZ];
+    int r;
+
+    va_start(va, fmt);
+    40082174:	912403e0 	add	x0, sp, #0x900
+    40082178:	f9040fe0 	str	x0, [sp, #2072]
+    4008217c:	912403e0 	add	x0, sp, #0x900
+    40082180:	f90413e0 	str	x0, [sp, #2080]
+    40082184:	912303e0 	add	x0, sp, #0x8c0
+    40082188:	f90417e0 	str	x0, [sp, #2088]
+    4008218c:	128006e0 	mov	w0, #0xffffffc8            	// #-56
+    40082190:	b90833e0 	str	w0, [sp, #2096]
+    40082194:	12800fe0 	mov	w0, #0xffffff80            	// #-128
+    40082198:	b90837e0 	str	w0, [sp, #2100]
+    r = vsnprintf(buf, sizeof buf, fmt, va);
+    4008219c:	910043e0 	add	x0, sp, #0x10
+    400821a0:	912063e1 	add	x1, sp, #0x818
+    400821a4:	ad400420 	ldp	q0, q1, [x1]
+    400821a8:	ad000400 	stp	q0, q1, [x0]
+    400821ac:	910043e1 	add	x1, sp, #0x10
+    400821b0:	910123e0 	add	x0, sp, #0x48
+    400821b4:	aa0103e3 	mov	x3, x1
+    400821b8:	f9401fe2 	ldr	x2, [sp, #56]
+    400821bc:	5280fa01 	mov	w1, #0x7d0                 	// #2000
+    400821c0:	97fffd98 	bl	40081820 <vsnprintf>
+    400821c4:	b9083fe0 	str	w0, [sp, #2108]
+    va_end(va);
+
+    puts(buf);
+    400821c8:	910123e0 	add	x0, sp, #0x48
+    400821cc:	97fffc04 	bl	400811dc <uart_putstr>
+
+    return r;
+    400821d0:	b9483fe0 	ldr	w0, [sp, #2108]
+}
+    400821d4:	a9407bfd 	ldp	x29, x30, [sp]
+    400821d8:	912403ff 	add	sp, sp, #0x900
+    400821dc:	d65f03c0 	ret
+
+00000000400821e0 <warning>:
+
+int warning(const char *fmt, ...)
+{
+    400821e0:	d12403ff 	sub	sp, sp, #0x900
+    400821e4:	a9007bfd 	stp	x29, x30, [sp]
+    400821e8:	910003fd 	mov	x29, sp
+    400821ec:	f9001fe0 	str	x0, [sp, #56]
+    400821f0:	f90467e1 	str	x1, [sp, #2248]
+    400821f4:	f9046be2 	str	x2, [sp, #2256]
+    400821f8:	f9046fe3 	str	x3, [sp, #2264]
+    400821fc:	f90473e4 	str	x4, [sp, #2272]
+    40082200:	f90477e5 	str	x5, [sp, #2280]
+    40082204:	f9047be6 	str	x6, [sp, #2288]
+    40082208:	f9047fe7 	str	x7, [sp, #2296]
+    4008220c:	912003e0 	add	x0, sp, #0x800
+    40082210:	3d801000 	str	q0, [x0, #64]
+    40082214:	912003e0 	add	x0, sp, #0x800
+    40082218:	3d801401 	str	q1, [x0, #80]
+    4008221c:	912003e0 	add	x0, sp, #0x800
+    40082220:	3d801802 	str	q2, [x0, #96]
+    40082224:	912003e0 	add	x0, sp, #0x800
+    40082228:	3d801c03 	str	q3, [x0, #112]
+    4008222c:	912003e0 	add	x0, sp, #0x800
+    40082230:	3d802004 	str	q4, [x0, #128]
+    40082234:	912003e0 	add	x0, sp, #0x800
+    40082238:	3d802405 	str	q5, [x0, #144]
+    4008223c:	912003e0 	add	x0, sp, #0x800
+    40082240:	3d802806 	str	q6, [x0, #160]
+    40082244:	912003e0 	add	x0, sp, #0x800
+    40082248:	3d802c07 	str	q7, [x0, #176]
+    va_list va;
+    char buf[BUFSZ];
+    int r;
+
+    va_start(va, fmt);
+    4008224c:	912403e0 	add	x0, sp, #0x900
+    40082250:	f9040fe0 	str	x0, [sp, #2072]
+    40082254:	912403e0 	add	x0, sp, #0x900
+    40082258:	f90413e0 	str	x0, [sp, #2080]
+    4008225c:	912303e0 	add	x0, sp, #0x8c0
+    40082260:	f90417e0 	str	x0, [sp, #2088]
+    40082264:	128006e0 	mov	w0, #0xffffffc8            	// #-56
+    40082268:	b90833e0 	str	w0, [sp, #2096]
+    4008226c:	12800fe0 	mov	w0, #0xffffff80            	// #-128
+    40082270:	b90837e0 	str	w0, [sp, #2100]
+    r = vsnprintf(buf, sizeof buf, fmt, va);
+    40082274:	910043e0 	add	x0, sp, #0x10
+    40082278:	912063e1 	add	x1, sp, #0x818
+    4008227c:	ad400420 	ldp	q0, q1, [x1]
+    40082280:	ad000400 	stp	q0, q1, [x0]
+    40082284:	910043e1 	add	x1, sp, #0x10
+    40082288:	910123e0 	add	x0, sp, #0x48
+    4008228c:	aa0103e3 	mov	x3, x1
+    40082290:	f9401fe2 	ldr	x2, [sp, #56]
+    40082294:	5280fa01 	mov	w1, #0x7d0                 	// #2000
+    40082298:	97fffd62 	bl	40081820 <vsnprintf>
+    4008229c:	b9083fe0 	str	w0, [sp, #2108]
+    va_end(va);
+
+    puts(buf);
+    400822a0:	910123e0 	add	x0, sp, #0x48
+    400822a4:	97fffbce 	bl	400811dc <uart_putstr>
+
+    return r;
+    400822a8:	b9483fe0 	ldr	w0, [sp, #2108]
+}
+    400822ac:	a9407bfd 	ldp	x29, x30, [sp]
+    400822b0:	912403ff 	add	sp, sp, #0x900
+    400822b4:	d65f03c0 	ret
+
+00000000400822b8 <error>:
+
+int error(const char *fmt, ...)
+{
+    400822b8:	d12403ff 	sub	sp, sp, #0x900
+    400822bc:	a9007bfd 	stp	x29, x30, [sp]
+    400822c0:	910003fd 	mov	x29, sp
+    400822c4:	f9001fe0 	str	x0, [sp, #56]
+    400822c8:	f90467e1 	str	x1, [sp, #2248]
+    400822cc:	f9046be2 	str	x2, [sp, #2256]
+    400822d0:	f9046fe3 	str	x3, [sp, #2264]
+    400822d4:	f90473e4 	str	x4, [sp, #2272]
+    400822d8:	f90477e5 	str	x5, [sp, #2280]
+    400822dc:	f9047be6 	str	x6, [sp, #2288]
+    400822e0:	f9047fe7 	str	x7, [sp, #2296]
+    400822e4:	912003e0 	add	x0, sp, #0x800
+    400822e8:	3d801000 	str	q0, [x0, #64]
+    400822ec:	912003e0 	add	x0, sp, #0x800
+    400822f0:	3d801401 	str	q1, [x0, #80]
+    400822f4:	912003e0 	add	x0, sp, #0x800
+    400822f8:	3d801802 	str	q2, [x0, #96]
+    400822fc:	912003e0 	add	x0, sp, #0x800
+    40082300:	3d801c03 	str	q3, [x0, #112]
+    40082304:	912003e0 	add	x0, sp, #0x800
+    40082308:	3d802004 	str	q4, [x0, #128]
+    4008230c:	912003e0 	add	x0, sp, #0x800
+    40082310:	3d802405 	str	q5, [x0, #144]
+    40082314:	912003e0 	add	x0, sp, #0x800
+    40082318:	3d802806 	str	q6, [x0, #160]
+    4008231c:	912003e0 	add	x0, sp, #0x800
+    40082320:	3d802c07 	str	q7, [x0, #176]
+    va_list va;
+    char buf[BUFSZ];
+    int r;
+
+    va_start(va, fmt);
+    40082324:	912403e0 	add	x0, sp, #0x900
+    40082328:	f9040fe0 	str	x0, [sp, #2072]
+    4008232c:	912403e0 	add	x0, sp, #0x900
+    40082330:	f90413e0 	str	x0, [sp, #2080]
+    40082334:	912303e0 	add	x0, sp, #0x8c0
+    40082338:	f90417e0 	str	x0, [sp, #2088]
+    4008233c:	128006e0 	mov	w0, #0xffffffc8            	// #-56
+    40082340:	b90833e0 	str	w0, [sp, #2096]
+    40082344:	12800fe0 	mov	w0, #0xffffff80            	// #-128
+    40082348:	b90837e0 	str	w0, [sp, #2100]
+    r = vsnprintf(buf, sizeof buf, fmt, va);
+    4008234c:	910043e0 	add	x0, sp, #0x10
+    40082350:	912063e1 	add	x1, sp, #0x818
+    40082354:	ad400420 	ldp	q0, q1, [x1]
+    40082358:	ad000400 	stp	q0, q1, [x0]
+    4008235c:	910043e1 	add	x1, sp, #0x10
+    40082360:	910123e0 	add	x0, sp, #0x48
+    40082364:	aa0103e3 	mov	x3, x1
+    40082368:	f9401fe2 	ldr	x2, [sp, #56]
+    4008236c:	5280fa01 	mov	w1, #0x7d0                 	// #2000
+    40082370:	97fffd2c 	bl	40081820 <vsnprintf>
+    40082374:	b9083fe0 	str	w0, [sp, #2108]
+    va_end(va);
+
+    puts(buf);
+    40082378:	910123e0 	add	x0, sp, #0x48
+    4008237c:	97fffb98 	bl	400811dc <uart_putstr>
+
+    return r;
+    40082380:	b9483fe0 	ldr	w0, [sp, #2108]
+}
+    40082384:	a9407bfd 	ldp	x29, x30, [sp]
+    40082388:	912403ff 	add	sp, sp, #0x900
+    4008238c:	d65f03c0 	ret
+
+0000000040082390 <binstr>:
+
+void binstr(uint32_t x, char out[BINSTR_SZ])
+{
+    40082390:	d100c3ff 	sub	sp, sp, #0x30
+    40082394:	f90007e0 	str	x0, [sp, #8]
+    40082398:	f90003e1 	str	x1, [sp]
+	int i;
+	char *c;
+	int n;
+
+	n = sizeof(uint32_t) * 8;
+    4008239c:	52800800 	mov	w0, #0x40                  	// #64
+    400823a0:	b9001fe0 	str	w0, [sp, #28]
+	i = 0;
+    400823a4:	b9002fff 	str	wzr, [sp, #44]
+	c = &out[0];
+    400823a8:	f94003e0 	ldr	x0, [sp]
+    400823ac:	f90013e0 	str	x0, [sp, #32]
+	for (;;) {
+		*c++ = (x & (1ul << (n - i - 1))) ? '1' : '0';
+    400823b0:	b9401fe1 	ldr	w1, [sp, #28]
+    400823b4:	b9402fe0 	ldr	w0, [sp, #44]
+    400823b8:	4b000020 	sub	w0, w1, w0
+    400823bc:	51000400 	sub	w0, w0, #0x1
+    400823c0:	f94007e1 	ldr	x1, [sp, #8]
+    400823c4:	9ac02420 	lsr	x0, x1, x0
+    400823c8:	92400000 	and	x0, x0, #0x1
+    400823cc:	f100001f 	cmp	x0, #0x0
+    400823d0:	54000060 	b.eq	400823dc <binstr+0x4c>  // b.none
+    400823d4:	52800621 	mov	w1, #0x31                  	// #49
+    400823d8:	14000002 	b	400823e0 <binstr+0x50>
+    400823dc:	52800601 	mov	w1, #0x30                  	// #48
+    400823e0:	f94013e0 	ldr	x0, [sp, #32]
+    400823e4:	91000402 	add	x2, x0, #0x1
+    400823e8:	f90013e2 	str	x2, [sp, #32]
+    400823ec:	39000001 	strb	w1, [x0]
+		i++;
+    400823f0:	b9402fe0 	ldr	w0, [sp, #44]
+    400823f4:	11000400 	add	w0, w0, #0x1
+    400823f8:	b9002fe0 	str	w0, [sp, #44]
+
+		if (i == n) {
+    400823fc:	b9402fe1 	ldr	w1, [sp, #44]
+    40082400:	b9401fe0 	ldr	w0, [sp, #28]
+    40082404:	6b00003f 	cmp	w1, w0
+    40082408:	54000081 	b.ne	40082418 <binstr+0x88>  // b.any
+			*c = '\0';
+    4008240c:	f94013e0 	ldr	x0, [sp, #32]
+    40082410:	3900001f 	strb	wzr, [x0]
+			break;
+    40082414:	1400000b 	b	40082440 <binstr+0xb0>
+		}
+		if (i % 4 == 0)
+    40082418:	b9402fe0 	ldr	w0, [sp, #44]
+    4008241c:	12000400 	and	w0, w0, #0x3
+    40082420:	7100001f 	cmp	w0, #0x0
+    40082424:	54fffc61 	b.ne	400823b0 <binstr+0x20>  // b.any
+			*c++ = '\'';
+    40082428:	f94013e0 	ldr	x0, [sp, #32]
+    4008242c:	91000401 	add	x1, x0, #0x1
+    40082430:	f90013e1 	str	x1, [sp, #32]
+    40082434:	528004e1 	mov	w1, #0x27                  	// #39
+    40082438:	39000001 	strb	w1, [x0]
+		*c++ = (x & (1ul << (n - i - 1))) ? '1' : '0';
+    4008243c:	17ffffdd 	b	400823b0 <binstr+0x20>
+	}
+	// assert(c + 1 - &out[0] == BINSTR_SZ);
+}
+    40082440:	d503201f 	nop
+    40082444:	9100c3ff 	add	sp, sp, #0x30
+    40082448:	d65f03c0 	ret
+
+000000004008244c <print_binstr>:
+
+void print_binstr(uint32_t x)
+{
+    4008244c:	a9b97bfd 	stp	x29, x30, [sp, #-112]!
+    40082450:	910003fd 	mov	x29, sp
+    40082454:	f9000fe0 	str	x0, [sp, #24]
+	char out[BINSTR_SZ];
+	binstr(x, out);
+    40082458:	910083e0 	add	x0, sp, #0x20
+    4008245c:	aa0003e1 	mov	x1, x0
+    40082460:	f9400fe0 	ldr	x0, [sp, #24]
+    40082464:	97ffffcb 	bl	40082390 <binstr>
+	aj_printf("%s", out);
+    40082468:	910083e0 	add	x0, sp, #0x20
+    4008246c:	aa0003e1 	mov	x1, x0
+    40082470:	90000000 	adrp	x0, 40082000 <snprintf>
+    40082474:	912f6000 	add	x0, x0, #0xbd8
+    40082478:	97ffff24 	bl	40082108 <aj_printf>
+}
+    4008247c:	d503201f 	nop
+    40082480:	a8c77bfd 	ldp	x29, x30, [sp], #112
+    40082484:	d65f03c0 	ret
+
+0000000040082488 <enable_mmu>:
+.global enable_mmu
+
+/* ldr x0, =0x40084000 need change */
+enable_mmu:
+    // 设置 Translation Table Base Register 0 (TTBR0_EL1)
+    ldr x0, =0x40086000
+    40082488:	580001c0 	ldr	x0, 400824c0 <enable_mmu+0x38>
+    msr ttbr0_el1, x0
+    4008248c:	d5182000 	msr	ttbr0_el1, x0
+    msr ttbr1_el1, x0
+    40082490:	d5182020 	msr	ttbr1_el1, x0
+    // 设置 Translation Control Register (TCR_EL1)
+    ldr x0, =(TCR_VALUE)
+    40082494:	580001a0 	ldr	x0, 400824c8 <enable_mmu+0x40>
+    msr tcr_el1, x0
+    40082498:	d5182040 	msr	tcr_el1, x0
+    // 设置 MAIR_EL1 (Memory Attribute Indirection Register)
+    ldr x0, =(MAIR_VALUE)
+    4008249c:	580001a0 	ldr	x0, 400824d0 <enable_mmu+0x48>
+    msr mair_el1, x0
+    400824a0:	d518a200 	msr	mair_el1, x0
+    
+
+    // 设置 SCTLR_EL1 (System Control Register) 以启用MMU
+    mrs x0, sctlr_el1
+    400824a4:	d5381000 	mrs	x0, sctlr_el1
+    orr x0, x0, #(1 << 0) // 设置 SCTLR_EL1.M 位以启用 MMU
+    400824a8:	b2400000 	orr	x0, x0, #0x1
+    msr sctlr_el1, x0
+    400824ac:	d5181000 	msr	sctlr_el1, x0
+    
+    // 清空TLB
+    dsb sy // 确保之前所有内存访问完成
+    400824b0:	d5033f9f 	dsb	sy
+    isb    // 确保所有指令都执行完成
+    400824b4:	d5033fdf 	isb
+
+    400824b8:	d65f03c0 	ret
+    400824bc:	00000000 	udf	#0
+    400824c0:	40086000 	.word	0x40086000
+    400824c4:	00000000 	.word	0x00000000
+    400824c8:	b5003500 	.word	0xb5003500
+    400824cc:	00000000 	.word	0x00000000
+    400824d0:	0044ff00 	.word	0x0044ff00
+    400824d4:	00000000 	.word	0x00000000
+
+00000000400824d8 <init_page_table>:
+
+// 定义页表
+static uint64_t pt0[512] __attribute__((aligned(4096)));
+static uint64_t pt1[512] __attribute__((aligned(4096)));
+
+void init_page_table() {
+    400824d8:	d10043ff 	sub	sp, sp, #0x10
+    // 清空页表
+    for (int i = 0; i < 512; ++i) {
+    400824dc:	b9000fff 	str	wzr, [sp, #12]
+    400824e0:	14000008 	b	40082500 <init_page_table+0x28>
+        pt0[i] = 0;
+    400824e4:	90000020 	adrp	x0, 40086000 <pt0>
+    400824e8:	91000000 	add	x0, x0, #0x0
+    400824ec:	b9800fe1 	ldrsw	x1, [sp, #12]
+    400824f0:	f821781f 	str	xzr, [x0, x1, lsl #3]
+    for (int i = 0; i < 512; ++i) {
+    400824f4:	b9400fe0 	ldr	w0, [sp, #12]
+    400824f8:	11000400 	add	w0, w0, #0x1
+    400824fc:	b9000fe0 	str	w0, [sp, #12]
+    40082500:	b9400fe0 	ldr	w0, [sp, #12]
+    40082504:	7107fc1f 	cmp	w0, #0x1ff
+    40082508:	54fffeed 	b.le	400824e4 <init_page_table+0xc>
+    }
+    for (int i = 0; i < 512; ++i) {
+    4008250c:	b9000bff 	str	wzr, [sp, #8]
+    40082510:	14000008 	b	40082530 <init_page_table+0x58>
+        pt1[i] = 0;
+    40082514:	b0000020 	adrp	x0, 40087000 <pt1>
+    40082518:	91000000 	add	x0, x0, #0x0
+    4008251c:	b9800be1 	ldrsw	x1, [sp, #8]
+    40082520:	f821781f 	str	xzr, [x0, x1, lsl #3]
+    for (int i = 0; i < 512; ++i) {
+    40082524:	b9400be0 	ldr	w0, [sp, #8]
+    40082528:	11000400 	add	w0, w0, #0x1
+    4008252c:	b9000be0 	str	w0, [sp, #8]
+    40082530:	b9400be0 	ldr	w0, [sp, #8]
+    40082534:	7107fc1f 	cmp	w0, #0x1ff
+    40082538:	54fffeed 	b.le	40082514 <init_page_table+0x3c>
+    }
+
+    pt0[0] = (uint64_t)pt1 + MM_TYPE_TABLE;    // 512 G
+    4008253c:	b0000020 	adrp	x0, 40087000 <pt1>
+    40082540:	91000000 	add	x0, x0, #0x0
+    40082544:	91000c01 	add	x1, x0, #0x3
+    40082548:	90000020 	adrp	x0, 40086000 <pt0>
+    4008254c:	91000000 	add	x0, x0, #0x0
+    40082550:	f9000001 	str	x1, [x0]
+
+    pt1[0] = (0          + PTE_DEVICE_MEMORY);  // 0x0000_0000 0x4000_0000
+    40082554:	b0000020 	adrp	x0, 40087000 <pt1>
+    40082558:	91000000 	add	x0, x0, #0x0
+    4008255c:	d2808021 	mov	x1, #0x401                 	// #1025
+    40082560:	f9000001 	str	x1, [x0]
+    pt1[1] = (0x40000000 + PTE_NORMAL_MEMORY);  // 0x4000_0000 0x8000_0000
+    40082564:	b0000020 	adrp	x0, 40087000 <pt1>
+    40082568:	91000000 	add	x0, x0, #0x0
+    4008256c:	d280e0a1 	mov	x1, #0x705                 	// #1797
+    40082570:	f2a80001 	movk	x1, #0x4000, lsl #16
+    40082574:	f9000401 	str	x1, [x0, #8]
+    40082578:	d503201f 	nop
+    4008257c:	910043ff 	add	sp, sp, #0x10
+    40082580:	d65f03c0 	ret
+
+0000000040082584 <strlen>:
+
+#include "aj_string.h"
+#include "aj_types.h"
+
+unsigned long strlen(const char *buf)
+{
+    40082584:	d10083ff 	sub	sp, sp, #0x20
+    40082588:	f90007e0 	str	x0, [sp, #8]
+    unsigned long len = 0;
+    4008258c:	f9000fff 	str	xzr, [sp, #24]
+
+    while (*buf++)
+    40082590:	14000004 	b	400825a0 <strlen+0x1c>
+	++len;
+    40082594:	f9400fe0 	ldr	x0, [sp, #24]
+    40082598:	91000400 	add	x0, x0, #0x1
+    4008259c:	f9000fe0 	str	x0, [sp, #24]
+    while (*buf++)
+    400825a0:	f94007e0 	ldr	x0, [sp, #8]
+    400825a4:	91000401 	add	x1, x0, #0x1
+    400825a8:	f90007e1 	str	x1, [sp, #8]
+    400825ac:	39400000 	ldrb	w0, [x0]
+    400825b0:	7100001f 	cmp	w0, #0x0
+    400825b4:	54ffff01 	b.ne	40082594 <strlen+0x10>  // b.any
+    return len;
+    400825b8:	f9400fe0 	ldr	x0, [sp, #24]
+}
+    400825bc:	910083ff 	add	sp, sp, #0x20
+    400825c0:	d65f03c0 	ret
+
+00000000400825c4 <strcat>:
+
+char *strcat(char *dest, const char *src)
+{
+    400825c4:	d10083ff 	sub	sp, sp, #0x20
+    400825c8:	f90007e0 	str	x0, [sp, #8]
+    400825cc:	f90003e1 	str	x1, [sp]
+    char *p = dest;
+    400825d0:	f94007e0 	ldr	x0, [sp, #8]
+    400825d4:	f9000fe0 	str	x0, [sp, #24]
+
+    while (*p)
+    400825d8:	14000004 	b	400825e8 <strcat+0x24>
+	++p;
+    400825dc:	f9400fe0 	ldr	x0, [sp, #24]
+    400825e0:	91000400 	add	x0, x0, #0x1
+    400825e4:	f9000fe0 	str	x0, [sp, #24]
+    while (*p)
+    400825e8:	f9400fe0 	ldr	x0, [sp, #24]
+    400825ec:	39400000 	ldrb	w0, [x0]
+    400825f0:	7100001f 	cmp	w0, #0x0
+    400825f4:	54ffff41 	b.ne	400825dc <strcat+0x18>  // b.any
+    while ((*p++ = *src++) != 0)
+    400825f8:	d503201f 	nop
+    400825fc:	f94003e1 	ldr	x1, [sp]
+    40082600:	91000420 	add	x0, x1, #0x1
+    40082604:	f90003e0 	str	x0, [sp]
+    40082608:	f9400fe0 	ldr	x0, [sp, #24]
+    4008260c:	91000402 	add	x2, x0, #0x1
+    40082610:	f9000fe2 	str	x2, [sp, #24]
+    40082614:	39400021 	ldrb	w1, [x1]
+    40082618:	39000001 	strb	w1, [x0]
+    4008261c:	39400000 	ldrb	w0, [x0]
+    40082620:	7100001f 	cmp	w0, #0x0
+    40082624:	54fffec1 	b.ne	400825fc <strcat+0x38>  // b.any
+	;
+    return dest;
+    40082628:	f94007e0 	ldr	x0, [sp, #8]
+}
+    4008262c:	910083ff 	add	sp, sp, #0x20
+    40082630:	d65f03c0 	ret
+
+0000000040082634 <strcpy>:
+
+char *strcpy(char *dest, const char *src)
+{
+    40082634:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    40082638:	910003fd 	mov	x29, sp
+    4008263c:	f9000fe0 	str	x0, [sp, #24]
+    40082640:	f9000be1 	str	x1, [sp, #16]
+    *dest = 0;
+    40082644:	f9400fe0 	ldr	x0, [sp, #24]
+    40082648:	3900001f 	strb	wzr, [x0]
+    return strcat(dest, src);
+    4008264c:	f9400be1 	ldr	x1, [sp, #16]
+    40082650:	f9400fe0 	ldr	x0, [sp, #24]
+    40082654:	97ffffdc 	bl	400825c4 <strcat>
+}
+    40082658:	a8c27bfd 	ldp	x29, x30, [sp], #32
+    4008265c:	d65f03c0 	ret
+
+0000000040082660 <strncmp>:
+
+int strncmp(const char *a, const char *b, size_t n)
+{
+    40082660:	d10083ff 	sub	sp, sp, #0x20
+    40082664:	f9000fe0 	str	x0, [sp, #24]
+    40082668:	f9000be1 	str	x1, [sp, #16]
+    4008266c:	f90007e2 	str	x2, [sp, #8]
+    for (; n--; ++a, ++b)
+    40082670:	14000018 	b	400826d0 <strncmp+0x70>
+        if (*a != *b || *a == '\0')
+    40082674:	f9400fe0 	ldr	x0, [sp, #24]
+    40082678:	39400001 	ldrb	w1, [x0]
+    4008267c:	f9400be0 	ldr	x0, [sp, #16]
+    40082680:	39400000 	ldrb	w0, [x0]
+    40082684:	6b00003f 	cmp	w1, w0
+    40082688:	540000a1 	b.ne	4008269c <strncmp+0x3c>  // b.any
+    4008268c:	f9400fe0 	ldr	x0, [sp, #24]
+    40082690:	39400000 	ldrb	w0, [x0]
+    40082694:	7100001f 	cmp	w0, #0x0
+    40082698:	54000101 	b.ne	400826b8 <strncmp+0x58>  // b.any
+            return *a - *b;
+    4008269c:	f9400fe0 	ldr	x0, [sp, #24]
+    400826a0:	39400000 	ldrb	w0, [x0]
+    400826a4:	2a0003e1 	mov	w1, w0
+    400826a8:	f9400be0 	ldr	x0, [sp, #16]
+    400826ac:	39400000 	ldrb	w0, [x0]
+    400826b0:	4b000020 	sub	w0, w1, w0
+    400826b4:	1400000d 	b	400826e8 <strncmp+0x88>
+    for (; n--; ++a, ++b)
+    400826b8:	f9400fe0 	ldr	x0, [sp, #24]
+    400826bc:	91000400 	add	x0, x0, #0x1
+    400826c0:	f9000fe0 	str	x0, [sp, #24]
+    400826c4:	f9400be0 	ldr	x0, [sp, #16]
+    400826c8:	91000400 	add	x0, x0, #0x1
+    400826cc:	f9000be0 	str	x0, [sp, #16]
+    400826d0:	f94007e0 	ldr	x0, [sp, #8]
+    400826d4:	d1000401 	sub	x1, x0, #0x1
+    400826d8:	f90007e1 	str	x1, [sp, #8]
+    400826dc:	f100001f 	cmp	x0, #0x0
+    400826e0:	54fffca1 	b.ne	40082674 <strncmp+0x14>  // b.any
+
+    return 0;
+    400826e4:	52800000 	mov	w0, #0x0                   	// #0
+}
+    400826e8:	910083ff 	add	sp, sp, #0x20
+    400826ec:	d65f03c0 	ret
+
+00000000400826f0 <strcmp>:
+
+int strcmp(const char *a, const char *b)
+{
+    400826f0:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    400826f4:	910003fd 	mov	x29, sp
+    400826f8:	f9000fe0 	str	x0, [sp, #24]
+    400826fc:	f9000be1 	str	x1, [sp, #16]
+    return strncmp(a, b, SIZE_MAX);
+    40082700:	92f00002 	mov	x2, #0x7fffffffffffffff    	// #9223372036854775807
+    40082704:	f9400be1 	ldr	x1, [sp, #16]
+    40082708:	f9400fe0 	ldr	x0, [sp, #24]
+    4008270c:	97ffffd5 	bl	40082660 <strncmp>
+}
+    40082710:	a8c27bfd 	ldp	x29, x30, [sp], #32
+    40082714:	d65f03c0 	ret
+
+0000000040082718 <strchr>:
+
+char *strchr(const char *s, int c)
+{
+    40082718:	d10043ff 	sub	sp, sp, #0x10
+    4008271c:	f90007e0 	str	x0, [sp, #8]
+    40082720:	b90007e1 	str	w1, [sp, #4]
+    while (*s != (char)c)
+    40082724:	14000009 	b	40082748 <strchr+0x30>
+	if (*s++ == '\0')
+    40082728:	f94007e0 	ldr	x0, [sp, #8]
+    4008272c:	91000401 	add	x1, x0, #0x1
+    40082730:	f90007e1 	str	x1, [sp, #8]
+    40082734:	39400000 	ldrb	w0, [x0]
+    40082738:	7100001f 	cmp	w0, #0x0
+    4008273c:	54000061 	b.ne	40082748 <strchr+0x30>  // b.any
+	    return NULL;
+    40082740:	d2800000 	mov	x0, #0x0                   	// #0
+    40082744:	14000008 	b	40082764 <strchr+0x4c>
+    while (*s != (char)c)
+    40082748:	f94007e0 	ldr	x0, [sp, #8]
+    4008274c:	39400001 	ldrb	w1, [x0]
+    40082750:	b94007e0 	ldr	w0, [sp, #4]
+    40082754:	12001c00 	and	w0, w0, #0xff
+    40082758:	6b00003f 	cmp	w1, w0
+    4008275c:	54fffe61 	b.ne	40082728 <strchr+0x10>  // b.any
+    return (char *)s;
+    40082760:	f94007e0 	ldr	x0, [sp, #8]
+}
+    40082764:	910043ff 	add	sp, sp, #0x10
+    40082768:	d65f03c0 	ret
+
+000000004008276c <strstr>:
+
+char *strstr(const char *s1, const char *s2)
+{
+    4008276c:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+    40082770:	910003fd 	mov	x29, sp
+    40082774:	f9000fe0 	str	x0, [sp, #24]
+    40082778:	f9000be1 	str	x1, [sp, #16]
+    size_t l1, l2;
+
+    l2 = strlen(s2);
+    4008277c:	f9400be0 	ldr	x0, [sp, #16]
+    40082780:	97ffff81 	bl	40082584 <strlen>
+    40082784:	f90013e0 	str	x0, [sp, #32]
+    if (!l2)
+    40082788:	f94013e0 	ldr	x0, [sp, #32]
+    4008278c:	f100001f 	cmp	x0, #0x0
+    40082790:	54000061 	b.ne	4008279c <strstr+0x30>  // b.any
+	return (char *)s1;
+    40082794:	f9400fe0 	ldr	x0, [sp, #24]
+    40082798:	14000018 	b	400827f8 <strstr+0x8c>
+    l1 = strlen(s1);
+    4008279c:	f9400fe0 	ldr	x0, [sp, #24]
+    400827a0:	97ffff79 	bl	40082584 <strlen>
+    400827a4:	f90017e0 	str	x0, [sp, #40]
+    while (l1 >= l2) {
+    400827a8:	1400000f 	b	400827e4 <strstr+0x78>
+	l1--;
+    400827ac:	f94017e0 	ldr	x0, [sp, #40]
+    400827b0:	d1000400 	sub	x0, x0, #0x1
+    400827b4:	f90017e0 	str	x0, [sp, #40]
+	if (!memcmp(s1, s2, l2))
+    400827b8:	f94013e2 	ldr	x2, [sp, #32]
+    400827bc:	f9400be1 	ldr	x1, [sp, #16]
+    400827c0:	f9400fe0 	ldr	x0, [sp, #24]
+    400827c4:	94000043 	bl	400828d0 <memcmp>
+    400827c8:	7100001f 	cmp	w0, #0x0
+    400827cc:	54000061 	b.ne	400827d8 <strstr+0x6c>  // b.any
+	    return (char *)s1;
+    400827d0:	f9400fe0 	ldr	x0, [sp, #24]
+    400827d4:	14000009 	b	400827f8 <strstr+0x8c>
+	s1++;
+    400827d8:	f9400fe0 	ldr	x0, [sp, #24]
+    400827dc:	91000400 	add	x0, x0, #0x1
+    400827e0:	f9000fe0 	str	x0, [sp, #24]
+    while (l1 >= l2) {
+    400827e4:	f94017e1 	ldr	x1, [sp, #40]
+    400827e8:	f94013e0 	ldr	x0, [sp, #32]
+    400827ec:	eb00003f 	cmp	x1, x0
+    400827f0:	54fffde2 	b.cs	400827ac <strstr+0x40>  // b.hs, b.nlast
+    }
+    return NULL;
+    400827f4:	d2800000 	mov	x0, #0x0                   	// #0
+}
+    400827f8:	a8c37bfd 	ldp	x29, x30, [sp], #48
+    400827fc:	d65f03c0 	ret
+
+0000000040082800 <memset>:
+
+void *memset(void *s, int c, size_t n)
+{
+    40082800:	d100c3ff 	sub	sp, sp, #0x30
+    40082804:	f9000fe0 	str	x0, [sp, #24]
+    40082808:	b90017e1 	str	w1, [sp, #20]
+    4008280c:	f90007e2 	str	x2, [sp, #8]
+    size_t i;
+    char *a = s;
+    40082810:	f9400fe0 	ldr	x0, [sp, #24]
+    40082814:	f90013e0 	str	x0, [sp, #32]
+
+    for (i = 0; i < n; ++i)
+    40082818:	f90017ff 	str	xzr, [sp, #40]
+    4008281c:	1400000a 	b	40082844 <memset+0x44>
+        a[i] = c;
+    40082820:	f94013e1 	ldr	x1, [sp, #32]
+    40082824:	f94017e0 	ldr	x0, [sp, #40]
+    40082828:	8b000020 	add	x0, x1, x0
+    4008282c:	b94017e1 	ldr	w1, [sp, #20]
+    40082830:	12001c21 	and	w1, w1, #0xff
+    40082834:	39000001 	strb	w1, [x0]
+    for (i = 0; i < n; ++i)
+    40082838:	f94017e0 	ldr	x0, [sp, #40]
+    4008283c:	91000400 	add	x0, x0, #0x1
+    40082840:	f90017e0 	str	x0, [sp, #40]
+    40082844:	f94017e1 	ldr	x1, [sp, #40]
+    40082848:	f94007e0 	ldr	x0, [sp, #8]
+    4008284c:	eb00003f 	cmp	x1, x0
+    40082850:	54fffe83 	b.cc	40082820 <memset+0x20>  // b.lo, b.ul, b.last
+
+    return s;
+    40082854:	f9400fe0 	ldr	x0, [sp, #24]
+}
+    40082858:	9100c3ff 	add	sp, sp, #0x30
+    4008285c:	d65f03c0 	ret
+
+0000000040082860 <memcpy>:
+
+void *memcpy(void *dest, const void *src, size_t n)
+{
+    40082860:	d10103ff 	sub	sp, sp, #0x40
+    40082864:	f9000fe0 	str	x0, [sp, #24]
+    40082868:	f9000be1 	str	x1, [sp, #16]
+    4008286c:	f90007e2 	str	x2, [sp, #8]
+    size_t i;
+    char *a = dest;
+    40082870:	f9400fe0 	ldr	x0, [sp, #24]
+    40082874:	f9001be0 	str	x0, [sp, #48]
+    const char *b = src;
+    40082878:	f9400be0 	ldr	x0, [sp, #16]
+    4008287c:	f90017e0 	str	x0, [sp, #40]
+
+    for (i = 0; i < n; ++i)
+    40082880:	f9001fff 	str	xzr, [sp, #56]
+    40082884:	1400000c 	b	400828b4 <memcpy+0x54>
+        a[i] = b[i];
+    40082888:	f94017e1 	ldr	x1, [sp, #40]
+    4008288c:	f9401fe0 	ldr	x0, [sp, #56]
+    40082890:	8b000021 	add	x1, x1, x0
+    40082894:	f9401be2 	ldr	x2, [sp, #48]
+    40082898:	f9401fe0 	ldr	x0, [sp, #56]
+    4008289c:	8b000040 	add	x0, x2, x0
+    400828a0:	39400021 	ldrb	w1, [x1]
+    400828a4:	39000001 	strb	w1, [x0]
+    for (i = 0; i < n; ++i)
+    400828a8:	f9401fe0 	ldr	x0, [sp, #56]
+    400828ac:	91000400 	add	x0, x0, #0x1
+    400828b0:	f9001fe0 	str	x0, [sp, #56]
+    400828b4:	f9401fe1 	ldr	x1, [sp, #56]
+    400828b8:	f94007e0 	ldr	x0, [sp, #8]
+    400828bc:	eb00003f 	cmp	x1, x0
+    400828c0:	54fffe43 	b.cc	40082888 <memcpy+0x28>  // b.lo, b.ul, b.last
+
+    return dest;
+    400828c4:	f9400fe0 	ldr	x0, [sp, #24]
+}
+    400828c8:	910103ff 	add	sp, sp, #0x40
+    400828cc:	d65f03c0 	ret
+
+00000000400828d0 <memcmp>:
+
+int memcmp(const void *s1, const void *s2, size_t n)
+{
+    400828d0:	d10103ff 	sub	sp, sp, #0x40
+    400828d4:	f9000fe0 	str	x0, [sp, #24]
+    400828d8:	f9000be1 	str	x1, [sp, #16]
+    400828dc:	f90007e2 	str	x2, [sp, #8]
+    const unsigned char *a = s1, *b = s2;
+    400828e0:	f9400fe0 	ldr	x0, [sp, #24]
+    400828e4:	f9001fe0 	str	x0, [sp, #56]
+    400828e8:	f9400be0 	ldr	x0, [sp, #16]
+    400828ec:	f9001be0 	str	x0, [sp, #48]
+    int ret = 0;
+    400828f0:	b9002fff 	str	wzr, [sp, #44]
+
+    while (n--) {
+    400828f4:	14000011 	b	40082938 <memcmp+0x68>
+	ret = *a - *b;
+    400828f8:	f9401fe0 	ldr	x0, [sp, #56]
+    400828fc:	39400000 	ldrb	w0, [x0]
+    40082900:	2a0003e1 	mov	w1, w0
+    40082904:	f9401be0 	ldr	x0, [sp, #48]
+    40082908:	39400000 	ldrb	w0, [x0]
+    4008290c:	4b000020 	sub	w0, w1, w0
+    40082910:	b9002fe0 	str	w0, [sp, #44]
+	if (ret)
+    40082914:	b9402fe0 	ldr	w0, [sp, #44]
+    40082918:	7100001f 	cmp	w0, #0x0
+    4008291c:	540001a1 	b.ne	40082950 <memcmp+0x80>  // b.any
+	    break;
+	++a, ++b;
+    40082920:	f9401fe0 	ldr	x0, [sp, #56]
+    40082924:	91000400 	add	x0, x0, #0x1
+    40082928:	f9001fe0 	str	x0, [sp, #56]
+    4008292c:	f9401be0 	ldr	x0, [sp, #48]
+    40082930:	91000400 	add	x0, x0, #0x1
+    40082934:	f9001be0 	str	x0, [sp, #48]
+    while (n--) {
+    40082938:	f94007e0 	ldr	x0, [sp, #8]
+    4008293c:	d1000401 	sub	x1, x0, #0x1
+    40082940:	f90007e1 	str	x1, [sp, #8]
+    40082944:	f100001f 	cmp	x0, #0x0
+    40082948:	54fffd81 	b.ne	400828f8 <memcmp+0x28>  // b.any
+    4008294c:	14000002 	b	40082954 <memcmp+0x84>
+	    break;
+    40082950:	d503201f 	nop
+    }
+    return ret;
+    40082954:	b9402fe0 	ldr	w0, [sp, #44]
+}
+    40082958:	910103ff 	add	sp, sp, #0x40
+    4008295c:	d65f03c0 	ret
+
+0000000040082960 <memmove>:
+
+void *memmove(void *dest, const void *src, size_t n)
+{
+    40082960:	d100c3ff 	sub	sp, sp, #0x30
+    40082964:	f9000fe0 	str	x0, [sp, #24]
+    40082968:	f9000be1 	str	x1, [sp, #16]
+    4008296c:	f90007e2 	str	x2, [sp, #8]
+    const unsigned char *s = src;
+    40082970:	f9400be0 	ldr	x0, [sp, #16]
+    40082974:	f90017e0 	str	x0, [sp, #40]
+    unsigned char *d = dest;
+    40082978:	f9400fe0 	ldr	x0, [sp, #24]
+    4008297c:	f90013e0 	str	x0, [sp, #32]
+
+    if (d <= s) {
+    40082980:	f94013e1 	ldr	x1, [sp, #32]
+    40082984:	f94017e0 	ldr	x0, [sp, #40]
+    40082988:	eb00003f 	cmp	x1, x0
+    4008298c:	54000208 	b.hi	400829cc <memmove+0x6c>  // b.pmore
+	while (n--)
+    40082990:	14000009 	b	400829b4 <memmove+0x54>
+	    *d++ = *s++;
+    40082994:	f94017e1 	ldr	x1, [sp, #40]
+    40082998:	91000420 	add	x0, x1, #0x1
+    4008299c:	f90017e0 	str	x0, [sp, #40]
+    400829a0:	f94013e0 	ldr	x0, [sp, #32]
+    400829a4:	91000402 	add	x2, x0, #0x1
+    400829a8:	f90013e2 	str	x2, [sp, #32]
+    400829ac:	39400021 	ldrb	w1, [x1]
+    400829b0:	39000001 	strb	w1, [x0]
+	while (n--)
+    400829b4:	f94007e0 	ldr	x0, [sp, #8]
+    400829b8:	d1000401 	sub	x1, x0, #0x1
+    400829bc:	f90007e1 	str	x1, [sp, #8]
+    400829c0:	f100001f 	cmp	x0, #0x0
+    400829c4:	54fffe81 	b.ne	40082994 <memmove+0x34>  // b.any
+    400829c8:	14000019 	b	40082a2c <memmove+0xcc>
+    } else {
+	d += n, s += n;
+    400829cc:	f94013e1 	ldr	x1, [sp, #32]
+    400829d0:	f94007e0 	ldr	x0, [sp, #8]
+    400829d4:	8b000020 	add	x0, x1, x0
+    400829d8:	f90013e0 	str	x0, [sp, #32]
+    400829dc:	f94017e1 	ldr	x1, [sp, #40]
+    400829e0:	f94007e0 	ldr	x0, [sp, #8]
+    400829e4:	8b000020 	add	x0, x1, x0
+    400829e8:	f90017e0 	str	x0, [sp, #40]
+	while (n--)
+    400829ec:	1400000b 	b	40082a18 <memmove+0xb8>
+	    *--d = *--s;
+    400829f0:	f94017e0 	ldr	x0, [sp, #40]
+    400829f4:	d1000400 	sub	x0, x0, #0x1
+    400829f8:	f90017e0 	str	x0, [sp, #40]
+    400829fc:	f94013e0 	ldr	x0, [sp, #32]
+    40082a00:	d1000400 	sub	x0, x0, #0x1
+    40082a04:	f90013e0 	str	x0, [sp, #32]
+    40082a08:	f94017e0 	ldr	x0, [sp, #40]
+    40082a0c:	39400001 	ldrb	w1, [x0]
+    40082a10:	f94013e0 	ldr	x0, [sp, #32]
+    40082a14:	39000001 	strb	w1, [x0]
+	while (n--)
+    40082a18:	f94007e0 	ldr	x0, [sp, #8]
+    40082a1c:	d1000401 	sub	x1, x0, #0x1
+    40082a20:	f90007e1 	str	x1, [sp, #8]
+    40082a24:	f100001f 	cmp	x0, #0x0
+    40082a28:	54fffe41 	b.ne	400829f0 <memmove+0x90>  // b.any
+    }
+    return dest;
+    40082a2c:	f9400fe0 	ldr	x0, [sp, #24]
+}
+    40082a30:	9100c3ff 	add	sp, sp, #0x30
+    40082a34:	d65f03c0 	ret
+
+0000000040082a38 <memchr>:
+
+void *memchr(const void *s, int c, size_t n)
+{
+    40082a38:	d100c3ff 	sub	sp, sp, #0x30
+    40082a3c:	f9000fe0 	str	x0, [sp, #24]
+    40082a40:	b90017e1 	str	w1, [sp, #20]
+    40082a44:	f90007e2 	str	x2, [sp, #8]
+    const unsigned char *str = s, chr = (unsigned char)c;
+    40082a48:	f9400fe0 	ldr	x0, [sp, #24]
+    40082a4c:	f90017e0 	str	x0, [sp, #40]
+    40082a50:	b94017e0 	ldr	w0, [sp, #20]
+    40082a54:	39009fe0 	strb	w0, [sp, #39]
+
+    while (n--)
+    40082a58:	1400000b 	b	40082a84 <memchr+0x4c>
+	if (*str++ == chr)
+    40082a5c:	f94017e0 	ldr	x0, [sp, #40]
+    40082a60:	91000401 	add	x1, x0, #0x1
+    40082a64:	f90017e1 	str	x1, [sp, #40]
+    40082a68:	39400000 	ldrb	w0, [x0]
+    40082a6c:	39409fe1 	ldrb	w1, [sp, #39]
+    40082a70:	6b00003f 	cmp	w1, w0
+    40082a74:	54000081 	b.ne	40082a84 <memchr+0x4c>  // b.any
+	    return (void *)(str - 1);
+    40082a78:	f94017e0 	ldr	x0, [sp, #40]
+    40082a7c:	d1000400 	sub	x0, x0, #0x1
+    40082a80:	14000007 	b	40082a9c <memchr+0x64>
+    while (n--)
+    40082a84:	f94007e0 	ldr	x0, [sp, #8]
+    40082a88:	d1000401 	sub	x1, x0, #0x1
+    40082a8c:	f90007e1 	str	x1, [sp, #8]
+    40082a90:	f100001f 	cmp	x0, #0x0
+    40082a94:	54fffe41 	b.ne	40082a5c <memchr+0x24>  // b.any
+    return NULL;
+    40082a98:	d2800000 	mov	x0, #0x0                   	// #0
+}
+    40082a9c:	9100c3ff 	add	sp, sp, #0x30
+    40082aa0:	d65f03c0 	ret
+
+0000000040082aa4 <atol>:
+
+long atol(const char *ptr)
+{
+    40082aa4:	d100c3ff 	sub	sp, sp, #0x30
+    40082aa8:	f90007e0 	str	x0, [sp, #8]
+    long acc = 0;
+    40082aac:	f90017ff 	str	xzr, [sp, #40]
+    const char *s = ptr;
+    40082ab0:	f94007e0 	ldr	x0, [sp, #8]
+    40082ab4:	f90013e0 	str	x0, [sp, #32]
+    int neg, c;
+
+    while (*s == ' ' || *s == '\t')
+    40082ab8:	14000004 	b	40082ac8 <atol+0x24>
+        s++;
+    40082abc:	f94013e0 	ldr	x0, [sp, #32]
+    40082ac0:	91000400 	add	x0, x0, #0x1
+    40082ac4:	f90013e0 	str	x0, [sp, #32]
+    while (*s == ' ' || *s == '\t')
+    40082ac8:	f94013e0 	ldr	x0, [sp, #32]
+    40082acc:	39400000 	ldrb	w0, [x0]
+    40082ad0:	7100801f 	cmp	w0, #0x20
+    40082ad4:	54ffff40 	b.eq	40082abc <atol+0x18>  // b.none
+    40082ad8:	f94013e0 	ldr	x0, [sp, #32]
+    40082adc:	39400000 	ldrb	w0, [x0]
+    40082ae0:	7100241f 	cmp	w0, #0x9
+    40082ae4:	54fffec0 	b.eq	40082abc <atol+0x18>  // b.none
+    if (*s == '-'){
+    40082ae8:	f94013e0 	ldr	x0, [sp, #32]
+    40082aec:	39400000 	ldrb	w0, [x0]
+    40082af0:	7100b41f 	cmp	w0, #0x2d
+    40082af4:	540000e1 	b.ne	40082b10 <atol+0x6c>  // b.any
+        neg = 1;
+    40082af8:	52800020 	mov	w0, #0x1                   	// #1
+    40082afc:	b9001fe0 	str	w0, [sp, #28]
+        s++;
+    40082b00:	f94013e0 	ldr	x0, [sp, #32]
+    40082b04:	91000400 	add	x0, x0, #0x1
+    40082b08:	f90013e0 	str	x0, [sp, #32]
+    40082b0c:	14000022 	b	40082b94 <atol+0xf0>
+    } else {
+        neg = 0;
+    40082b10:	b9001fff 	str	wzr, [sp, #28]
+        if (*s == '+')
+    40082b14:	f94013e0 	ldr	x0, [sp, #32]
+    40082b18:	39400000 	ldrb	w0, [x0]
+    40082b1c:	7100ac1f 	cmp	w0, #0x2b
+    40082b20:	540003a1 	b.ne	40082b94 <atol+0xf0>  // b.any
+            s++;
+    40082b24:	f94013e0 	ldr	x0, [sp, #32]
+    40082b28:	91000400 	add	x0, x0, #0x1
+    40082b2c:	f90013e0 	str	x0, [sp, #32]
+    }
+
+    while (*s) {
+    40082b30:	14000019 	b	40082b94 <atol+0xf0>
+        if (*s < '0' || *s > '9')
+    40082b34:	f94013e0 	ldr	x0, [sp, #32]
+    40082b38:	39400000 	ldrb	w0, [x0]
+    40082b3c:	7100bc1f 	cmp	w0, #0x2f
+    40082b40:	54000329 	b.ls	40082ba4 <atol+0x100>  // b.plast
+    40082b44:	f94013e0 	ldr	x0, [sp, #32]
+    40082b48:	39400000 	ldrb	w0, [x0]
+    40082b4c:	7100e41f 	cmp	w0, #0x39
+    40082b50:	540002a8 	b.hi	40082ba4 <atol+0x100>  // b.pmore
+            break;
+        c = *s - '0';
+    40082b54:	f94013e0 	ldr	x0, [sp, #32]
+    40082b58:	39400000 	ldrb	w0, [x0]
+    40082b5c:	5100c000 	sub	w0, w0, #0x30
+    40082b60:	b9001be0 	str	w0, [sp, #24]
+        acc = acc * 10 + c;
+    40082b64:	f94017e1 	ldr	x1, [sp, #40]
+    40082b68:	aa0103e0 	mov	x0, x1
+    40082b6c:	d37ef400 	lsl	x0, x0, #2
+    40082b70:	8b010000 	add	x0, x0, x1
+    40082b74:	d37ff800 	lsl	x0, x0, #1
+    40082b78:	aa0003e1 	mov	x1, x0
+    40082b7c:	b9801be0 	ldrsw	x0, [sp, #24]
+    40082b80:	8b000020 	add	x0, x1, x0
+    40082b84:	f90017e0 	str	x0, [sp, #40]
+        s++;
+    40082b88:	f94013e0 	ldr	x0, [sp, #32]
+    40082b8c:	91000400 	add	x0, x0, #0x1
+    40082b90:	f90013e0 	str	x0, [sp, #32]
+    while (*s) {
+    40082b94:	f94013e0 	ldr	x0, [sp, #32]
+    40082b98:	39400000 	ldrb	w0, [x0]
+    40082b9c:	7100001f 	cmp	w0, #0x0
+    40082ba0:	54fffca1 	b.ne	40082b34 <atol+0x90>  // b.any
+    }
+
+    if (neg)
+    40082ba4:	b9401fe0 	ldr	w0, [sp, #28]
+    40082ba8:	7100001f 	cmp	w0, #0x0
+    40082bac:	54000080 	b.eq	40082bbc <atol+0x118>  // b.none
+        acc = -acc;
+    40082bb0:	f94017e0 	ldr	x0, [sp, #40]
+    40082bb4:	cb0003e0 	neg	x0, x0
+    40082bb8:	f90017e0 	str	x0, [sp, #40]
+
+    return acc;
+    40082bbc:	f94017e0 	ldr	x0, [sp, #40]
+}
+    40082bc0:	9100c3ff 	add	sp, sp, #0x30
+    40082bc4:	d65f03c0 	ret
