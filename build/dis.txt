@@ -7,7 +7,7 @@ start address 0x0000000040080000
 
 Program Header:
     LOAD off    0x0000000000010000 vaddr 0x0000000040080000 paddr 0x0000000040080000 align 2**16
-         filesz 0x00000000000043c8 memsz 0x000000000000b000 flags rwx
+         filesz 0x0000000000008001 memsz 0x000000000000f000 flags rwx
    STACK off    0x0000000000000000 vaddr 0x0000000000000000 paddr 0x0000000000000000 align 2**4
          filesz 0x0000000000000000 memsz 0x0000000000000000 flags rw-
 private flags = 0x0:
@@ -16,34 +16,34 @@ Sections:
 Idx Name          Size      VMA               LMA               File off  Algn
   0 .text         00003d60  0000000040080000  0000000040080000  00010000  2**11
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .rodata       0000017b  0000000040083d60  0000000040083d60  00013d60  2**3
+  1 .rodata       00000193  0000000040083d60  0000000040083d60  00013d60  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  2 .eh_frame     000004d0  0000000040083ee0  0000000040083ee0  00013ee0  2**3
+  2 .eh_frame     00000528  0000000040083ef8  0000000040083ef8  00013ef8  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .data         00000018  00000000400843b0  00000000400843b0  000143b0  2**3
+  3 .data         00003001  0000000040085000  0000000040085000  00015000  2**12
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .bss          00006000  0000000040085000  0000000040085000  000143c8  2**12
+  4 .bss          00006000  0000000040089000  0000000040089000  00018001  2**12
                   ALLOC
-  5 .debug_line   00000c0e  0000000000000000  0000000000000000  000143c8  2**0
+  5 .debug_line   00000c36  0000000000000000  0000000000000000  00018001  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  6 .debug_line_str 00000169  0000000000000000  0000000000000000  00014fd6  2**0
+  6 .debug_line_str 00000169  0000000000000000  0000000000000000  00018c37  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  7 .debug_info   000016c3  0000000000000000  0000000000000000  0001513f  2**0
+  7 .debug_info   000016e0  0000000000000000  0000000000000000  00018da0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  8 .debug_abbrev 00000977  0000000000000000  0000000000000000  00016802  2**0
+  8 .debug_abbrev 0000095c  0000000000000000  0000000000000000  0001a480  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  9 .debug_aranges 00000210  0000000000000000  0000000000000000  00017180  2**4
+  9 .debug_aranges 00000210  0000000000000000  0000000000000000  0001ade0  2**4
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 10 .debug_str    0000047e  0000000000000000  0000000000000000  00017390  2**0
+ 10 .debug_str    000004cd  0000000000000000  0000000000000000  0001aff0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 11 .comment      0000001b  0000000000000000  0000000000000000  0001780e  2**0
+ 11 .comment      0000001b  0000000000000000  0000000000000000  0001b4bd  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 0000000040080000 l    d  .text	0000000000000000 .text
 0000000040083d60 l    d  .rodata	0000000000000000 .rodata
-0000000040083ee0 l    d  .eh_frame	0000000000000000 .eh_frame
-00000000400843b0 l    d  .data	0000000000000000 .data
-0000000040085000 l    d  .bss	0000000000000000 .bss
+0000000040083ef8 l    d  .eh_frame	0000000000000000 .eh_frame
+0000000040085000 l    d  .data	0000000000000000 .data
+0000000040089000 l    d  .bss	0000000000000000 .bss
 0000000000000000 l    d  .debug_line	0000000000000000 .debug_line
 0000000000000000 l    d  .debug_line_str	0000000000000000 .debug_line_str
 0000000000000000 l    d  .debug_info	0000000000000000 .debug_info
@@ -52,14 +52,19 @@ SYMBOL TABLE:
 0000000000000000 l    d  .debug_str	0000000000000000 .debug_str
 0000000000000000 l    d  .comment	0000000000000000 .comment
 0000000000000000 l    df *ABS*	0000000000000000 boot.s.o
-0000000040089000 l       .bss	0000000000000000 _stack_top_el3
-000000004008007c l       .text	0000000000000000 from_el3_to_el1
-0000000040080078 l       .text	0000000000000000 from_el2_to_el1
-0000000040080024 l       .text	0000000000000000 el1_entry_point
-0000000040085000 l       .bss	0000000000000000 _stack_bottom
-0000000040087000 l       .bss	0000000000000000 _stack_bottom_el3
+000000004008d000 l       .bss	0000000000000000 _stack_top_el3
+00000000400800b4 l       .text	0000000000000000 from_el3_to_el1
+0000000040080098 l       .text	0000000000000000 from_el2_to_el1
+000000004008f000 l       .bss	0000000000000000 _stack_top_second
+000000004008005c l       .text	0000000000000000 primary_entry
+000000004008b000 l       .bss	0000000000000000 _stack_top
+000000004008009c l       .text	0000000000000000 stack_test
+0000000040089000 l       .bss	0000000000000000 _stack_bottom
+000000004008b000 l       .bss	0000000000000000 _stack_bottom_el3
+000000004008d000 l       .bss	0000000000000000 _stack_bottom_second
 0000000000000000 l    df *ABS*	0000000000000000 main.c
-00000000400800e8 l     F .text	000000000000003c hvc_call
+0000000040080128 l     F .text	000000000000003c hvc_call
+0000000040080164 l     F .text	000000000000001c get_current_cpu_id
 0000000000000000 l    df *ABS*	0000000000000000 exception.s.o
 0000000000000000 l    df *ABS*	0000000000000000 exception_el3.s.o
 0000000000000000 l    df *ABS*	0000000000000000 exception.c
@@ -68,7 +73,7 @@ SYMBOL TABLE:
 00000000400821d0 l     F .text	0000000000000018 read_esr_el3
 0000000000000000 l    df *ABS*	0000000000000000 io.c
 0000000000000000 l    df *ABS*	0000000000000000 printf.c
-00000000400843b8 l     O .data	0000000000000010 digits
+0000000040085000 l     O .data	0000000000000010 digits
 0000000040082498 l     F .text	000000000000006c addchar
 0000000040082504 l     F .text	0000000000000120 print_str
 0000000040082624 l     F .text	00000000000001a4 print_int
@@ -76,13 +81,15 @@ SYMBOL TABLE:
 00000000400829b8 l     F .text	00000000000000b4 fmtnum
 0000000000000000 l    df *ABS*	0000000000000000 mmu.s.o
 0000000000000000 l    df *ABS*	0000000000000000 page.c
-0000000040089000 l     O .bss	0000000000001000 pt0
-000000004008a000 l     O .bss	0000000000001000 pt1
+0000000040086000 l     O .data	0000000000001000 pt0
+0000000040087000 l     O .data	0000000000001000 pt1
+0000000040088000 l     O .data	0000000000000001 mmu_enable_flag
 0000000000000000 l    df *ABS*	0000000000000000 string.c
 000000004008230c g     F .text	0000000000000030 invalid_exception_el3
 00000000400837cc g     F .text	000000000000002c strcpy
 0000000040083340 g     F .text	000000000000009c printf
 0000000040080800 g       .text	0000000000000000 exception_vector_base
+0000000040080024 g       .text	0000000000000000 second_entry
 0000000040081800 g       .text	0000000000000000 exception_vector_base_el3
 0000000040083af8 g     F .text	00000000000000d8 memmove
 000000004008324c g     F .text	000000000000008c snprintf
@@ -94,9 +101,9 @@ SYMBOL TABLE:
 000000004008216c g     F .text	0000000000000034 handle_irq_exception
 00000000400821a0 g     F .text	0000000000000030 invalid_exception
 0000000040082a6c g     F .text	00000000000007e0 vsnprintf
+0000000040080180 g     F .text	000000000000001c simple_console
 00000000400836fc g     F .text	0000000000000020 enable_mmu
-00000000400801d0 g     F .text	0000000000000068 kernel_main
-0000000040087000 g       .bss	0000000000000000 _stack_top
+00000000400801e0 g     F .text	0000000000000068 kernel_main
 000000004008375c g     F .text	0000000000000070 strcat
 00000000400835d0 g     F .text	000000000000003c print_binstr
 00000000400832d8 g     F .text	0000000000000068 vprintf
@@ -111,14 +118,14 @@ SYMBOL TABLE:
 000000004008246c g     F .text	000000000000002c uart_getc
 0000000040083998 g     F .text	0000000000000060 memset
 00000000400823ec g     F .text	000000000000003c uart_putc
+0000000040080248 g     F .text	0000000000000018 second_kernel_main
 0000000040083888 g     F .text	0000000000000028 strcmp
 00000000400821e8 g     F .text	00000000000000f0 handle_sync_exception_el3
 0000000040083478 g     F .text	000000000000009c error
 0000000040083650 g     F .text	00000000000000ac init_page_table
 0000000040083610 g       .text	0000000000000000 init_mmu
 00000000400833dc g     F .text	000000000000009c warning
-0000000040080124 g     F .text	00000000000000ac test_va
-00000000400843b0 g     O .data	0000000000000008 str
+000000004008019c g     F .text	0000000000000044 main_entry
 000000004008371c g     F .text	0000000000000040 strlen
 00000000400838b0 g     F .text	0000000000000054 strchr
 
@@ -127,16 +134,15 @@ SYMBOL TABLE:
 Disassembly of section .text:
 
 0000000040080000 <_start>:
-.extern exception_vector_base
+
 
 _start:
 
     // 设置栈指针
     ldr x0, =_stack_top_el3
-    40080000:	58000680 	ldr	x0, 400800d0 <from_el3_to_el1+0x54>
+    40080000:	58000840 	ldr	x0, 40080108 <from_el3_to_el1+0x54>
     mov sp, x0
     40080004:	9100001f 	mov	sp, x0
-
 
     mrs x0, CurrentEL          // Read current exception level
     40080008:	d5384240 	mrs	x0, currentel
@@ -146,297 +152,355 @@ _start:
     cmp x0, #3
     40080010:	f1000c1f 	cmp	x0, #0x3
     b.eq from_el3_to_el1       // Branch if we are in EL3
-    40080014:	54000340 	b.eq	4008007c <from_el3_to_el1>  // b.none
+    40080014:	54000500 	b.eq	400800b4 <from_el3_to_el1>  // b.none
 
     cmp x0, #2
     40080018:	f100081f 	cmp	x0, #0x2
     b.eq from_el2_to_el1       // Branch if we are in EL2
-    4008001c:	540002e0 	b.eq	40080078 <from_el2_to_el1>  // b.none
+    4008001c:	540003e0 	b.eq	40080098 <from_el2_to_el1>  // b.none
 
     b   .
     40080020:	14000000 	b	40080020 <_start+0x20>
 
-0000000040080024 <el1_entry_point>:
-
+0000000040080024 <second_entry>:
+*/
 
 // 此时CPU已经工作在EL1状态
-el1_entry_point:
+second_entry:
     // 查看当前异常等级
     mrs x0, CurrentEL          // Read current exception level
     40080024:	d5384240 	mrs	x0, currentel
     lsr x0, x0, #2             // 右移两位
     40080028:	d342fc00 	lsr	x0, x0, #2
-
+    
     // 设置栈指针
-    ldr x0, =_stack_top
-    4008002c:	58000560 	ldr	x0, 400800d8 <from_el3_to_el1+0x5c>
+    ldr x0, =_stack_top_second
+    4008002c:	58000720 	ldr	x0, 40080110 <from_el3_to_el1+0x5c>
     mov sp, x0
     40080030:	9100001f 	mov	sp, x0
 
-    bl init_page_table
-    40080034:	94000d87 	bl	40083650 <init_page_table>
-    bl enable_mmu
-    40080038:	94000db1 	bl	400836fc <enable_mmu>
+    // 使用 cpu0 的页表
+    bl      enable_mmu
+    40080034:	94000db2 	bl	400836fc <enable_mmu>
+
+    // 设置栈指针
+    ldr x0, =_stack_top_second
+    40080038:	580006c0 	ldr	x0, 40080110 <from_el3_to_el1+0x5c>
+    mov sp, x0
+    4008003c:	9100001f 	mov	sp, x0
+
+    adrp    x0, exception_vector_base
+    40080040:	90000000 	adrp	x0, 40080000 <_start>
+    add     x0, x0, :lo12:exception_vector_base
+    40080044:	91200000 	add	x0, x0, #0x800
+    msr     vbar_el1, x0
+    40080048:	d518c000 	msr	vbar_el1, x0
+    dsb     sy      // 确保所有内存访问完成
+    4008004c:	d5033f9f 	dsb	sy
+    isb             // 确保所有指令都执行完成
+    40080050:	d5033fdf 	isb
+
+    bl second_kernel_main
+    40080054:	9400007d 	bl	40080248 <second_kernel_main>
+
+    b .
+    40080058:	14000000 	b	40080058 <second_entry+0x34>
+
+000000004008005c <primary_entry>:
+
+// 此时CPU已经工作在EL1状态
+primary_entry:
+    // 查看当前异常等级
+    mrs x0, CurrentEL          // Read current exception level
+    4008005c:	d5384240 	mrs	x0, currentel
+    lsr x0, x0, #2             // 右移两位
+    40080060:	d342fc00 	lsr	x0, x0, #2
 
     // 设置栈指针
     ldr x0, =_stack_top
-    4008003c:	580004e0 	ldr	x0, 400800d8 <from_el3_to_el1+0x5c>
+    40080064:	580005a0 	ldr	x0, 40080118 <from_el3_to_el1+0x64>
     mov sp, x0
-    40080040:	9100001f 	mov	sp, x0
+    40080068:	9100001f 	mov	sp, x0
+
+    bl init_page_table
+    4008006c:	94000d79 	bl	40083650 <init_page_table>
+    bl enable_mmu
+    40080070:	94000da3 	bl	400836fc <enable_mmu>
+
+    // 设置栈指针
+    ldr x0, =_stack_top
+    40080074:	58000520 	ldr	x0, 40080118 <from_el3_to_el1+0x64>
+    mov sp, x0
+    40080078:	9100001f 	mov	sp, x0
 
     adrp    x0, exception_vector_base
-    40080044:	90000000 	adrp	x0, 40080000 <_start>
+    4008007c:	90000000 	adrp	x0, 40080000 <_start>
     add     x0, x0, :lo12:exception_vector_base
-    40080048:	91200000 	add	x0, x0, #0x800
+    40080080:	91200000 	add	x0, x0, #0x800
     msr     vbar_el1, x0
-    4008004c:	d518c000 	msr	vbar_el1, x0
+    40080084:	d518c000 	msr	vbar_el1, x0
     dsb     sy      // 确保所有内存访问完成
-    40080050:	d5033f9f 	dsb	sy
+    40080088:	d5033f9f 	dsb	sy
     isb             // 确保所有指令都执行完成
-    40080054:	d5033fdf 	isb
-    mov x1, 0x2
-    smc #0
-    hvc #0
-*/
-
-    mov x0, #1
-    40080058:	d2800020 	mov	x0, #0x1                   	// #1
-    mov x1, #2
-    4008005c:	d2800041 	mov	x1, #0x2                   	// #2
-    sub sp, sp, 2 * 8
-    40080060:	d10043ff 	sub	sp, sp, #0x10
-    str	x0, [sp, #0]
-    40080064:	f90003e0 	str	x0, [sp]
-    str	x1, [sp, #8]
-    40080068:	f90007e1 	str	x1, [sp, #8]
-    add sp, sp, 2 * 8
-    4008006c:	910043ff 	add	sp, sp, #0x10
+    4008008c:	d5033fdf 	isb
 
     // 调用 C 语言的 main 函数
     bl kernel_main
-    40080070:	94000058 	bl	400801d0 <kernel_main>
+    40080090:	94000054 	bl	400801e0 <kernel_main>
 
 	b .
-    40080074:	14000000 	b	40080074 <el1_entry_point+0x50>
+    40080094:	14000000 	b	40080094 <primary_entry+0x38>
 
-0000000040080078 <from_el2_to_el1>:
-
-
+0000000040080098 <from_el2_to_el1>:
 
 
+
+// 从el2到el1
 from_el2_to_el1:
     b .
-    40080078:	14000000 	b	40080078 <from_el2_to_el1>
+    40080098:	14000000 	b	40080098 <from_el2_to_el1>
 
-000000004008007c <from_el3_to_el1>:
+000000004008009c <stack_test>:
 
+stack_test:
+    mov x0, #1
+    4008009c:	d2800020 	mov	x0, #0x1                   	// #1
+    mov x1, #2
+    400800a0:	d2800041 	mov	x1, #0x2                   	// #2
+    sub sp, sp, 2 * 8
+    400800a4:	d10043ff 	sub	sp, sp, #0x10
+    str	x0, [sp, #0]
+    400800a8:	f90003e0 	str	x0, [sp]
+    str	x1, [sp, #8]
+    400800ac:	f90007e1 	str	x1, [sp, #8]
+    add sp, sp, 2 * 8
+    400800b0:	910043ff 	add	sp, sp, #0x10
+
+00000000400800b4 <from_el3_to_el1>:
 
 from_el3_to_el1:
     // 设置 SCR_EL3 寄存器
     mrs x0, scr_el3
-    4008007c:	d53e1100 	mrs	x0, scr_el3
+    400800b4:	d53e1100 	mrs	x0, scr_el3
     orr x0, x0, #(1 << 0)     // 设置 NS 位为 1，进入非安全世界
-    40080080:	b2400000 	orr	x0, x0, #0x1
+    400800b8:	b2400000 	orr	x0, x0, #0x1
     orr x0, x0, #(1 << 10)    // 设置 HCE 位为 1，允许 HVC 指令
-    40080084:	b2760000 	orr	x0, x0, #0x400
+    400800bc:	b2760000 	orr	x0, x0, #0x400
     bic x0, x0, #(1 << 7)     // 清除 SMD 位，使能 SMC 指令
-    40080088:	9278f800 	and	x0, x0, #0xffffffffffffff7f
+    400800c0:	9278f800 	and	x0, x0, #0xffffffffffffff7f
     msr scr_el3, x0
-    4008008c:	d51e1100 	msr	scr_el3, x0
+    400800c4:	d51e1100 	msr	scr_el3, x0
 
     // 设置 HCD 位为 1，允许 HVC 指令
     mrs x0, hcr_el2           // 读取 HCR_EL2 寄存器
-    40080090:	d53c1100 	mrs	x0, hcr_el2
+    400800c8:	d53c1100 	mrs	x0, hcr_el2
     orr x0, x0, #(1 << 29)    // 设置 HCD 位 (位29) 为 1
-    40080094:	b2630000 	orr	x0, x0, #0x20000000
+    400800cc:	b2630000 	orr	x0, x0, #0x20000000
     msr hcr_el2, x0           // 写回 HCR_EL2 寄存器
-    40080098:	d51c1100 	msr	hcr_el2, x0
+    400800d0:	d51c1100 	msr	hcr_el2, x0
 
     adrp    x0, exception_vector_base_el3
-    4008009c:	b0000000 	adrp	x0, 40081000 <exception_vector_base+0x800>
+    400800d4:	b0000000 	adrp	x0, 40081000 <exception_vector_base+0x800>
     add     x0, x0, :lo12:exception_vector_base_el3
-    400800a0:	91200000 	add	x0, x0, #0x800
+    400800d8:	91200000 	add	x0, x0, #0x800
     msr     vbar_el3, x0
-    400800a4:	d51ec000 	msr	vbar_el3, x0
+    400800dc:	d51ec000 	msr	vbar_el3, x0
     dsb     sy      // 确保所有内存访问完成
-    400800a8:	d5033f9f 	dsb	sy
+    400800e0:	d5033f9f 	dsb	sy
     isb             // 确保所有指令都执行完成
-    400800ac:	d5033fdf 	isb
+    400800e4:	d5033fdf 	isb
 
 
     // 设置 SPSR_EL3 寄存器
     // 将目标处理器状态设置为 EL1h 模式
     mov x0,     #(0b0101 << 0)   // 设置 M[4:0] 为 0b0101，即 EL1h 模式
-    400800b0:	d28000a0 	mov	x0, #0x5                   	// #5
+    400800e8:	d28000a0 	mov	x0, #0x5                   	// #5
     orr x0, x0, #(0b1111 << 6)   // 设置 DAIF[3:0] 为 0b1111，禁用所有中断
-    400800b4:	b27a0c00 	orr	x0, x0, #0x3c0
+    400800ec:	b27a0c00 	orr	x0, x0, #0x3c0
     msr spsr_el3, x0
-    400800b8:	d51e4000 	msr	spsr_el3, x0
+    400800f0:	d51e4000 	msr	spsr_el3, x0
 
     // 设置 ELR_EL3 寄存器
     // 设置返回地址为 EL1 的入口点
-    ldr x0, =el1_entry_point
-    400800bc:	58000120 	ldr	x0, 400800e0 <from_el3_to_el1+0x64>
+    ldr x0, =primary_entry
+    400800f4:	58000160 	ldr	x0, 40080120 <from_el3_to_el1+0x6c>
     msr elr_el3, x0
-    400800c0:	d51e4020 	msr	elr_el3, x0
+    400800f8:	d51e4020 	msr	elr_el3, x0
 
     // 设置 SP_EL1 寄存器
     // 设置 EL1 的堆栈指针
     ldr x0, =_stack_top
-    400800c4:	580000a0 	ldr	x0, 400800d8 <from_el3_to_el1+0x5c>
+    400800fc:	580000e0 	ldr	x0, 40080118 <from_el3_to_el1+0x64>
     msr sp_el1, x0
-    400800c8:	d51c4100 	msr	sp_el1, x0
+    40080100:	d51c4100 	msr	sp_el1, x0
 
     // 使用 ERET 指令返回到 EL1
     eret
-    400800cc:	d69f03e0 	eret
-    400800d0:	40089000 	.word	0x40089000
-    400800d4:	00000000 	.word	0x00000000
-    400800d8:	40087000 	.word	0x40087000
-    400800dc:	00000000 	.word	0x00000000
-    400800e0:	40080024 	.word	0x40080024
-    400800e4:	00000000 	.word	0x00000000
+    40080104:	d69f03e0 	eret
+    40080108:	4008d000 	.word	0x4008d000
+    4008010c:	00000000 	.word	0x00000000
+    40080110:	4008f000 	.word	0x4008f000
+    40080114:	00000000 	.word	0x00000000
+    40080118:	4008b000 	.word	0x4008b000
+    4008011c:	00000000 	.word	0x00000000
+    40080120:	4008005c 	.word	0x4008005c
+    40080124:	00000000 	.word	0x00000000
 
-00000000400800e8 <hvc_call>:
+0000000040080128 <hvc_call>:
  
     ret = (int)reg0;
     return ret;
 }
 
 static inline uint32_t hvc_call(uint32_t function_id, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
-    400800e8:	d100c3ff 	sub	sp, sp, #0x30
-    400800ec:	f9000fe0 	str	x0, [sp, #24]
-    400800f0:	f9000be1 	str	x1, [sp, #16]
-    400800f4:	f90007e2 	str	x2, [sp, #8]
-    400800f8:	f90003e3 	str	x3, [sp]
+    40080128:	d100c3ff 	sub	sp, sp, #0x30
+    4008012c:	f9000fe0 	str	x0, [sp, #24]
+    40080130:	f9000be1 	str	x1, [sp, #16]
+    40080134:	f90007e2 	str	x2, [sp, #8]
+    40080138:	f90003e3 	str	x3, [sp]
     register uint64_t reg0 __asm__("x0") = function_id;
-    400800fc:	f9400fe0 	ldr	x0, [sp, #24]
+    4008013c:	f9400fe0 	ldr	x0, [sp, #24]
     register uint64_t reg1 __asm__("x1") = arg0;
-    40080100:	f9400be1 	ldr	x1, [sp, #16]
+    40080140:	f9400be1 	ldr	x1, [sp, #16]
     register uint64_t reg2 __asm__("x2") = arg1;
-    40080104:	f94007e2 	ldr	x2, [sp, #8]
+    40080144:	f94007e2 	ldr	x2, [sp, #8]
     register uint64_t reg3 __asm__("x3") = arg2;
-    40080108:	f94003e3 	ldr	x3, [sp]
+    40080148:	f94003e3 	ldr	x3, [sp]
     int ret = 0;
-    4008010c:	b9002fff 	str	wzr, [sp, #44]
+    4008014c:	b9002fff 	str	wzr, [sp, #44]
  
     asm volatile ("hvc    #0\n" : "+r" (reg0) :"r"(reg1), "r"(reg2), "r"(reg3));
-    40080110:	d4000002 	hvc	#0x0
+    40080150:	d4000002 	hvc	#0x0
  
     ret = (int)reg0;
-    40080114:	b9002fe0 	str	w0, [sp, #44]
+    40080154:	b9002fe0 	str	w0, [sp, #44]
     return ret;
-    40080118:	b9802fe0 	ldrsw	x0, [sp, #44]
+    40080158:	b9802fe0 	ldrsw	x0, [sp, #44]
 }
-    4008011c:	9100c3ff 	add	sp, sp, #0x30
-    40080120:	d65f03c0 	ret
+    4008015c:	9100c3ff 	add	sp, sp, #0x30
+    40080160:	d65f03c0 	ret
 
-0000000040080124 <test_va>:
+0000000040080164 <get_current_cpu_id>:
+#include "aj_types.h"
+#include "io.h"
 #include "smp.h"
 #include "psci.h"
 
-char * str = "start core\n";
-
-void test_va(int x, ...) {
-    40080124:	d10203ff 	sub	sp, sp, #0x80
-    40080128:	b9000fe0 	str	w0, [sp, #12]
-    4008012c:	f90027e1 	str	x1, [sp, #72]
-    40080130:	f9002be2 	str	x2, [sp, #80]
-    40080134:	f9002fe3 	str	x3, [sp, #88]
-    40080138:	f90033e4 	str	x4, [sp, #96]
-    4008013c:	f90037e5 	str	x5, [sp, #104]
-    40080140:	f9003be6 	str	x6, [sp, #112]
-    40080144:	f9003fe7 	str	x7, [sp, #120]
-    va_list va;
-    va_start(va, x);
-    40080148:	910203e0 	add	x0, sp, #0x80
-    4008014c:	f9000fe0 	str	x0, [sp, #24]
-    40080150:	910203e0 	add	x0, sp, #0x80
-    40080154:	f90013e0 	str	x0, [sp, #32]
-    40080158:	910103e0 	add	x0, sp, #0x40
-    4008015c:	f90017e0 	str	x0, [sp, #40]
-    40080160:	128006e0 	mov	w0, #0xffffffc8            	// #-56
-    40080164:	b90033e0 	str	w0, [sp, #48]
-    40080168:	b90037ff 	str	wzr, [sp, #52]
-    int res = va_arg(va, int);
-    4008016c:	b94033e1 	ldr	w1, [sp, #48]
-    40080170:	f9400fe0 	ldr	x0, [sp, #24]
-    40080174:	7100003f 	cmp	w1, #0x0
-    40080178:	540000ab 	b.lt	4008018c <test_va+0x68>  // b.tstop
-    4008017c:	91002c01 	add	x1, x0, #0xb
-    40080180:	927df021 	and	x1, x1, #0xfffffffffffffff8
-    40080184:	f9000fe1 	str	x1, [sp, #24]
-    40080188:	1400000d 	b	400801bc <test_va+0x98>
-    4008018c:	11002022 	add	w2, w1, #0x8
-    40080190:	b90033e2 	str	w2, [sp, #48]
-    40080194:	b94033e2 	ldr	w2, [sp, #48]
-    40080198:	7100005f 	cmp	w2, #0x0
-    4008019c:	540000ad 	b.le	400801b0 <test_va+0x8c>
-    400801a0:	91002c01 	add	x1, x0, #0xb
-    400801a4:	927df021 	and	x1, x1, #0xfffffffffffffff8
-    400801a8:	f9000fe1 	str	x1, [sp, #24]
-    400801ac:	14000004 	b	400801bc <test_va+0x98>
-    400801b0:	f94013e2 	ldr	x2, [sp, #32]
-    400801b4:	93407c20 	sxtw	x0, w1
-    400801b8:	8b000040 	add	x0, x2, x0
-    400801bc:	b9400000 	ldr	w0, [x0]
-    400801c0:	b9003fe0 	str	w0, [sp, #60]
-    va_end(va);
+static inline unsigned int get_current_cpu_id(void) {
+    40080164:	d10043ff 	sub	sp, sp, #0x10
+    unsigned long mpidr;
+    asm volatile ("mrs %0, mpidr_el1" : "=r" (mpidr));
+    40080168:	d53800a0 	mrs	x0, mpidr_el1
+    4008016c:	f90007e0 	str	x0, [sp, #8]
+    return (unsigned int)(mpidr & 0xff);
+    40080170:	f94007e0 	ldr	x0, [sp, #8]
+    40080174:	12001c00 	and	w0, w0, #0xff
 }
-    400801c4:	d503201f 	nop
-    400801c8:	910203ff 	add	sp, sp, #0x80
-    400801cc:	d65f03c0 	ret
+    40080178:	910043ff 	add	sp, sp, #0x10
+    4008017c:	d65f03c0 	ret
 
-00000000400801d0 <kernel_main>:
+0000000040080180 <simple_console>:
 
-extern void smc_psci_off();
-extern void trigger_exception();
+extern void second_entry();
 
-void kernel_main(void) {
-    400801d0:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
-    400801d4:	910003fd 	mov	x29, sp
-	uart_init();
-    400801d8:	94000859 	bl	4008233c <uart_init>
-
-    uart_putstr(str);
-    400801dc:	90000020 	adrp	x0, 40084000 <atol+0x3c4>
-    400801e0:	910ec000 	add	x0, x0, #0x3b0
-    400801e4:	f9400000 	ldr	x0, [x0]
-    400801e8:	94000890 	bl	40082428 <uart_putstr>
-    // uint32_t result = smc_call(PSCI_0_2_FN64_CPU_OFF, 0, 0, 0);
-    // if (result != 0) {
-    //     printf("stop core 1 failed!\n");
-    // }
-
-    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, 0x40080000, 0x40083000);
-    400801ec:	d2860003 	mov	x3, #0x3000                	// #12288
-    400801f0:	f2a80103 	movk	x3, #0x4008, lsl #16
-    400801f4:	d2a80102 	mov	x2, #0x40080000            	// #1074266112
-    400801f8:	d2800021 	mov	x1, #0x1                   	// #1
-    400801fc:	d2800060 	mov	x0, #0x3                   	// #3
-    40080200:	f2b88000 	movk	x0, #0xc400, lsl #16
-    40080204:	97ffffb9 	bl	400800e8 <hvc_call>
-    40080208:	b9001fe0 	str	w0, [sp, #28]
-    if (result != 0) {
-    4008020c:	b9401fe0 	ldr	w0, [sp, #28]
-    40080210:	7100001f 	cmp	w0, #0x0
-    40080214:	54000080 	b.eq	40080224 <kernel_main+0x54>  // b.none
-        printf("start core 1 failed!\n");
-    40080218:	f0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    4008021c:	9135c000 	add	x0, x0, #0xd70
-    40080220:	94000c48 	bl	40083340 <printf>
-    }
-
+void simple_console() {
+    40080180:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    40080184:	910003fd 	mov	x29, sp
     while(1) 
     {
         char c = uart_getc();
-    40080224:	94000892 	bl	4008246c <uart_getc>
-    40080228:	39006fe0 	strb	w0, [sp, #27]
+    40080188:	940008b9 	bl	4008246c <uart_getc>
+    4008018c:	39007fe0 	strb	w0, [sp, #31]
         uart_putc(c);
-    4008022c:	39406fe0 	ldrb	w0, [sp, #27]
-    40080230:	9400086f 	bl	400823ec <uart_putc>
+    40080190:	39407fe0 	ldrb	w0, [sp, #31]
+    40080194:	94000896 	bl	400823ec <uart_putc>
     {
-    40080234:	17fffffc 	b	40080224 <kernel_main+0x54>
+    40080198:	17fffffc 	b	40080188 <simple_console+0x8>
+
+000000004008019c <main_entry>:
+    }
+}
+
+void main_entry() {
+    4008019c:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    400801a0:	910003fd 	mov	x29, sp
+    while(1) {
+        for(uint64_t i=0; i<0xffffff; i++);
+    400801a4:	f9000fff 	str	xzr, [sp, #24]
+    400801a8:	14000004 	b	400801b8 <main_entry+0x1c>
+    400801ac:	f9400fe0 	ldr	x0, [sp, #24]
+    400801b0:	91000400 	add	x0, x0, #0x1
+    400801b4:	f9000fe0 	str	x0, [sp, #24]
+    400801b8:	f9400fe1 	ldr	x1, [sp, #24]
+    400801bc:	b27f5be0 	mov	x0, #0xfffffe              	// #16777214
+    400801c0:	eb00003f 	cmp	x1, x0
+    400801c4:	54ffff49 	b.ls	400801ac <main_entry+0x10>  // b.plast
+        printf("get_current_cpu_id: %d\n", get_current_cpu_id());
+    400801c8:	97ffffe7 	bl	40080164 <get_current_cpu_id>
+    400801cc:	2a0003e1 	mov	w1, w0
+    400801d0:	f0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
+    400801d4:	91358000 	add	x0, x0, #0xd60
+    400801d8:	94000c5a 	bl	40083340 <printf>
+        for(uint64_t i=0; i<0xffffff; i++);
+    400801dc:	17fffff2 	b	400801a4 <main_entry+0x8>
+
+00000000400801e0 <kernel_main>:
+    }
+}
+
+void kernel_main(void) {
+    400801e0:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+    400801e4:	910003fd 	mov	x29, sp
+
+	uart_init();
+    400801e8:	94000855 	bl	4008233c <uart_init>
+
+    uart_putstr("start core\n");
+    400801ec:	f0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
+    400801f0:	9135e000 	add	x0, x0, #0xd78
+    400801f4:	9400088d 	bl	40082428 <uart_putstr>
+
+    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void*)second_entry, 0x40086000);
+    400801f8:	90000000 	adrp	x0, 40080000 <_start>
+    400801fc:	91009000 	add	x0, x0, #0x24
+    40080200:	d28c0003 	mov	x3, #0x6000                	// #24576
+    40080204:	f2a80103 	movk	x3, #0x4008, lsl #16
+    40080208:	aa0003e2 	mov	x2, x0
+    4008020c:	d2800021 	mov	x1, #0x1                   	// #1
+    40080210:	d2800060 	mov	x0, #0x3                   	// #3
+    40080214:	f2b88000 	movk	x0, #0xc400, lsl #16
+    40080218:	97ffffc4 	bl	40080128 <hvc_call>
+    4008021c:	b9001fe0 	str	w0, [sp, #28]
+    if (result != 0) {
+    40080220:	b9401fe0 	ldr	w0, [sp, #28]
+    40080224:	7100001f 	cmp	w0, #0x0
+    40080228:	54000080 	b.eq	40080238 <kernel_main+0x58>  // b.none
+        printf("start core 1 failed!\n");
+    4008022c:	f0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
+    40080230:	91362000 	add	x0, x0, #0xd88
+    40080234:	94000c43 	bl	40083340 <printf>
+    }
+
+    main_entry();
+    40080238:	97ffffd9 	bl	4008019c <main_entry>
+    // can't reach here !
+}
+    4008023c:	d503201f 	nop
+    40080240:	a8c27bfd 	ldp	x29, x30, [sp], #32
+    40080244:	d65f03c0 	ret
+
+0000000040080248 <second_kernel_main>:
+
+void second_kernel_main() {
+    40080248:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+    4008024c:	910003fd 	mov	x29, sp
+
+    main_entry();
+    40080250:	97ffffd3 	bl	4008019c <main_entry>
+    // can't reach here !
+    40080254:	d503201f 	nop
+    40080258:	a8c17bfd 	ldp	x29, x30, [sp], #16
+    4008025c:	d65f03c0 	ret
 	...
 
 0000000040080800 <exception_vector_base>:
@@ -1620,12 +1684,12 @@ void handle_sync_exception(uint64_t *stack_pointer) {
     printf("el1 esr: %x\n", el1_esr);
     40082098:	b9404fe1 	ldr	w1, [sp, #76]
     4008209c:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400820a0:	91362000 	add	x0, x0, #0xd88
+    400820a0:	91368000 	add	x0, x0, #0xda0
     400820a4:	940004a7 	bl	40083340 <printf>
     printf("ec: %x\n", ec);
     400820a8:	b9404be1 	ldr	w1, [sp, #72]
     400820ac:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400820b0:	91366000 	add	x0, x0, #0xd98
+    400820b0:	9136c000 	add	x0, x0, #0xdb0
     400820b4:	940004a3 	bl	40083340 <printf>
     
 
@@ -1635,7 +1699,7 @@ void handle_sync_exception(uint64_t *stack_pointer) {
     400820c0:	540000a1 	b.ne	400820d4 <handle_sync_exception+0x64>  // b.any
         printf("This is smc call handler\n");
     400820c4:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400820c8:	91368000 	add	x0, x0, #0xda0
+    400820c8:	9136e000 	add	x0, x0, #0xdb8
     400820cc:	9400049d 	bl	40083340 <printf>
         return;
     400820d0:	14000025 	b	40082164 <handle_sync_exception+0xf4>
@@ -1643,7 +1707,7 @@ void handle_sync_exception(uint64_t *stack_pointer) {
 
     printf("This is handle_sync_exception: \n");
     400820d4:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400820d8:	91370000 	add	x0, x0, #0xdc0
+    400820d8:	91376000 	add	x0, x0, #0xdd8
     400820dc:	94000499 	bl	40083340 <printf>
     for(int i=0; i<31; i++) {
     400820e0:	b9005fff 	str	wzr, [sp, #92]
@@ -1657,7 +1721,7 @@ void handle_sync_exception(uint64_t *stack_pointer) {
     400820f8:	f94017e2 	ldr	x2, [sp, #40]
     400820fc:	b9405fe1 	ldr	w1, [sp, #92]
     40082100:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082104:	9137a000 	add	x0, x0, #0xde8
+    40082104:	91380000 	add	x0, x0, #0xe00
     40082108:	9400048e 	bl	40083340 <printf>
     for(int i=0; i<31; i++) {
     4008210c:	b9405fe0 	ldr	w0, [sp, #92]
@@ -1686,7 +1750,7 @@ void handle_sync_exception(uint64_t *stack_pointer) {
     4008214c:	f94023e2 	ldr	x2, [sp, #64]
     40082150:	f9401fe1 	ldr	x1, [sp, #56]
     40082154:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082158:	91386000 	add	x0, x0, #0xe18
+    40082158:	9138c000 	add	x0, x0, #0xe30
     4008215c:	94000479 	bl	40083340 <printf>
 
     while(1);
@@ -1786,12 +1850,12 @@ void handle_sync_exception_el3(uint64_t *stack_pointer) {
     printf("        el1 esr: %x\n", el3_esr);
     40082210:	b9404fe1 	ldr	w1, [sp, #76]
     40082214:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082218:	9138e000 	add	x0, x0, #0xe38
+    40082218:	91394000 	add	x0, x0, #0xe50
     4008221c:	94000449 	bl	40083340 <printf>
     printf("        ec: %x\n", ec);
     40082220:	b9404be1 	ldr	w1, [sp, #72]
     40082224:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082228:	91394000 	add	x0, x0, #0xe50
+    40082228:	9139a000 	add	x0, x0, #0xe68
     4008222c:	94000445 	bl	40083340 <printf>
     
 
@@ -1801,7 +1865,7 @@ void handle_sync_exception_el3(uint64_t *stack_pointer) {
     40082238:	540000a1 	b.ne	4008224c <handle_sync_exception_el3+0x64>  // b.any
         printf("            This is smc call handler\n");
     4008223c:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082240:	91398000 	add	x0, x0, #0xe60
+    40082240:	9139e000 	add	x0, x0, #0xe78
     40082244:	9400043f 	bl	40083340 <printf>
         return;
     40082248:	14000022 	b	400822d0 <handle_sync_exception_el3+0xe8>
@@ -1819,7 +1883,7 @@ void handle_sync_exception_el3(uint64_t *stack_pointer) {
     40082264:	f94017e2 	ldr	x2, [sp, #40]
     40082268:	b9405fe1 	ldr	w1, [sp, #92]
     4008226c:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    40082270:	913a2000 	add	x0, x0, #0xe88
+    40082270:	913a8000 	add	x0, x0, #0xea0
     40082274:	94000433 	bl	40083340 <printf>
     for(int i=0; i<31; i++) {
     40082278:	b9405fe0 	ldr	w0, [sp, #92]
@@ -1848,7 +1912,7 @@ void handle_sync_exception_el3(uint64_t *stack_pointer) {
     400822b8:	f94023e2 	ldr	x2, [sp, #64]
     400822bc:	f9401fe1 	ldr	x1, [sp, #56]
     400822c0:	b0000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400822c4:	913ae000 	add	x0, x0, #0xeb8
+    400822c4:	913b4000 	add	x0, x0, #0xed0
     400822c8:	9400041e 	bl	40083340 <printf>
 
     while(1);
@@ -2233,8 +2297,8 @@ static void print_int(pstream_t *ps, long n, int base, strprops_t props){
     40082694:	f94037e0 	ldr	x0, [sp, #104]
     40082698:	91000402 	add	x2, x0, #0x1
     4008269c:	f90037e2 	str	x2, [sp, #104]
-    400826a0:	d0000002 	adrp	x2, 40084000 <atol+0x3c4>
-    400826a4:	910ee042 	add	x2, x2, #0x3b8
+    400826a0:	f0000002 	adrp	x2, 40085000 <digits>
+    400826a4:	91000042 	add	x2, x2, #0x0
     400826a8:	38616841 	ldrb	w1, [x2, x1]
     400826ac:	39000001 	strb	w1, [x0]
         n /= base;
@@ -2363,8 +2427,8 @@ static void print_unsigned(pstream_t *ps, uint32_t n, int base,
     40082814:	f94037e0 	ldr	x0, [sp, #104]
     40082818:	91000402 	add	x2, x0, #0x1
     4008281c:	f90037e2 	str	x2, [sp, #104]
-    40082820:	d0000002 	adrp	x2, 40084000 <atol+0x3c4>
-    40082824:	910ee042 	add	x2, x2, #0x3b8
+    40082820:	f0000002 	adrp	x2, 40085000 <digits>
+    40082824:	91000042 	add	x2, x2, #0x0
     40082828:	38616841 	ldrb	w1, [x2, x1]
     4008282c:	39000001 	strb	w1, [x0]
 	n /= base;
@@ -3521,7 +3585,7 @@ void print_binstr(uint32_t x)
     400835ec:	910083e0 	add	x0, sp, #0x20
     400835f0:	aa0003e1 	mov	x1, x0
     400835f4:	90000000 	adrp	x0, 40083000 <vsnprintf+0x594>
-    400835f8:	913b6000 	add	x0, x0, #0xed8
+    400835f8:	913bc000 	add	x0, x0, #0xef0
     400835fc:	97ffff51 	bl	40083340 <printf>
 }
     40083600:	d503201f 	nop
@@ -3572,10 +3636,10 @@ init_mmu:
     4008364c:	00000000 	.word	0x00000000
 
 0000000040083650 <init_page_table>:
+static uint64_t pt0[512] __attribute__((aligned(4096))) = {-1};
+static uint64_t pt1[512] __attribute__((aligned(4096))) = {-1};
 
-// 定义页表
-static uint64_t pt0[512] __attribute__((aligned(4096)));
-static uint64_t pt1[512] __attribute__((aligned(4096)));
+static bool mmu_enable_flag = -1;
 
 void init_page_table() {
     40083650:	d10043ff 	sub	sp, sp, #0x10
@@ -3584,7 +3648,7 @@ void init_page_table() {
     40083654:	b9000fff 	str	wzr, [sp, #12]
     40083658:	14000008 	b	40083678 <init_page_table+0x28>
         pt0[i] = 0;
-    4008365c:	d0000020 	adrp	x0, 40089000 <pt0>
+    4008365c:	f0000000 	adrp	x0, 40086000 <pt0>
     40083660:	91000000 	add	x0, x0, #0x0
     40083664:	b9800fe1 	ldrsw	x1, [sp, #12]
     40083668:	f821781f 	str	xzr, [x0, x1, lsl #3]
@@ -3600,7 +3664,7 @@ void init_page_table() {
     40083684:	b9000bff 	str	wzr, [sp, #8]
     40083688:	14000008 	b	400836a8 <init_page_table+0x58>
         pt1[i] = 0;
-    4008368c:	f0000020 	adrp	x0, 4008a000 <pt1>
+    4008368c:	90000020 	adrp	x0, 40087000 <pt1>
     40083690:	91000000 	add	x0, x0, #0x0
     40083694:	b9800be1 	ldrsw	x1, [sp, #8]
     40083698:	f821781f 	str	xzr, [x0, x1, lsl #3]
@@ -3614,20 +3678,20 @@ void init_page_table() {
     }
 
     pt0[0] = (uint64_t)pt1 + MM_TYPE_TABLE;    // 512 G
-    400836b4:	f0000020 	adrp	x0, 4008a000 <pt1>
+    400836b4:	90000020 	adrp	x0, 40087000 <pt1>
     400836b8:	91000000 	add	x0, x0, #0x0
     400836bc:	91000c01 	add	x1, x0, #0x3
-    400836c0:	d0000020 	adrp	x0, 40089000 <pt0>
+    400836c0:	f0000000 	adrp	x0, 40086000 <pt0>
     400836c4:	91000000 	add	x0, x0, #0x0
     400836c8:	f9000001 	str	x1, [x0]
 
     pt1[0] = (0          + PTE_DEVICE_MEMORY);  // 0x0000_0000 0x4000_0000
-    400836cc:	f0000020 	adrp	x0, 4008a000 <pt1>
+    400836cc:	90000020 	adrp	x0, 40087000 <pt1>
     400836d0:	91000000 	add	x0, x0, #0x0
     400836d4:	d2808021 	mov	x1, #0x401                 	// #1025
     400836d8:	f9000001 	str	x1, [x0]
     pt1[1] = (0x40000000 + PTE_NORMAL_MEMORY);  // 0x4000_0000 0x8000_0000
-    400836dc:	f0000020 	adrp	x0, 4008a000 <pt1>
+    400836dc:	90000020 	adrp	x0, 40087000 <pt1>
     400836e0:	91000000 	add	x0, x0, #0x0
     400836e4:	d280e0a1 	mov	x1, #0x705                 	// #1797
     400836e8:	f2a80001 	movk	x1, #0x4000, lsl #16
@@ -3639,13 +3703,13 @@ void init_page_table() {
 
 00000000400836fc <enable_mmu>:
 
-extern void init_mmu(uint64_t*);
+extern void init_mmu(uint64_t);
 
 void enable_mmu() {
     400836fc:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
     40083700:	910003fd 	mov	x29, sp
-    init_mmu((uint64_t*)(void*)pt0);
-    40083704:	d0000020 	adrp	x0, 40089000 <pt0>
+    init_mmu((uint64_t)(void*)pt0);
+    40083704:	f0000000 	adrp	x0, 40086000 <pt0>
     40083708:	91000000 	add	x0, x0, #0x0
     4008370c:	97ffffc1 	bl	40083610 <init_mmu>
     40083710:	d503201f 	nop

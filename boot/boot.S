@@ -7,13 +7,16 @@
 .extern init_page_table
 .extern enable_mmu
 .extern exception_vector_base
+.extern exception_vector_base_el3
+
+.global second_entry
+
 
 _start:
 
     // 设置栈指针
     ldr x0, =_stack_top_el3
     mov sp, x0
-
 
     mrs x0, CurrentEL          // Read current exception level
     lsr x0, x0, #2             // 右移两位
@@ -29,9 +32,35 @@ _start:
     -M virt,secure=on  设置secure=on后启动为el3等级
 */
 
+// 此时CPU已经工作在EL1状态
+second_entry:
+    // 查看当前异常等级
+    mrs x0, CurrentEL          // Read current exception level
+    lsr x0, x0, #2             // 右移两位
+    
+    // 设置栈指针
+    ldr x0, =_stack_top_second
+    mov sp, x0
+
+    // 使用 cpu0 的页表
+    bl      enable_mmu
+
+    // 设置栈指针
+    ldr x0, =_stack_top_second
+    mov sp, x0
+
+    adrp    x0, exception_vector_base
+    add     x0, x0, :lo12:exception_vector_base
+    msr     vbar_el1, x0
+    dsb     sy      // 确保所有内存访问完成
+    isb             // 确保所有指令都执行完成
+
+    bl second_kernel_main
+
+    b .
 
 // 此时CPU已经工作在EL1状态
-el1_entry_point:
+primary_entry:
     // 查看当前异常等级
     mrs x0, CurrentEL          // Read current exception level
     lsr x0, x0, #2             // 右移两位
@@ -53,20 +82,6 @@ el1_entry_point:
     dsb     sy      // 确保所有内存访问完成
     isb             // 确保所有指令都执行完成
 
-/*
-    mov x0, 0x6666
-    mov x1, 0x2
-    smc #0
-    hvc #0
-*/
-
-    mov x0, #1
-    mov x1, #2
-    sub sp, sp, 2 * 8
-    str	x0, [sp, #0]
-    str	x1, [sp, #8]
-    add sp, sp, 2 * 8
-
     // 调用 C 语言的 main 函数
     bl kernel_main
 
@@ -75,9 +90,17 @@ el1_entry_point:
 
 
 
+// 从el2到el1
 from_el2_to_el1:
     b .
 
+stack_test:
+    mov x0, #1
+    mov x1, #2
+    sub sp, sp, 2 * 8
+    str	x0, [sp, #0]
+    str	x1, [sp, #8]
+    add sp, sp, 2 * 8
 
 from_el3_to_el1:
     // 设置 SCR_EL3 寄存器
@@ -107,7 +130,7 @@ from_el3_to_el1:
 
     // 设置 ELR_EL3 寄存器
     // 设置返回地址为 EL1 的入口点
-    ldr x0, =el1_entry_point
+    ldr x0, =primary_entry
     msr elr_el3, x0
 
     // 设置 SP_EL1 寄存器
@@ -121,8 +144,8 @@ from_el3_to_el1:
 
 // 栈空间
 .section .bss
+
 .align 12
-.global _stack_top
 _stack_bottom:
     .skip 0x2000  // 4KB 的栈空间
 _stack_top:
@@ -131,3 +154,8 @@ _stack_top:
 _stack_bottom_el3:
     .skip 0x2000  // 4KB 的栈空间
 _stack_top_el3:
+
+.align 12
+_stack_bottom_second:
+    .skip 0x2000  // 4KB 的栈空间
+_stack_top_second:

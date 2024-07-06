@@ -4,44 +4,46 @@
 #include "smp.h"
 #include "psci.h"
 
-char * str = "start core\n";
-
-void test_va(int x, ...) {
-    va_list va;
-    va_start(va, x);
-    int res = va_arg(va, int);
-    va_end(va);
+static inline unsigned int get_current_cpu_id(void) {
+    unsigned long mpidr;
+    asm volatile ("mrs %0, mpidr_el1" : "=r" (mpidr));
+    return (unsigned int)(mpidr & 0xff);
 }
 
-extern void smc_psci_off();
-extern void trigger_exception();
+extern void second_entry();
 
-
-
-void kernel_main(void) {
-	uart_init();
-
-    uart_putstr(str);
-
-    // printf("this is printf func %d\n", 1);
-
-    // trigger_exception();
-
-    // uint32_t result = smc_call(PSCI_0_2_FN64_CPU_OFF, 0, 0, 0);
-    // if (result != 0) {
-    //     printf("stop core 1 failed!\n");
-    // }
-
-    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, 0x40080000, 0x40083000);
-    if (result != 0) {
-        printf("start core 1 failed!\n");
-    }
-
+void simple_console() {
     while(1) 
     {
         char c = uart_getc();
         uart_putc(c);
     }
+}
 
+void main_entry() {
+    while(1) {
+        for(uint64_t i=0; i<0xffffff; i++);
+        printf("get_current_cpu_id: %d\n", get_current_cpu_id());
+    }
+}
+
+void kernel_main(void) {
+
+	uart_init();
+
+    uart_putstr("start core\n");
+
+    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void*)second_entry, 0x40086000);
+    if (result != 0) {
+        printf("start core 1 failed!\n");
+    }
+
+    main_entry();
+    // can't reach here !
+}
+
+void second_kernel_main() {
+
+    main_entry();
     // can't reach here !
 }
