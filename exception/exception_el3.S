@@ -17,9 +17,9 @@
     stp     x26, x27, [sp, 26 * 8]
     stp     x28, x29, [sp, 28 * 8]
 
-    mrs     x9, sp_el0
-    mrs     x10, elr_el1
-    mrs     x11, spsr_el1
+    mrs     x9, sp_el1
+    mrs     x10, elr_el3
+    mrs     x11, spsr_el3
     stp     x30, x9,  [sp, 30 * 8]
     stp     x10, x11, [sp, 32 * 8]
 .endm
@@ -27,9 +27,9 @@
 .macro RESTORE_REGS
     ldp     x10, x11, [sp, 32 * 8]
     ldp     x30, x9,  [sp, 30 * 8]
-    msr     sp_el0, x9
-    msr     elr_el1, x10
-    msr     spsr_el1, x11
+    msr     sp_el1, x9
+    msr     elr_el3, x10
+    msr     spsr_el3, x11
 
     ldp     x28, x29, [sp, 28 * 8]
     ldp     x26, x27, [sp, 26 * 8]
@@ -55,7 +55,7 @@
     mov     x0, sp
     mov     x1, \kind
     mov     x2, \source
-    bl      invalid_exception
+    bl      invalid_exception_el3
     b       .Lexception_return
 .endm
 
@@ -63,7 +63,7 @@
 .p2align 7
     SAVE_REGS
     mov     x0, sp
-    bl      handle_sync_exception
+    bl      handle_sync_exception_el3
     b       .Lexception_return
 .endm
 
@@ -71,19 +71,19 @@
 .p2align 7
     SAVE_REGS
     mov     x0, sp
-    bl      handle_irq_exception
+    bl      handle_irq_exception_el3
     b       .Lexception_return
 .endm
 
 .section .text
 .p2align 11
-.global exception_vector_base
+.global exception_vector_base_el3
 
-.extern invalid_exception
-.extern handle_sync_exception
-.extern handle_irq_exception
+.extern invalid_exception_el3
+.extern handle_sync_exception_el3
+.extern handle_irq_exception_el3
 
-exception_vector_base:
+exception_vector_base_el3:
     // current EL, with SP_EL0
     INVALID_EXCP 0 0
     INVALID_EXCP 1 0
@@ -111,4 +111,10 @@ exception_vector_base:
 .Lexception_return:
     RESTORE_REGS
     eret
+
+.global trigger_exception
+trigger_exception:
+    ldr x0, =0xFFFFFFFF
+    ldr x1, [x0] // 触发数据中止异常
+    ret
 

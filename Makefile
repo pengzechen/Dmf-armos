@@ -29,8 +29,14 @@ $(BUILD_DIR)/boot.s.o: boot/boot.S
 $(BUILD_DIR)/exception.o: exception/exception.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception.c $(INCLUDE) -o $(BUILD_DIR)/exception.o
 
+$(BUILD_DIR)/exception_el3.o: exception/exception_el3.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception_el3.c $(INCLUDE) -o $(BUILD_DIR)/exception_el3.o
+
 $(BUILD_DIR)/exception.s.o: exception/exception.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception.S $(INCLUDE) -o $(BUILD_DIR)/exception.s.o
+
+$(BUILD_DIR)/exception_el3.s.o: exception/exception_el3.S
+	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception_el3.S $(INCLUDE) -o $(BUILD_DIR)/exception_el3.s.o
 
 #  io
 $(BUILD_DIR)/io.o: io/io.c
@@ -47,12 +53,14 @@ $(BUILD_DIR)/string.o: mem/string.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) mem/string.c $(INCLUDE) -o $(BUILD_DIR)/string.o
 
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o 
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o 
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o \
 	$(BUILD_DIR)/main.o \
 	$(BUILD_DIR)/exception.s.o \
+	$(BUILD_DIR)/exception_el3.s.o \
 	$(BUILD_DIR)/exception.o \
+	$(BUILD_DIR)/exception_el3.o \
 	$(BUILD_DIR)/io.o \
 	$(BUILD_DIR)/printf.o \
 	$(BUILD_DIR)/mmu.s.o \
@@ -66,13 +74,13 @@ deasm: $(BUILD_DIR)/kernel.elf
 	$(TOOL_PREFIX)objcopy -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
 
-QEMU_ARGS =
+QEMU_ARGS = -smp 2
 
 debug: deasm
-	qemu-system-aarch64 -M virt -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.bin -s -S
+	qemu-system-aarch64 -M virt,secure=on -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf -s -S
 
 run:
-	qemu-system-aarch64 -M virt -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.bin
+	qemu-system-aarch64 -M virt,secure=on -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf
 
 
 clean:

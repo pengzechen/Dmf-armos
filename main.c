@@ -14,20 +14,25 @@ void test_va(int x, ...) {
 }
 
 extern void smc_psci_off();
+extern void trigger_exception();
+
+
 
 void kernel_main(void) {
 	uart_init();
 
     uart_putstr(str);
 
-    printf("this is printf func %d\n", 1);
+    // printf("this is printf func %d\n", 1);
 
-    uint32_t result = smc_call(PSCI_0_2_FN_CPU_OFF, 0, 0, 0);
-    if (result != 0) {
-        printf("stop core 1 failed!\n");
-    }
+    // trigger_exception();
 
-    result = smc_call(PSCI_0_2_FN_CPU_ON, 3, 0x40080000, 0x40083000);
+    // uint32_t result = smc_call(PSCI_0_2_FN64_CPU_OFF, 0, 0, 0);
+    // if (result != 0) {
+    //     printf("stop core 1 failed!\n");
+    // }
+
+    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, 0x40080000, 0x40083000);
     if (result != 0) {
         printf("start core 1 failed!\n");
     }
