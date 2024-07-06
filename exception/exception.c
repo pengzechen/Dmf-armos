@@ -2,7 +2,7 @@
 #include <aj_types.h>
 #include <io.h>
 #include <exception_frame.h>
-
+#include <gic.h>
 
 static inline uint32_t read_esr_el1(void)
 {
@@ -52,6 +52,15 @@ void handle_irq_exception(uint64_t *stack_pointer) {
 
     uint64_t x1_value = context->r[1];
     uint64_t sp_el0_value = context->usp;
+
+    int iar = gicv2_read_iar();
+    int vector = gicv2_iar_irqnr(iar);
+
+    if (vector == 33) {
+        printf("this is timer event...");
+    }
+
+    gicv2_write_eoir(iar);
 
     // 在这里实现处理 IRQ 异常的代码
 }

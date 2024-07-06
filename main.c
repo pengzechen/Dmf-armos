@@ -3,6 +3,8 @@
 #include "io.h"
 #include "smp.h"
 #include "psci.h"
+#include "gic.h"
+#include "timer.h"
 
 static inline unsigned int get_current_cpu_id(void) {
     unsigned long mpidr;
@@ -30,6 +32,10 @@ void main_entry() {
 void kernel_main(void) {
 
 	uart_init();
+
+    gicv2_init();
+
+    timer_init();
 
     uart_putstr("start core\n");
 

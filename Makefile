@@ -38,6 +38,11 @@ $(BUILD_DIR)/exception.s.o: exception/exception.S
 $(BUILD_DIR)/exception_el3.s.o: exception/exception_el3.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception_el3.S $(INCLUDE) -o $(BUILD_DIR)/exception_el3.s.o
 
+$(BUILD_DIR)/gic.o: exception/gic/gic.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) exception/gic/gic.c $(INCLUDE) -o $(BUILD_DIR)/gic.o
+
+
+
 #  io
 $(BUILD_DIR)/io.o: io/io.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) io/io.c $(INCLUDE) -o $(BUILD_DIR)/io.o
@@ -53,7 +58,13 @@ $(BUILD_DIR)/string.o: mem/string.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) mem/string.c $(INCLUDE) -o $(BUILD_DIR)/string.o
 
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o 
+#  timer
+$(BUILD_DIR)/timer.o: timer/timer.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) timer/timer.c $(INCLUDE) -o $(BUILD_DIR)/timer.o
+
+
+
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o \
 	$(BUILD_DIR)/main.o \
@@ -61,11 +72,13 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/
 	$(BUILD_DIR)/exception_el3.s.o \
 	$(BUILD_DIR)/exception.o \
 	$(BUILD_DIR)/exception_el3.o \
+	$(BUILD_DIR)/gic.o \
 	$(BUILD_DIR)/io.o \
 	$(BUILD_DIR)/printf.o \
 	$(BUILD_DIR)/mmu.s.o \
 	$(BUILD_DIR)/page.o \
-	$(BUILD_DIR)/string.o 
+	$(BUILD_DIR)/string.o \
+	$(BUILD_DIR)/timer.o
 
 
 deasm: $(BUILD_DIR)/kernel.elf
