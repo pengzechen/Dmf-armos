@@ -8,7 +8,7 @@ typedef struct {
     uint64_t usp;           // User Stack Pointer (SP_EL0)
     uint64_t elr;           // Exception Link Register (ELR_EL3)
     uint64_t spsr;          // Saved Process Status Register (SPSR_EL3)
-} TrapFrame;
+} trap_frame_t;
 
 
 #endif // __ECCEPTION_FRAME_H__

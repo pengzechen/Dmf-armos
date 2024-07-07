@@ -17,7 +17,7 @@ static inline uint32_t read_esr_el1(void)
 // 示例使用方式：处理同步异常
 void handle_sync_exception(uint64_t *stack_pointer)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     int el1_esr = read_esr_el1();
 
@@ -52,7 +52,7 @@ void handle_sync_exception(uint64_t *stack_pointer)
 // 示例使用方式：处理 IRQ 异常
 void handle_irq_exception(uint64_t *stack_pointer)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     uint64_t x1_value = context->r[1];
     uint64_t sp_el0_value = context->usp;
@@ -60,7 +60,9 @@ void handle_irq_exception(uint64_t *stack_pointer)
     int iar = gicv2_read_iar();
     int vector = gicv2_iar_irqnr(iar);
 
-    if (vector == 33)
+    printf("irq ec\n");
+
+    if (vector == 30)
     {
         printf("this is timer event...");
     }
@@ -73,7 +75,7 @@ void handle_irq_exception(uint64_t *stack_pointer)
 // 示例使用方式：处理无效异常
 void invalid_exception(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     uint64_t x2_value = context->r[2];
 

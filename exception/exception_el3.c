@@ -16,7 +16,7 @@ static inline uint32_t read_esr_el3(void)
 // 示例使用方式：处理同步异常
 void handle_sync_exception_el3(uint64_t *stack_pointer)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     int el3_esr = read_esr_el3();
 
@@ -50,7 +50,7 @@ void handle_sync_exception_el3(uint64_t *stack_pointer)
 // 示例使用方式：处理 IRQ 异常
 void handle_irq_exception_el3(uint64_t *stack_pointer)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     uint64_t x1_value = context->r[1];
     uint64_t sp_el0_value = context->usp;
@@ -61,7 +61,7 @@ void handle_irq_exception_el3(uint64_t *stack_pointer)
 // 示例使用方式：处理无效异常
 void invalid_exception_el3(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
 {
-    TrapFrame *context = (TrapFrame *)stack_pointer;
+    trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     uint64_t x2_value = context->r[2];
 

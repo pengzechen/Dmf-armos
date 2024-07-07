@@ -23,7 +23,7 @@
 #define GICD_SGIR			    0x0f00
 #define GICD_ICPIDR2			0x0fe8
 
-#define GICD_TYPER_IRQS(typer)		((((typer) & 0x1f) + 1) * 32)
+#define GICD_TYPER_IRQS(typer)		    ((((typer) & 0x1f) + 1) * 32)
 #define GICD_TYPER_CPU_NUM(typer)	    ((((typer) >> 5) & 0b111) + 1)
 
 #define GICD_INT_EN_SET_SGI		0x0000ffff
@@ -85,12 +85,17 @@ static inline void writel(uint32_t value, volatile void *addr) {
 
 
 void gicv2_init();
+void gicv2_gicc_init();
+
 uint32_t gicv2_read_iar(void);
 uint32_t gicv2_iar_irqnr(uint32_t iar);
+void configure_interrupt(int vector, trigger_mode_t tg);
+
 void gicv2_write_eoir(uint32_t irqstat);
 void gicv2_ipi_send_single(int irq, int cpu);
-void set_enable(int vector, bool enable);
-bool get_enable(int vector);
+void set_enable(int vector, int enable);
+int get_enable(int vector);
+uint32_t cpu_num();
 
 
 #endif // __GIC_H__

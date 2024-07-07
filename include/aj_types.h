@@ -3,7 +3,7 @@
 #define __TYPES_H__
 
 
-typedef unsigned long        uint32_t;
+typedef unsigned int         uint32_t;
 typedef unsigned long long   uint64_t;
 
 typedef    _Bool  bool;

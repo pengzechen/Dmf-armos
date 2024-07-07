@@ -42,6 +42,8 @@ second_entry:
     ldr x0, =_stack_top_second
     mov sp, x0
 
+    msr daifset, #2   // 关闭所有中断
+    
     // 使用 cpu0 的页表
     bl      enable_mmu
 
@@ -68,6 +70,8 @@ primary_entry:
     // 设置栈指针
     ldr x0, =_stack_top
     mov sp, x0
+
+    msr daifset, #2   // 关闭所有中断
 
     bl init_page_table
     bl enable_mmu

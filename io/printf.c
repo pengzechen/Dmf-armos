@@ -272,7 +272,7 @@ int vsnprintf(char *buf, int size, const char *fmt, va_list va)
 			break;
 		case 'p':
 			props.alternate = true;
-			print_unsigned(&s, (uint32_t)va_arg(va, void *), 16, props);
+			print_unsigned(&s, *(uint32_t*)va_arg(va, void *), 16, props);
 			break;
 		case 's':
 			print_str(&s, va_arg(va, const char *), props);
