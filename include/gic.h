@@ -64,11 +64,22 @@ extern struct gicv2_t _gicv2;
 #define gicv2_dist_base()		(_gicv2.dist_base)
 #define gicv2_cpu_base()		(_gicv2.cpu_base)
 
+
+#define isb(option) __asm__ __volatile__ ("isb " #option : : : "memory")
+#define dsb(option) __asm__ __volatile__ ("dsb " #option : : : "memory")
+#define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+
+
+#define mb()		dsb()
+#define rmb()		dsb()
+#define wmb()		dsb(st)
+
 static inline uint32_t readl(const volatile void *addr) {
     return *(const volatile uint32_t *)addr;
 }
 
 static inline void writel(uint32_t value, volatile void *addr) {
+	wmb();
     *(volatile uint32_t *)addr = value;
 }
 
@@ -79,6 +90,7 @@ uint32_t gicv2_iar_irqnr(uint32_t iar);
 void gicv2_write_eoir(uint32_t irqstat);
 void gicv2_ipi_send_single(int irq, int cpu);
 void set_enable(int vector, bool enable);
+bool get_enable(int vector);
 
 
 #endif // __GIC_H__

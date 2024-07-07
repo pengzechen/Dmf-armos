@@ -4,3 +4,4 @@
 *.elf
 *.bin
 *.o
+/build/*.txt

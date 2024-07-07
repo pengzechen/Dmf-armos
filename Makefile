@@ -90,10 +90,10 @@ deasm: $(BUILD_DIR)/kernel.elf
 QEMU_ARGS = -smp 2
 
 debug: deasm
-	qemu-system-aarch64 -M virt,secure=on -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf -s -S
+	qemu-system-aarch64 -m 4G -M virt,secure=on,gic_version=2 -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf -s -S
 
 run:
-	qemu-system-aarch64 -M virt,secure=on -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf
+	qemu-system-aarch64 -m 4G -M virt,secure=on,gic_version=2 -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf
 
 
 clean:

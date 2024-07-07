@@ -29,6 +29,16 @@ void main_entry() {
     }
 }
 
+void mem_test() {
+    int mask = 0x1234;
+    void * addr = (void*)0x8000000;
+    printf("addr: %x\n", addr);
+    printf("value: %x\n", *(const volatile uint32_t*)((addr)));
+    *(volatile uint32_t*)addr = mask;
+
+    printf("value: %x\n", *(const volatile uint32_t*)((addr)));
+}
+
 void kernel_main(void) {
 
 	uart_init();
@@ -37,12 +47,12 @@ void kernel_main(void) {
 
     timer_init();
 
-    uart_putstr("start core\n");
+    // uart_putstr("start core\n");
 
-    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void*)second_entry, 0x40086000);
-    if (result != 0) {
-        printf("start core 1 failed!\n");
-    }
+    // int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void*)second_entry, 0x40086000);
+    // if (result != 0) {
+    //     printf("start core 1 failed!\n");
+    // }
 
     main_entry();
     // can't reach here !

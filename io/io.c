@@ -1,7 +1,8 @@
 
 #include <io.h>
 
-void uart_init() {
+void uart_init()
+{
     // 禁用 UART
     UART0_CR = 0x0;
 
@@ -25,24 +26,26 @@ void uart_init() {
     UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
 }
 
-
-void uart_putc(char c) {
+void uart_putc(char c)
+{
     // 等待发送 FIFO 不为满
-    while (UART0_FR & (1 << 5));
+    while (UART0_FR & (1 << 5))
+        ;
     UART0_DR = c;
 }
 
-void uart_putstr(const char* str) {
-    while (*str) {
+void uart_putstr(const char *str)
+{
+    while (*str)
+    {
         uart_putc(*str++);
     }
 }
 
-char uart_getc() {
+char uart_getc()
+{
     // 等待接收 FIFO 不为空
-    while (UART0_FR & (1 << 4));
+    while (UART0_FR & (1 << 4))
+        ;
     return (char)UART0_DR;
 }
-
-
-

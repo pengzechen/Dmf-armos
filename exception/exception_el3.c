@@ -3,50 +3,53 @@
 #include <io.h>
 #include <exception_frame.h>
 
-
 static inline uint32_t read_esr_el3(void)
 {
     uint32_t esr;
 
     // 使用内联汇编读取 ESR_EL1 寄存器
-    __asm__ volatile ("mrs %0, esr_el3" : "=r" (esr));
+    __asm__ volatile("mrs %0, esr_el3" : "=r"(esr));
 
     return esr;
 }
 
 // 示例使用方式：处理同步异常
-void handle_sync_exception_el3(uint64_t *stack_pointer) {
+void handle_sync_exception_el3(uint64_t *stack_pointer)
+{
     TrapFrame *context = (TrapFrame *)stack_pointer;
 
     int el3_esr = read_esr_el3();
 
-    int ec = (( el3_esr >> 26) & 0b111111);
+    int ec = ((el3_esr >> 26) & 0b111111);
 
     printf("        el1 esr: %x\n", el3_esr);
     printf("        ec: %x\n", ec);
-    
 
-    if ( ec == 0x17 ) {  // smc
+    if (ec == 0x17)
+    { // smc
         printf("            This is smc call handler\n");
         return;
     }
 
-    for(int i=0; i<31; i++) {
+    for (int i = 0; i < 31; i++)
+    {
         uint64_t value = context->r[i];
         printf("General-purpose register: %d, value: %x\n", i, value);
     }
-    
+
     uint64_t elr_el1_value = context->elr;
     uint64_t usp_value = context->usp;
     uint64_t spsr_value = context->spsr;
 
     printf("usp: %x, elr: %x, spsr: %x\n", usp_value, elr_el1_value, spsr_value);
 
-    while(1);
+    while (1)
+        ;
 }
 
 // 示例使用方式：处理 IRQ 异常
-void handle_irq_exception_el3(uint64_t *stack_pointer) {
+void handle_irq_exception_el3(uint64_t *stack_pointer)
+{
     TrapFrame *context = (TrapFrame *)stack_pointer;
 
     uint64_t x1_value = context->r[1];
@@ -56,7 +59,8 @@ void handle_irq_exception_el3(uint64_t *stack_pointer) {
 }
 
 // 示例使用方式：处理无效异常
-void invalid_exception_el3(uint64_t *stack_pointer, uint64_t kind, uint64_t source) {
+void invalid_exception_el3(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
+{
     TrapFrame *context = (TrapFrame *)stack_pointer;
 
     uint64_t x2_value = context->r[2];
