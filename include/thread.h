@@ -21,15 +21,21 @@ struct thread_info {
 
 register unsigned long current_stack_pointer asm("sp");
 
-static inline struct thread_info * current_thread_info(void)
-{
-	return thread_info_sp(current_stack_pointer);
-}
-
 static inline struct thread_info *thread_info_sp(unsigned long sp)
 {
 	return (struct thread_info *)(sp & ~(THREAD_SIZE - 1));
 }
 
+static inline struct thread_info * current_thread_info(void)
+{
+	return thread_info_sp(current_stack_pointer);
+}
+
+static inline unsigned int get_current_cpu_id(void)
+{
+    unsigned long mpidr;
+    __asm__ __volatile__("mrs %0, mpidr_el1" : "=r"(mpidr));
+    return (unsigned int)(mpidr & 0xff);
+}
 
 #endif // __THREAD_H__

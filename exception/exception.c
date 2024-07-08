@@ -1,18 +1,9 @@
 
 #include <aj_types.h>
 #include <io.h>
-#include <exception_frame.h>
+#include <exception.h>
 #include <gic.h>
-
-static inline uint32_t read_esr_el1(void)
-{
-    uint32_t esr;
-
-    // 使用内联汇编读取 ESR_EL1 寄存器
-    __asm__ volatile("mrs %0, esr_el1" : "=r"(esr));
-
-    return esr;
-}
+#include <timer.h>
 
 // 示例使用方式：处理同步异常
 void handle_sync_exception(uint64_t *stack_pointer)
@@ -49,6 +40,13 @@ void handle_sync_exception(uint64_t *stack_pointer)
         ;
 }
 
+static irq_handler_t g_handler_vec[512] = {0};
+
+void irq_install(int vector, void (*h)(int))
+{
+    g_handler_vec[vector] = h;
+}
+
 // 示例使用方式：处理 IRQ 异常
 void handle_irq_exception(uint64_t *stack_pointer)
 {
@@ -59,17 +57,9 @@ void handle_irq_exception(uint64_t *stack_pointer)
 
     int iar = gicv2_read_iar();
     int vector = gicv2_iar_irqnr(iar);
-
-    printf("irq ec\n");
-
-    if (vector == 30)
-    {
-        printf("this is timer event...");
-    }
-
     gicv2_write_eoir(iar);
-
-    // 在这里实现处理 IRQ 异常的代码
+    
+    g_handler_vec[vector](0); // arg not use
 }
 
 // 示例使用方式：处理无效异常

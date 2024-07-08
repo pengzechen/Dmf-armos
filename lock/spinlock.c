@@ -1,4 +1,5 @@
 
+#include <aj_types.h>
 
 struct spinlock {
 	int v;
@@ -6,7 +7,7 @@ struct spinlock {
 
 void spin_lock(struct spinlock *lock)
 {
-	u32 val, fail;
+	uint32_t val, fail;
 
 	if (!mmu_enabled()) {
 		lock->v = 1;

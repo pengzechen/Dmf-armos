@@ -5,17 +5,8 @@
 #include "psci.h"
 #include "gic.h"
 #include "timer.h"
-
-static inline unsigned int get_current_cpu_id(void)
-{
-    unsigned long mpidr;
-    asm volatile("mrs %0, mpidr_el1" : "=r"(mpidr));
-    return (unsigned int)(mpidr & 0xff);
-}
-
-static inline void enable_interrupts(void) {
-    asm volatile("msr daifclr, #2" : : : "memory");
-}
+#include "thread.h"
+#include "task.h"
 
 extern void second_entry();
 
@@ -28,17 +19,7 @@ void simple_console()
     }
 }
 
-void main_entry()
-{
-    while (1)
-    {
-        for (uint64_t i = 0; i < 0xffffff; i++)
-            ;
-        printf("get_current_cpu_id: %d\n", get_current_cpu_id());
-    }
-}
-
-void mem_test()
+void test_mem()
 {
     uint32_t mask = 97;
     void *addr = (void *)0x9000000;
@@ -68,6 +49,40 @@ void test_types()
         ;
 }
 
+void task2()
+{
+    while (1)
+    {
+        for (uint64_t i = 0; i < 0xffffff; i++)
+            ;
+        printf("task2: get_current_cpu_id: %d\n", get_current_cpu_id());
+    }
+}
+
+void task1()
+{
+    while (1)
+    {
+        for (uint64_t i = 0; i < 0xffffff; i++)
+            ;
+        printf("task1: get_current_cpu_id: %d\n", get_current_cpu_id());
+    }
+}
+
+char task2_stack[1024] = {0};
+char task1_stack[1024] = {0};
+
+void main_entry()
+{
+    schedule_init();
+    create_task(task1, task1_stack + 1024);
+    create_task(task2, task2_stack + 1024);
+
+    // print_current_task();
+    while (1)
+        ;
+}
+
 void kernel_main(void)
 {
     printf("===== uart  init =====\n");
@@ -76,19 +91,20 @@ void kernel_main(void)
     gicv2_init();
     printf("===== timer init =====\n");
     timer_init();
-
-    enable_interrupts();
-
+/*
+    printf("\n");
     printf("starting core 1\n");
-    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void*)second_entry, 0x40086000);
-    if (result != 0) {
+    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40090000);
+    if (result != 0)
+    {
         printf("start core 1 failed!\n");
     }
-
+*/
     // 做一点休眠 保证第二个核 初始化完成
-    for(int i=0; i<0xfffff; i++);
-    
-    gicv2_ipi_send_single(0, 1);
+    for (int j = 0; j < 5; j++)
+        for (int i = 0; i < 0xfffff; i++)
+            ;
+    enable_interrupts();
 
     main_entry();
     // can't reach here !
@@ -97,6 +113,8 @@ void kernel_main(void)
 void second_kernel_main()
 {
     gicv2_gicc_init();
+    // gicv2_init();
+    timer_init();
     enable_interrupts();
 
     main_entry();

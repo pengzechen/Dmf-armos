@@ -19,29 +19,29 @@ void gicv2_gicd_init(void)
         _gicv2.irq_nr = 1020;
 
     // Disable all interrupts SGI(soft), PPI(private), SPI(share)
-    for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
-    {
-        writel(0xffffffff, dist + GICD_ICENABLER + i);
-        writel(0xffffffff, dist + GICD_ICPENDR + i);
-    }
+    // for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
+    // {
+    //     writel(0xffffffff, dist + GICD_ICENABLER + i);
+    //     writel(0xffffffff, dist + GICD_ICPENDR + i);
+    // }
 
     // 多核时设置 SPI(share) target 为 0x1010101
-    if (cpu_num() > 1)
-    {
-        for (i = GIC_FIRST_SPI; i < 1020; i++)
-            writel(0x1010101, dist + GICD_ITARGETSR + i);
-    }
+    // if (cpu_num() > 1)
+    // {
+    //     for (i = GIC_FIRST_SPI; i < 1020; i++)
+    //         writel(0x1010101, dist + GICD_ITARGETSR + i);
+    // }
 
     // Initialize all the SPIs to edge triggered
-    for (i = GIC_FIRST_SPI; i < 1020; i++)
-    {
-        configure_interrupt(i, EDGE);
-    }
+    // for (i = GIC_FIRST_SPI; i < 1020; i++)
+    // {
+    //     configure_interrupt(i, EDGE);
+    // }
 
-    // for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
-    //     writel(GICD_INT_DEF_PRI_X4, dist + GICD_IPRIORITYR + i);
+    for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
+        writel(GICD_INT_DEF_PRI_X4, dist + GICD_IPRIORITYR + i);
 
-    // writel(GICD_INT_EN_SET_SGI, dist + GICD_ISENABLER + 0);
+    writel(GICD_INT_EN_SET_SGI, dist + GICD_ISENABLER + 0);
     writel(GICD_ENABLE, dist + GICD_CTLR);
 }
 
@@ -132,13 +132,12 @@ void set_enable(int vector, int enable)
 
     void *addr_enable = gicv2_dist_base() + GICD_ISENABLER + reg * sizeof(uint32_t);
     void *addr_disable = gicv2_dist_base() + GICD_ICENABLER + reg * sizeof(uint32_t);
-
+    printf("set enable: reg: %d, mask: 0x%x, addr: 0x%x\n", reg, mask, addr_enable);
     if (enable)
     {
-        printf("set enable: reg: %d, mask: %d, addr: %x\n", reg, mask, addr_enable);
-        printf("before value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
+        // printf("before value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
         writel(mask, (addr_enable));
-        printf("after  value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
+        // printf("after  value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
     }
     else
     {
@@ -154,6 +153,6 @@ int get_enable(int vector)
     void *addr_enable = (gicv2_dist_base() + GICD_ISENABLER + reg * sizeof(uint32_t));
     uint32_t val = readl(addr_enable);
 
-    // printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
+    printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
     return val & mask != 0;
 }

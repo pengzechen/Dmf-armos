@@ -34,6 +34,7 @@
         "typeinfo": "c",
         "utility": "c",
         "aj_types.h": "c",
-        "io.h": "c"
+        "io.h": "c",
+        "timer.h": "c"
     }
 }

@@ -84,6 +84,16 @@ static inline void writel(uint32_t value, volatile void *addr) {
 }
 
 
+static inline void enable_interrupts(void) {
+    __asm__ __volatile__("msr daifclr, #2" : : : "memory");
+}
+
+static inline void disable_interrupts(void) {
+    __asm__ __volatile__("msr daifset, #2" : : : "memory");
+}
+
+
+
 void gicv2_init();
 void gicv2_gicc_init();
 

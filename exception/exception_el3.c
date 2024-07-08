@@ -1,17 +1,7 @@
 
 #include <aj_types.h>
 #include <io.h>
-#include <exception_frame.h>
-
-static inline uint32_t read_esr_el3(void)
-{
-    uint32_t esr;
-
-    // 使用内联汇编读取 ESR_EL1 寄存器
-    __asm__ volatile("mrs %0, esr_el3" : "=r"(esr));
-
-    return esr;
-}
+#include <exception.h>
 
 // 示例使用方式：处理同步异常
 void handle_sync_exception_el3(uint64_t *stack_pointer)

@@ -62,9 +62,15 @@ $(BUILD_DIR)/string.o: mem/string.c
 $(BUILD_DIR)/timer.o: timer/timer.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) timer/timer.c $(INCLUDE) -o $(BUILD_DIR)/timer.o
 
+#  schedule
+$(BUILD_DIR)/task.o: schedule/task.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) schedule/task.c $(INCLUDE) -o $(BUILD_DIR)/task.o
+
+$(BUILD_DIR)/context.s.o: schedule/context.S
+	$(TOOL_PREFIX)gcc $(CFLAGS) schedule/context.S $(INCLUDE) -o $(BUILD_DIR)/context.s.o
 
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o \
 	$(BUILD_DIR)/main.o \
@@ -78,7 +84,9 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/
 	$(BUILD_DIR)/mmu.s.o \
 	$(BUILD_DIR)/page.o \
 	$(BUILD_DIR)/string.o \
-	$(BUILD_DIR)/timer.o
+	$(BUILD_DIR)/timer.o  \
+	$(BUILD_DIR)/task.o \
+	$(BUILD_DIR)/context.s.o
 
 
 deasm: $(BUILD_DIR)/kernel.elf
