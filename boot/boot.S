@@ -109,7 +109,7 @@ stack_test:
 from_el3_to_el1:
     // 设置 SCR_EL3 寄存器
     mrs x0, scr_el3
-    orr x0, x0, #(1 << 0)     // 设置 NS 位为 1，进入非安全世界
+    //orr x0, x0, #(1 << 0)     // 设置 NS 位为 1，进入非安全世界
     orr x0, x0, #(1 << 10)    // 设置 HCE 位为 1，允许 HVC 指令
     bic x0, x0, #(1 << 7)     // 清除 SMD 位，使能 SMC 指令
     msr scr_el3, x0
