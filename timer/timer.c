@@ -13,14 +13,15 @@ static uint64_t test_num = 0;
 
 void handle_timer_interrupt(int)
 {
-
-    if (test_num++ % 100 == 0) {
-        printf("core: %d, handle irq exception\n", get_current_cpu_id());
-        schedule();
-    }
-
-        // 设置定时值
+    // 设置定时值
     write_cntp_tval_el0(100000);
+    // if (test_num++ % 1 == 0) {
+        // printf("core: %d, handle irq exception\n", get_current_cpu_id());
+    
+        schedule();
+
+        //printf("schedule ok...\n");
+    // }
 }
 
 // 每个pe都要配置

@@ -83,6 +83,16 @@ static inline void writel(uint32_t value, volatile void *addr) {
     *(volatile uint32_t *)addr = value;
 }
 
+static inline uint32_t get_daif(){
+    uint32_t value;
+    asm volatile("mrs %0, daif" 
+				 : "=r" (value)
+				 : /* no input*/
+				 : 
+    );
+    return value;
+}
+
 
 static inline void enable_interrupts(void) {
     __asm__ __volatile__("msr daifclr, #2" : : : "memory");

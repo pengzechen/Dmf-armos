@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "thread.h"
 #include "task.h"
+#include "spinlock.h"
 
 extern void second_entry();
 
@@ -49,13 +50,39 @@ void test_types()
         ;
 }
 
+void task4()
+{
+    while (1)
+    {
+        for (uint64_t i = 0; i < 0xfffff; i++)
+            ;
+        // uart_putc('4');
+        // uart_putc('\n');
+        printf("task 4: get_current_cpu_id: %d\n", get_current_cpu_id());
+    }
+}
+
+void task3()
+{
+    while (1)
+    {
+        for (uint64_t i = 0; i < 0xfffff; i++)
+            ;
+        // uart_putc('3');
+        // uart_putc('\n');
+        printf("task 3: get_current_cpu_id: %d\n", get_current_cpu_id());
+    }
+}
+
 void task2()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xffffff; i++)
+        for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        printf("task2: get_current_cpu_id: %d\n", get_current_cpu_id());
+        // uart_putc('2');
+        // uart_putc('\n');
+        printf("task 2: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -63,24 +90,35 @@ void task1()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xffffff; i++)
+        for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        printf("task1: get_current_cpu_id: %d\n", get_current_cpu_id());
+        // uart_putc('1');
+        // uart_putc('\n');
+        printf("task 1: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
-char task2_stack[1024] = {0};
-char task1_stack[1024] = {0};
+char task4_stack[4096] = {0};
+char task3_stack[4096] = {0};
+char task2_stack[4096] = {0};
+char task1_stack[4096] = {0};
+
 
 void main_entry()
-{
-    schedule_init();
-    create_task(task1, task1_stack + 1024);
-    create_task(task2, task2_stack + 1024);
-
+{   
+    // schedule_init();
+    create_task(task1, task1_stack + 4096);
+    create_task(task2, task2_stack + 4096);
+    create_task(task3, task3_stack + 4096);
+    create_task(task4, task4_stack + 4096);
     // print_current_task();
+
+    enable_interrupts();
+    // move_to_first_task();
+    
     while (1)
         ;
+
 }
 
 void kernel_main(void)
@@ -91,20 +129,20 @@ void kernel_main(void)
     gicv2_init();
     printf("===== timer init =====\n");
     timer_init();
-/*
-    printf("\n");
-    printf("starting core 1\n");
-    int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40090000);
-    if (result != 0)
-    {
-        printf("start core 1 failed!\n");
-    }
-*/
+    /*
+        printf("\n");
+        printf("starting core 1\n");
+        int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40090000);
+        if (result != 0)
+        {
+            printf("start core 1 failed!\n");
+        }
+    
     // 做一点休眠 保证第二个核 初始化完成
     for (int j = 0; j < 5; j++)
         for (int i = 0; i < 0xfffff; i++)
             ;
-    enable_interrupts();
+    */
 
     main_entry();
     // can't reach here !

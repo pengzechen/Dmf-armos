@@ -1,8 +1,14 @@
 
 #include <io.h>
+#include <spinlock.h>
+
+
+static spinlock_t lock;
 
 void uart_init()
 {
+    
+    spinlock_init(&lock);
     // 禁用 UART
     UART0_CR = 0x0;
 
@@ -28,6 +34,7 @@ void uart_init()
 
 void uart_putc(char c)
 {
+    
     // 等待发送 FIFO 不为满
     while (UART0_FR & (1 << 5))
         ;
@@ -36,10 +43,12 @@ void uart_putc(char c)
 
 void uart_putstr(const char *str)
 {
+    spin_lock(&lock);
     while (*str)
     {
         uart_putc(*str++);
     }
+    spin_unlock(&lock);
 }
 
 char uart_getc()
