@@ -16,12 +16,24 @@ void handle_timer_interrupt(int)
     // 设置定时值
     write_cntp_tval_el0(100000);
     // if (test_num++ % 1 == 0) {
-        // printf("core: %d, handle irq exception\n", get_current_cpu_id());
-    
-        schedule();
+    // printf("core: %d, handle irq exception\n", get_current_cpu_id());
+    // printf("get daif: %x\n", get_daif());
+    schedule();
 
-        //printf("schedule ok...\n");
+    // printf("schedule ok...\n");
     // }
+}
+
+void timer_init_second()
+{
+    uint64_t frq = read_cntfrq_el0();
+
+    printf("timer frq: %d\n", frq);
+
+    // 设置定时值
+    write_cntp_tval_el0(100000);
+    // 启用定时器
+    write_cntp_ctl_el0(0b1);
 }
 
 // 每个pe都要配置

@@ -106,6 +106,7 @@ static inline void disable_interrupts(void) {
 
 void gicv2_init();
 void gicv2_gicc_init();
+void gicv2_test_init();
 
 uint32_t gicv2_read_iar(void);
 uint32_t gicv2_iar_irqnr(uint32_t iar);

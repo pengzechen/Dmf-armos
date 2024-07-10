@@ -61,6 +61,11 @@ void gicv2_init()
 
     gicv2_gicc_init();
 
+    gicv2_test_init();
+}
+
+void gicv2_test_init()
+{
     printf("    gicd enable %s\n", *(const volatile uint32_t *)((gicv2_dist_base())) ? "ok" : "error");
     printf("    gicc enable %s\n", *(const volatile uint32_t *)((gicv2_cpu_base())) ? "ok" : "error");
     printf("    irq numbers: %d\n", _gicv2.irq_nr);

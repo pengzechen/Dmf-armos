@@ -50,6 +50,7 @@ static inline uint64_t read_cntpct_el0(void) {
 
 
 void timer_init();
+void timer_init_second();
 
 
 #endif // __TIMER_H__
