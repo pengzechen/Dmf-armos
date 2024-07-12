@@ -49,6 +49,9 @@ $(BUILD_DIR)/io.o: io/io.c
 $(BUILD_DIR)/printf.o: io/printf.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) io/printf.c $(INCLUDE) -o $(BUILD_DIR)/printf.o
 
+$(BUILD_DIR)/uart_pl011.o: io/uart_pl011.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) io/uart_pl011.c $(INCLUDE) -o $(BUILD_DIR)/uart_pl011.o
+
 #  mem
 $(BUILD_DIR)/mmu.s.o: mem/mmu.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) mem/mmu.S $(INCLUDE) -o $(BUILD_DIR)/mmu.s.o
@@ -74,7 +77,7 @@ $(BUILD_DIR)/spinlock.s.o: spinlock/spinlock.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) spinlock/spinlock.S $(INCLUDE) -o $(BUILD_DIR)/spinlock.s.o
 
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
 	$(BUILD_DIR)/main.o 			\
@@ -84,6 +87,7 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/
 	$(BUILD_DIR)/exception_el3.o 	\
 	$(BUILD_DIR)/gic.o 				\
 	$(BUILD_DIR)/io.o 				\
+	$(BUILD_DIR)/uart_pl011.o       \
 	$(BUILD_DIR)/printf.o 			\
 	$(BUILD_DIR)/mmu.s.o 			\
 	$(BUILD_DIR)/page.o 			\

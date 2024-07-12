@@ -38,6 +38,7 @@
         "timer.h": "c",
         "task.h": "c",
         "thread.h": "c",
-        "spinlock.h": "c"
+        "spinlock.h": "c",
+        "uart_pl011.h": "c"
     }
 }

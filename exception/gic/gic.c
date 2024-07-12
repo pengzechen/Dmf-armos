@@ -8,75 +8,55 @@
 
 struct gicv2_t _gicv2;
 
-void gicv2_gicd_init(void)
-{
-    void *dist = gicv2_dist_base();
-    void *cpu_base = gicv2_cpu_base();
-    unsigned int i;
-
-    _gicv2.irq_nr = GICD_TYPER_IRQS(readl(dist + GICD_TYPER));
-    if (_gicv2.irq_nr > 1020)
-        _gicv2.irq_nr = 1020;
-
-    // Disable all interrupts SGI(soft), PPI(private), SPI(share)
-    // for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
-    // {
-    //     writel(0xffffffff, dist + GICD_ICENABLER + i);
-    //     writel(0xffffffff, dist + GICD_ICPENDR + i);
-    // }
-
-    // 多核时设置 SPI(share) target 为 0x1010101
-    // if (cpu_num() > 1)
-    // {
-    //     for (i = GIC_FIRST_SPI; i < 1020; i++)
-    //         writel(0x1010101, dist + GICD_ITARGETSR + i);
-    // }
-
-    // Initialize all the SPIs to edge triggered
-    // for (i = GIC_FIRST_SPI; i < 1020; i++)
-    // {
-    //     configure_interrupt(i, EDGE);
-    // }
-
-    for (i = 0; i < _gicv2.irq_nr; i += sizeof(uint32_t))
-        writel(GICD_INT_DEF_PRI_X4, dist + GICD_IPRIORITYR + i);
-
-    writel(GICD_INT_EN_SET_SGI, dist + GICD_ISENABLER + 0);
-    writel(GICD_ENABLE, dist + GICD_CTLR);
-}
-
-void gicv2_gicc_init()
-{
-    void *cpu_base = gicv2_cpu_base();
-    writel(GICC_INT_PRI_THRESHOLD, cpu_base + GICC_PMR);
-    writel(GICC_ENABLE, cpu_base + GICC_CTLR);
-}
-
-void gicv2_init()
-{
-    _gicv2.dist_base = (void *)0x8000000;
-    _gicv2.cpu_base = (void *)0x8010000;
-
-    gicv2_gicd_init();
-
-    gicv2_gicc_init();
-
-    gicv2_test_init();
-}
-
 void gicv2_test_init()
 {
-    printf("    gicd enable %s\n", *(const volatile uint32_t *)((gicv2_dist_base())) ? "ok" : "error");
-    printf("    gicc enable %s\n", *(const volatile uint32_t *)((gicv2_cpu_base())) ? "ok" : "error");
+    printf("    gicd enable %s\n", readl((void *)GICD_CTLR) ? "ok" : "error");
+    printf("    gicc enable %s\n", readl((void *)GICC_CTLR) ? "ok" : "error");
     printf("    irq numbers: %d\n", _gicv2.irq_nr);
     printf("    cpu num: %d\n", cpu_num());
 }
 
-uint32_t gicv2_read_iar(void)
+// gicd g0, g1  gicc enable
+void gicv2_init()
 {
-    return readl(gicv2_cpu_base() + GICC_IAR);
+    _gicv2.irq_nr = GICD_TYPER_IRQS(readl((void *)GICD_TYPER));
+    if (_gicv2.irq_nr > 1020)
+    {
+        _gicv2.irq_nr = 1020;
+    }
+
+    writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
+           (void *)GICD_CTLR);
+
+    // 允许所有优先级的中断
+    writel(0xff - 7, (void *)GICC_PMR);
+    writel(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+
+    gicv2_test_init();
 }
 
+// gicd g0, g1  gicc,  gich enable
+void gic_virtual_init()
+{
+    writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
+           (void *)GICD_CTLR);
+
+    // 允许所有优先级的中断
+    writel(0xff - 7, (void *)GICC_PMR);
+    writel(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+
+    writel(0x01, (void *)GICH_HCR);
+    for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
+        gic_enable_int(i, 0);
+}
+
+// get iar
+uint32_t gicv2_read_iar(void)
+{
+    return readl((void *)GICC_IAR);
+}
+
+// iar to vector
 uint32_t gicv2_iar_irqnr(uint32_t iar)
 {
     return iar & GICC_IAR_INT_ID_MASK;
@@ -84,80 +64,120 @@ uint32_t gicv2_iar_irqnr(uint32_t iar)
 
 void gicv2_write_eoir(uint32_t irqstat)
 {
-    writel(irqstat, gicv2_cpu_base() + GICC_EOIR);
+    writel(irqstat, (void *)GICC_EOIR);
 }
 
 void gicv2_ipi_send_single(int irq, int cpu)
 {
     // assert(cpu < 8);
     // assert(irq < 16);
-    writel(1 << (cpu + 16) | irq, gicv2_dist_base() + GICD_SGIR);
+    writel(1 << (cpu + 16) | irq, (void *)GICD_SGIR);
 }
 
 // The number of implemented CPU interfaces.
 uint32_t cpu_num()
 {
-    return GICD_TYPER_CPU_NUM(readl(gicv2_dist_base() + GICD_TYPER));
+    return GICD_TYPER_CPU_NUM(readl((void *)GICD_TYPER));
 }
 
-// Configures the trigger mode for the given interrupt.
-void configure_interrupt(int vector, trigger_mode_t tg)
+// Enables the given interrupt.
+void gic_enable_int(int vector, int pri)
 {
-    // Only configurable for SPI interrupts
-    if (vector >= _gicv2.irq_nr || vector < 32)
-    {
-        return;
-    }
+    int reg = vector >> 5;                     //  vec / 32
+    int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
+    printf("set enable: reg: %d, mask: 0x%x\n", reg, mask);
 
-    // type is encoded with two bits, MSB of the two determine type
-    // 16 irqs encoded per ICFGR register
-    int reg_idx = vector >> 4;
-    int bit_shift = ((vector & 0xf) << 1) + 1;
-    int reg_val = readl((gicv2_dist_base() + GICD_ICFGR + reg_idx * sizeof(uint32_t)));
-    if (tg == EDGE)
-    {
-        reg_val |= 1 << bit_shift;
-    }
-    else
-    {
-        reg_val &= !(1 << bit_shift);
-    }
-    writel(reg_val, (gicv2_dist_base() + GICD_ICFGR + reg_idx * sizeof(uint32_t)));
+    writel(mask, (void *)GICD_ISENABLER(reg));
+
+    int n = vector >> 2;
+    int m = vector & ((1 << 2) - 1);
+    writel((pri << 3) | (1 << 7), (void *)(GICD_IPRIORITYR(n) + m));
 }
 
-// Enables or disables the given interrupt.
-void set_enable(int vector, int enable)
+// disables the given interrupt.
+void gic_disable_int(int vector, int pri)
 {
-    if (vector >= _gicv2.irq_nr)
-    {
-        return;
-    }
-    int reg = vector / 32;
-    int mask = 1 << (vector % 32);
+    int reg = vector >> 5;                     //  vec / 32
+    int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
+    printf("disable: reg: %d, mask: 0x%x\n", reg, mask);
 
-    void *addr_enable = gicv2_dist_base() + GICD_ISENABLER + reg * sizeof(uint32_t);
-    void *addr_disable = gicv2_dist_base() + GICD_ICENABLER + reg * sizeof(uint32_t);
-    printf("set enable: reg: %d, mask: 0x%x, addr: 0x%x\n", reg, mask, addr_enable);
-    if (enable)
-    {
-        // printf("before value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
-        writel(mask, (addr_enable));
-        // printf("after  value: 0x%x\n", *(const volatile uint32_t *)((addr_enable)));
-    }
-    else
-    {
-        writel(mask, (addr_disable));
-    }
+    writel(mask, (void *)GICD_ICENABLER(reg));
 }
 
-// Enables or disables the given interrupt.
-int get_enable(int vector)
+// check the given interrupt.
+int gic_get_enable(int vector)
 {
-    int reg = vector / 32;
-    int mask = 1 << (vector % 32);
-    void *addr_enable = (gicv2_dist_base() + GICD_ISENABLER + reg * sizeof(uint32_t));
-    uint32_t val = readl(addr_enable);
+    int reg = vector >> 5;                     //  vec / 32
+    int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
+
+    uint32_t val = readl((void *)GICD_ISENABLER(reg));
 
     printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
     return val & mask != 0;
+}
+
+void gic_set_isenabler(uint32_t n, uint32_t value)
+{
+    writel(value, (void*)GICD_ISENABLER(n));
+}
+
+void gic_set_ipriority(uint32_t n, uint32_t value)
+{
+    writel(value, (void*)GICD_IPRIORITYR(n));
+}
+
+void gic_set_icenabler(uint32_t n, uint32_t value)
+{
+    writel(value, (void*)GICD_ICENABLER(n));
+}
+
+uint32_t gic_make_virtual_hardware_interrupt(uint32_t vector, uint32_t pintvec, int pri, bool grp1)
+{
+    uint32_t mask = 0x90000000;
+    mask |= ((uint32_t)(pri & 0xf8) << 20) | ((pintvec & 0x1ff) << 10) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30);
+    return mask;
+}
+
+uint32_t gic_make_virtual_software_interrupt(uint32_t vector, int pri, bool grp1)
+{
+    uint32_t mask = 0x10000000;
+    mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30);
+    return mask;
+}
+
+uint32_t gic_make_virtual_software_sgi(uint32_t vector, int cpu_id, int pri, bool grp1)
+{
+    uint32_t mask = 0x10000000;
+    mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30) | ((uint32_t)cpu_id << 10);
+    return mask;
+}
+
+uint32_t gic_read_lr(int n)
+{
+    return readl((void*)GICH_LR(n));
+}
+
+int gic_lr_read_pri(uint32_t lr_value)
+{
+    return (lr_value & (0xf8 << 20)) >> 20;
+}
+
+uint32_t gic_lr_read_vid(uint32_t lr_value)
+{
+    return lr_value & 0x1ff;
+}
+
+void gic_write_lr(int n, uint32_t mask)
+{
+    writel(mask, (void*)GICH_LR(n));
+}
+
+void gic_set_np_int(void)
+{
+    writel(readl((void*)GICH_HCR) | (1 << 3), (void*)GICH_HCR);
+}
+
+void gic_clear_np_int(void)
+{
+    writel(readl((void*)GICH_HCR) & ~(1 << 3), (void*)GICH_HCR);
 }

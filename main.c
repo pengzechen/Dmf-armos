@@ -8,6 +8,7 @@
 #include "thread.h"
 #include "task.h"
 #include "spinlock.h"
+#include "uart_pl011.h"
 
 extern void second_entry();
 
@@ -103,33 +104,31 @@ char task3_stack[4096] = {0};
 char task2_stack[4096] = {0};
 char task1_stack[4096] = {0};
 
-
 void main_entry()
-{   
+{
     schedule_init();
-    create_task(task1, task1_stack + 4096);
-    create_task(task2, task2_stack + 4096);
-    create_task(task3, task3_stack + 4096);
-    create_task(task4, task4_stack + 4096);
+    create_task(task1, task1_stack + 3800);
+    create_task(task2, task2_stack + 3800);
+    create_task(task3, task3_stack + 3800);
+    create_task(task4, task4_stack + 3800);
     print_current_task();
 
     enable_interrupts();
     // move_to_first_task();
-    
+
     while (1)
         ;
-
 }
 
 void kernel_main(void)
 {
     printf("===== uart  init =====\n");
-    uart_init();
+    io_init();
     printf("===== gicv2 init =====\n");
     gicv2_init();
     printf("===== timer init =====\n");
     timer_init();
-    // /*
+    /*
         printf("\n");
         printf("starting core 1\n");
         int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40090000);
@@ -137,15 +136,15 @@ void kernel_main(void)
         {
             printf("start core 1 failed!\n");
         }
-    
+
     // 做一点休眠 保证第二个核 初始化完成
     for (int j = 0; j < 5; j++)
         for (int i = 0; i < 0xfffff; i++)
             ;
-    // */
+    */
 
-    while (1)
-        ;
+    // while (1)
+    //     ;
 
     main_entry();
     // can't reach here !
@@ -153,10 +152,9 @@ void kernel_main(void)
 
 void second_kernel_main()
 {
-    gicv2_gicc_init();
 
     gicv2_test_init();
-    
+
     // gicv2_init();
     timer_init_second();
     // timer_init();
