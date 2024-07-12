@@ -8,7 +8,7 @@
 
 struct gic_t _gicv2;
 
-void gic_test_init()
+void gic_test_init(void)
 {
     printf("    gicd enable %s\n", readl((void *)GICD_CTLR) ? "ok" : "error");
     printf("    gicc enable %s\n", readl((void *)GICC_CTLR) ? "ok" : "error");
@@ -17,7 +17,7 @@ void gic_test_init()
 }
 
 // gicd g0, g1  gicc enable
-void gic_init()
+void gic_init(void)
 {
     _gicv2.irq_nr = GICD_TYPER_IRQS(readl((void *)GICD_TYPER));
     if (_gicv2.irq_nr > 1020)
@@ -36,8 +36,14 @@ void gic_init()
 }
 
 // gicd g0, g1  gicc,  gich enable
-void gic_virtual_init()
+void gic_virtual_init(void)
 {
+    _gicv2.irq_nr = GICD_TYPER_IRQS(readl((void *)GICD_TYPER));
+    if (_gicv2.irq_nr > 1020)
+    {
+        _gicv2.irq_nr = 1020;
+    }
+    
     writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
            (void *)GICD_CTLR);
 
@@ -48,6 +54,10 @@ void gic_virtual_init()
     writel(0x01, (void *)GICH_HCR);
     for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
         gic_enable_int(i, 0);
+    
+    gic_test_init();
+
+    printf("    gich enable %s\n", readl((void *)GICH_HCR) ? "ok" : "error");
 }
 
 // get iar
@@ -75,7 +85,7 @@ void gic_ipi_send_single(int irq, int cpu)
 }
 
 // The number of implemented CPU interfaces.
-uint32_t cpu_num()
+uint32_t cpu_num(void)
 {
     return GICD_TYPER_CPU_NUM(readl((void *)GICD_TYPER));
 }

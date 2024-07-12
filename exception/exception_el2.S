@@ -102,7 +102,7 @@ exception_vector_base_el2:
     INVALID_EXCP_EL2 2 1
     INVALID_EXCP_EL2 3 1
 
-    // lower EL, aarch64
+    // lower EL, aarch64  比当前等级更低一级
     HANDLE_LOWER_SYNC
     HANDLE_LOWER_IRQ
     INVALID_EXCP_EL2 2 2

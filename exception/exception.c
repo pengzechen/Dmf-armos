@@ -40,7 +40,12 @@ void handle_sync_exception(uint64_t *stack_pointer)
         ;
 }
 
-static irq_handler_t g_handler_vec[512] = {0};
+irq_handler_t g_handler_vec[512] = {0};
+
+irq_handler_t *get_g_handler_vec()
+{
+    return g_handler_vec;
+}
 
 void irq_install(int vector, void (*h)(int))
 {
@@ -58,7 +63,7 @@ void handle_irq_exception(uint64_t *stack_pointer)
     int iar = gic_read_iar();
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
-    
+
     g_handler_vec[vector](0); // arg not use
 }
 

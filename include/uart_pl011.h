@@ -5,7 +5,7 @@
 
 #include <aj_types.h>
 
-#define UART0_BASE 0x09000000 // PL011 UART 基地址
+#include <os_cfg.h>
 
 #define UART0_DR   (*(volatile uint32_t *)(UART0_BASE + 0x00)) // 数据寄存器
 #define UART0_FR   (*(volatile uint32_t *)(UART0_BASE + 0x18)) // 标志寄存器

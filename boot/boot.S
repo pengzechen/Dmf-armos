@@ -1,4 +1,5 @@
 #include "mmu.h"
+#include "sys/hcr.h"
 
 // startup.S
 .section .text
@@ -105,6 +106,27 @@ from_el2:
     bic x1, x1, #0xf
     msr sctlr_el2, x1
 
+    // msr daifset, #2   // 关闭所有中断
+
+    // 设置 hcr 的功能
+    mrs x0, hcr_el2       // 读取当前的HCR_EL2值
+
+    // 设置VM位 (bit 0)
+    orr x0, x0, #HCR_VM   
+    // 64 位
+    orr x0, x0, #HCR_RW   
+    // trap el1 smc to el2
+    orr x0, x0, #HCR_TSC
+    //  routed to EL2 by the configuration of HCR_EL2.IMO/FMO. 设置为 1
+    bic x0, x0, #HCR_AMO
+    orr x0, x0, #HCR_IMO
+    orr x0, x0, #HCR_FMO
+    bic x0, x0, #HCR_TGE
+	bic x0, x0, #HCR_PTW
+	orr x0, x0, #HCR_TW1
+	orr x0, x0, #HCR_TWE
+    msr hcr_el2, x0      // 写回HCR_EL2寄存器
+
     adrp    x0, exception_vector_base_el2
     add     x0, x0, :lo12:exception_vector_base_el2
     msr     vbar_el2, x0
@@ -117,6 +139,10 @@ from_el2:
 
     bl init_page_table
     bl enable_mmu_el2
+
+    // 设置栈指针
+    ldr x0, =_stack_top
+    mov sp, x0
 
     b hyper_main
     

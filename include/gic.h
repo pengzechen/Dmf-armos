@@ -8,9 +8,7 @@
 #define GIC_NR_PRIVATE_IRQS 32
 #define GIC_FIRST_SPI GIC_NR_PRIVATE_IRQS
 
-#define GICD_BASE_ADDR 0x8000000UL    // unsigned 64 位
-#define GICC_BASE_ADDR 0x8010000UL
-#define GICH_BASE_ADDR 0x8040000UL
+#include <os_cfg.h>
 
 /* Distributor registers */
 #define GICD_CTLR (GICD_BASE_ADDR + 0x000)
@@ -131,7 +129,7 @@ static inline void disable_interrupts(void)
 }
 
 void gic_init();
-void gicv2_gicc_init();
+void gic_virtual_init(void);
 void gic_test_init();
 
 uint32_t gic_read_iar(void);
