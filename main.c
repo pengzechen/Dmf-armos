@@ -125,7 +125,7 @@ void kernel_main(void)
     printf("===== uart  init =====\n");
     io_init();
     printf("===== gicv2 init =====\n");
-    gicv2_init();
+    gic_init();
     printf("===== timer init =====\n");
     timer_init();
     /*
@@ -153,7 +153,7 @@ void kernel_main(void)
 void second_kernel_main()
 {
 
-    gicv2_test_init();
+    gic_test_init();
 
     // gicv2_init();
     timer_init_second();

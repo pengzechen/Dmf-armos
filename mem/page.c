@@ -21,8 +21,14 @@ void init_page_table()
 }
 
 extern void init_mmu(uint64_t);
+extern void init_mmu_el2(uint64_t);
 
 void enable_mmu()
 {
     init_mmu((uint64_t)(void *)pt0);
+}
+
+void enable_mmu_el2()
+{
+    init_mmu_el2((uint64_t)(void *)pt0);
 }

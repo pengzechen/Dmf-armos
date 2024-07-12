@@ -6,7 +6,10 @@
 
 .extern init_page_table
 .extern enable_mmu
+.extern enable_mmu_el2
+
 .extern exception_vector_base
+.extern exception_vector_base_el2
 .extern exception_vector_base_el3
 
 .global second_entry
@@ -25,7 +28,7 @@ _start:
     b.eq from_el3_to_el1       // Branch if we are in EL3
 
     cmp x0, #2
-    b.eq from_el2_to_el1       // Branch if we are in EL2
+    b.eq from_el2       // Branch if we are in EL2
 
     b   .
 /*
@@ -94,10 +97,32 @@ primary_entry:
 
 
 
-// 从el2到el1
-from_el2_to_el1:
+// qemu 开启 virtualization=on 时启动为 el2 模式。
+// 在非 qemu virt platform 需要具体考虑
+from_el2:
+    // disable cache and MMU
+    mrs x1, sctlr_el2
+    bic x1, x1, #0xf
+    msr sctlr_el2, x1
+
+    adrp    x0, exception_vector_base_el2
+    add     x0, x0, :lo12:exception_vector_base_el2
+    msr     vbar_el2, x0
+    dsb     sy      // 确保所有内存访问完成
+    isb             // 确保所有指令都执行完成
+
+    // 设置栈指针
+    ldr x0, =_stack_top
+    mov sp, x0
+
+    bl init_page_table
+    bl enable_mmu_el2
+
+    b hyper_main
+    
     b .
 
+// 栈测试用
 stack_test:
     mov x0, #1
     mov x1, #2
@@ -106,6 +131,8 @@ stack_test:
     str	x1, [sp, #8]
     add sp, sp, 2 * 8
 
+
+// 从el3跳转到el1
 from_el3_to_el1:
     // 设置 SCR_EL3 寄存器
     mrs x0, scr_el3

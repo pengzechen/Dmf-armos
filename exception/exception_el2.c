@@ -3,27 +3,35 @@
 #include <io.h>
 #include <exception.h>
 #include <gic.h>
-#include <timer.h>
 
 // 示例使用方式：处理同步异常
-void handle_sync_exception(uint64_t *stack_pointer)
+void handle_sync_exception_el2(uint64_t *stack_pointer)
 {
     trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
-    int el1_esr = read_esr_el1();
+    int el2_esr = read_esr_el2();
 
-    int ec = ((el1_esr >> 26) & 0b111111);
+    int ec = ((el2_esr >> 26) & 0b111111);
 
-    printf("el1 esr: %x\n", el1_esr);
-    printf("ec: %x\n", ec);
+    printf("        el2 esr: %x\n", el2_esr);
+    printf("        ec: %x\n", ec);
 
-    if (ec == 0x17)
+    if (ec == 0x16)
+    { // hvc
+        printf("            This is hvc call handler\n");
+        return;
+    }
+    else if (ec == 0x17)
     { // smc
-        printf("This is smc call handler\n");
+        printf("            This is smc call handler\n");
+        return;
+    }
+    else if (ec == 0x24)
+    { // data abort
+        printf("            This is data abort handler\n");
         return;
     }
 
-    printf("This is handle_sync_exception: \n");
     for (int i = 0; i < 31; i++)
     {
         uint64_t value = context->r[i];
@@ -40,15 +48,8 @@ void handle_sync_exception(uint64_t *stack_pointer)
         ;
 }
 
-static irq_handler_t g_handler_vec[512] = {0};
-
-void irq_install(int vector, void (*h)(int))
-{
-    g_handler_vec[vector] = h;
-}
-
 // 示例使用方式：处理 IRQ 异常
-void handle_irq_exception(uint64_t *stack_pointer)
+void handle_irq_exception_el2(uint64_t *stack_pointer)
 {
     trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
@@ -58,16 +59,22 @@ void handle_irq_exception(uint64_t *stack_pointer)
     int iar = gic_read_iar();
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
-    
-    g_handler_vec[vector](0); // arg not use
 }
 
 // 示例使用方式：处理无效异常
-void invalid_exception(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
+void invalid_exception_el2(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
 {
+
     trap_frame_t *context = (trap_frame_t *)stack_pointer;
 
     uint64_t x2_value = context->r[2];
 
-    // 在这里实现处理无效异常的代码
+    printf("invalid_exception_el2\n");
+}
+
+// 调用 handle_irq_exception_el2
+void current_spxel_irq(uint64_t *stack_pointer)
+{
+    printf("irq stay in same el\n");
+    handle_irq_exception_el2(stack_pointer);
 }

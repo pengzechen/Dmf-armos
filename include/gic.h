@@ -94,10 +94,10 @@
 
 #include <aj_types.h>
 
-typedef struct gicv2_t
+typedef struct gic_t
 {
 	unsigned int irq_nr;
-} gicv2_t;
+} gic_t;
 
 typedef enum
 {
@@ -105,7 +105,7 @@ typedef enum
 	LEVEL = 0,
 } trigger_mode_t;
 
-extern struct gicv2_t _gicv2;
+extern struct gic_t _gicv2;
 
 #define gicv2_dist_base() (_gicv2.dist_base)
 #define gicv2_cpu_base() (_gicv2.cpu_base)
@@ -130,15 +130,15 @@ static inline void disable_interrupts(void)
 	__asm__ __volatile__("msr daifset, #2" : : : "memory");
 }
 
-void gicv2_init();
+void gic_init();
 void gicv2_gicc_init();
-void gicv2_test_init();
+void gic_test_init();
 
-uint32_t gicv2_read_iar(void);
-uint32_t gicv2_iar_irqnr(uint32_t iar);
+uint32_t gic_read_iar(void);
+uint32_t gic_iar_irqnr(uint32_t iar);
 
-void gicv2_write_eoir(uint32_t irqstat);
-void gicv2_ipi_send_single(int irq, int cpu);
+void gic_write_eoir(uint32_t irqstat);
+void gic_ipi_send_single(int irq, int cpu);
 void gic_enable_int(int vector, int enable);
 int gic_get_enable(int vector);
 uint32_t cpu_num();

@@ -6,9 +6,9 @@
 #include <aj_types.h>
 #include <io.h>
 
-struct gicv2_t _gicv2;
+struct gic_t _gicv2;
 
-void gicv2_test_init()
+void gic_test_init()
 {
     printf("    gicd enable %s\n", readl((void *)GICD_CTLR) ? "ok" : "error");
     printf("    gicc enable %s\n", readl((void *)GICC_CTLR) ? "ok" : "error");
@@ -17,7 +17,7 @@ void gicv2_test_init()
 }
 
 // gicd g0, g1  gicc enable
-void gicv2_init()
+void gic_init()
 {
     _gicv2.irq_nr = GICD_TYPER_IRQS(readl((void *)GICD_TYPER));
     if (_gicv2.irq_nr > 1020)
@@ -32,7 +32,7 @@ void gicv2_init()
     writel(0xff - 7, (void *)GICC_PMR);
     writel(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
 
-    gicv2_test_init();
+    gic_test_init();
 }
 
 // gicd g0, g1  gicc,  gich enable
@@ -51,23 +51,23 @@ void gic_virtual_init()
 }
 
 // get iar
-uint32_t gicv2_read_iar(void)
+uint32_t gic_read_iar(void)
 {
     return readl((void *)GICC_IAR);
 }
 
 // iar to vector
-uint32_t gicv2_iar_irqnr(uint32_t iar)
+uint32_t gic_iar_irqnr(uint32_t iar)
 {
     return iar & GICC_IAR_INT_ID_MASK;
 }
 
-void gicv2_write_eoir(uint32_t irqstat)
+void gic_write_eoir(uint32_t irqstat)
 {
     writel(irqstat, (void *)GICC_EOIR);
 }
 
-void gicv2_ipi_send_single(int irq, int cpu)
+void gic_ipi_send_single(int irq, int cpu)
 {
     // assert(cpu < 8);
     // assert(irq < 16);

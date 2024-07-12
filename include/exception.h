@@ -23,6 +23,16 @@ static inline uint32_t read_esr_el1(void)
     return esr;
 }
 
+static inline uint32_t read_esr_el2(void)
+{
+    uint32_t esr;
+
+    // 使用内联汇编读取 ESR_EL1 寄存器
+    __asm__ volatile("mrs %0, esr_el2" : "=r"(esr));
+
+    return esr;
+}
+
 static inline uint32_t read_esr_el3(void)
 {
     uint32_t esr;
