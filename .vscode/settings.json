@@ -43,6 +43,8 @@
         "os_cfg.h": "c",
         "page.h": "c",
         "aj_string.h": "c",
-        "barrier.h": "c"
+        "barrier.h": "c",
+        "vtcr.h": "c",
+        "ept.h": "c"
     }
 }

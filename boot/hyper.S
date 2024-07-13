@@ -1,12 +1,11 @@
 
-#include "sys/spsr.h"
+#include "sys/sys.h"
 
 .global guest_start
 
 test_guest:
-    wfi
-
-    b .
+  mov x0, 100
+  b .
 
 guest_start:
 
@@ -14,11 +13,13 @@ guest_start:
   ldr     x1,[x1,:got_lo12:test_guest]
   msr elr_el2, x1
 
-  // ldr x0, =SPSR_INIT
-  // msr spsr_el2, x0
+  mrs x0, spsr_el2
+  orr x0, x0, #SPSR_FIQ_MASK 
+  orr x0, x0, #SPSR_IRQ_MASK
+  msr spsr_el2, x0
 
   mov x0, #0x0
 
-  msr daifset, #2
+  // msr daifset, #2
 
   eret

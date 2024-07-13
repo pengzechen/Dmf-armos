@@ -36,13 +36,13 @@ static inline uint64_t read_vttbr_el2() {
 void vtcr_init(void)
 {
     print_info("    Initialize vtcr...\n");
-    uint64_t vtcr_val = VTCR_RES1|VTCR_SH0_IS|VTCR_ORGN0_WBWA|VTCR_IRGN0_WBWA;
-    vtcr_val |= VTCR_T0SZ(0x18); /* 40 bit IPA */
+    uint64_t vtcr_val = VTCR_NSA|VTCR_NSW|  VTCR_VS|VTCR_PS|
+                        VTCR_TG0_4K|VTCR_SH0_IS|VTCR_ORGN0_NC|VTCR_IRGN0_NC;
+    
+    vtcr_val |= VTCR_T0SZ(0x1a); /* 40 bit IPA */
     vtcr_val |= VTCR_SL0(0x1);   /* P2M starts at first level */
     
 
-    // from arceos
-    vtcr_val = 0x8001355c;
     printf("vtcr val: 0x%x\n", vtcr_val);
     write_vtcr_el2(vtcr_val);
 }

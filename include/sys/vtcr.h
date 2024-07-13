@@ -6,10 +6,13 @@
 #define _AC(X,Y)	__AC(X,Y)
 
 #define VTCR_T0SZ(x)    ((x)<<0)
-
 #define VTCR_SL0(x)     ((x)<<6)
 
-#define VTCR_RES1       (_AC(1,UL)<<31)
+#define VTCR_NSA        (1 << 30)
+#define VTCR_NSW        (1 << 29)
+
+#define VTCR_VS	   (0 << 19)
+#define VTCR_PS	   (2 << 16)
 
 #define VTCR_IRGN0_NC   (_AC(0x0,UL)<<8)
 #define VTCR_IRGN0_WBWA (_AC(0x1,UL)<<8)
