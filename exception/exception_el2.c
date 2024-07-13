@@ -60,7 +60,7 @@ void handle_irq_exception_el2(uint64_t *stack_pointer)
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
 
-    printf("this is handle irq el2\n");
+    printf("\nthis is handle irq el2\n");
 
     get_g_handler_vec()[vector](0); // arg not use
 }

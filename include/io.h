@@ -22,6 +22,7 @@ extern void uart_putstr(const char * str);
 
 #define puts uart_putstr
 extern int printf(const char *fmt, ...);
+extern void print_info(const char *info);
 extern int warning(const char *fmt, ...);
 extern int error(const char *fmt, ...);
 extern int snprintf(char *buf, int size, const char *fmt, ...);

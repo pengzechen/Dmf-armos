@@ -22,4 +22,7 @@ SECTIONS
     .bss : {
         *(.bss)
     }
+
+    . = ALIGN((1 << 14));
+    ept_L1 = .;
 }

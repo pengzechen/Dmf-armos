@@ -10,4 +10,9 @@
 #define GICC_BASE_ADDR 0x8010000UL
 #define GICH_BASE_ADDR 0x8040000UL
 
+#define PAGE_SIZE  (4096)
+
+#define RAM_START   ((unsigned long long)0x40000000)
+#define RAM_END     (RAM_START + 0x40000000)
+
 #endif // __OS_CFG_H__
