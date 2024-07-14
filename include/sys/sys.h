@@ -44,8 +44,7 @@
 	(HCR_TACR | HCR_TID3 | HCR_TID2 | HCR_TID1 | HCR_TWE | HCR_TWI |       \
 	 HCR_E2H | HCR_RW | HCR_TGE | HCR_AMO | HCR_IMO | HCR_FMO | HCR_SWIO | HCR_VM)
 
-#define HCR_VALUE HCR_VALUE_NO_ROUTE
-// #define HCR_VALUE HCR_VALUE_ROUTE
+#define HCR_VALUE HCR_VALUE_ROUTE
 
 /* =====================   SPSR_EL2 ======================= */
 /*

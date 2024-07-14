@@ -14,7 +14,14 @@
 #define PADDR_MASK              ((1ULL << PADDR_BITS)-1)
 #define PAGE_MASK               (1 << 12)                // 页对齐掩码
 
+#include <page.h>
+
 void guest_ept_init(void);
+
+lpae_t * get_ept_entry(uint64_t gpa);
+
+void apply_ept(void *ept);
+
 
 static inline uint64_t read_par(void)
 {

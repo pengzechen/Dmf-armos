@@ -6,6 +6,7 @@
 #include <mmu.h>
 #include <sys/vtcr.h>
 #include <ept.h>
+#include <page.h>
 
 static inline uint64_t read_sctlr_el2() {
     uint64_t value;
@@ -83,6 +84,11 @@ void hyper_main()
     printf("read_vttbr_el2: 0x%x\n", read_vttbr_el2());
     printf("cacheline_bytes: %d\n", cacheline_bytes);
     printf("\n");
+
+    lpae_t * avr_entry = get_ept_entry((uint64_t)0x40080000);
+    avr_entry->p2m.read = 1;
+    avr_entry->p2m.write = 1;
+    apply_ept(avr_entry);
 
     guest_start();
     
