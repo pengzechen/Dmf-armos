@@ -20,4 +20,7 @@ typedef unsigned long long size_t;
 #define MIN(a, b)		((a) < (b) ? (a) : (b))
 #define MAX(a, b)		((a) > (b) ? (a) : (b))
 
+#define vaddr_t uint64_t
+#define paddr_t uint64_t
+
 #endif

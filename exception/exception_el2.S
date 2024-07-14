@@ -1,4 +1,8 @@
 
+
+.extern vm_in
+.extern vm_out
+
 .macro SAVE_REGS_EL2
     sub     sp, sp, 34 * 8
     stp     x0, x1, [sp]
@@ -23,9 +27,13 @@
     mrs     x10, elr_el2
     mrs     x11, spsr_el2
     stp     x10, x11, [sp, 32 * 8]
+
+    bl      vm_out
 .endm
 
 .macro RESTORE_REGS_EL2
+    bl      vm_in
+
     ldp     x10, x11, [sp, 32 * 8]
     msr     elr_el2, x10
     msr     spsr_el2, x11

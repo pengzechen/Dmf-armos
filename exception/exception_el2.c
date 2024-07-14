@@ -3,6 +3,12 @@
 #include <io.h>
 #include <exception.h>
 #include <gic.h>
+#include <ept.h>
+
+void advance_pc(ept_violation_info_t *info, trap_frame_t *context)
+{
+  context->elr += info->hsr.len ? 4 : 2;
+}
 
 // 示例使用方式：处理同步异常
 void handle_sync_exception_el2(uint64_t *stack_pointer)
@@ -15,6 +21,8 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
 
     printf("        el2 esr: %x\n", el2_esr);
     printf("        ec: %x\n", ec);
+
+    union hsr hsr = { .bits = el2_esr };
 
     if (ec == 0x16)
     { // hvc
@@ -29,6 +37,15 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
     else if (ec == 0x24)
     { // data abort
         printf("            This is data abort handler\n");
+        ept_violation_info_t ept_violation_info;
+        printf("Prefetch abort : %x\n",hsr.bits);
+        ept_violation_info.hsr.bits = hsr.bits;
+        ept_violation_info.reason = PREFETCH;
+        ept_violation_info.gva = read_far_el2();
+        gva_to_ipa(ept_violation_info.gva, &ept_violation_info.gpa);
+        ept_violation_handler(&ept_violation_info);
+
+        advance_pc(&ept_violation_info, context);
         return;
     }
 

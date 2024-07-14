@@ -15,4 +15,6 @@
 #define RAM_START   ((unsigned long long)0x40000000)
 #define RAM_END     (RAM_START + 0x40000000)
 
+#define MMIO_ARREA  0x50000000
+
 #endif // __OS_CFG_H__

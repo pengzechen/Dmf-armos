@@ -45,6 +45,7 @@
         "aj_string.h": "c",
         "barrier.h": "c",
         "vtcr.h": "c",
-        "ept.h": "c"
+        "ept.h": "c",
+        "exception.h": "c"
     }
 }

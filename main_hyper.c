@@ -85,8 +85,8 @@ void hyper_main()
     printf("cacheline_bytes: %d\n", cacheline_bytes);
     printf("\n");
 
-    lpae_t * avr_entry = get_ept_entry((uint64_t)0x40080000);
-    avr_entry->p2m.read = 1;
+    lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_ARREA);
+    avr_entry->p2m.read = 0;
     avr_entry->p2m.write = 1;
     apply_ept(avr_entry);
 

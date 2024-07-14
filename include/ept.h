@@ -15,12 +15,17 @@
 #define PAGE_MASK               (1 << 12)                // 页对齐掩码
 
 #include <page.h>
+#include <exception.h>
 
 void guest_ept_init(void);
 
-lpae_t * get_ept_entry(uint64_t gpa);
+lpae_t * get_ept_entry(paddr_t gpa);
 
 void apply_ept(void *ept);
+
+void ept_violation_handler(ept_violation_info_t *info);
+
+int gva_to_ipa(uint64_t va, uint64_t *paddr);
 
 
 static inline uint64_t read_par(void)

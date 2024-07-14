@@ -44,7 +44,8 @@
 	(HCR_TACR | HCR_TID3 | HCR_TID2 | HCR_TID1 | HCR_TWE | HCR_TWI |       \
 	 HCR_E2H | HCR_RW | HCR_TGE | HCR_AMO | HCR_IMO | HCR_FMO | HCR_SWIO | HCR_VM)
 
-#define HCR_VALUE HCR_VALUE_ROUTE
+// #define HCR_VALUE HCR_VALUE_ROUTE
+#define HCR_VALUE HCR_VALUE_NO_ROUTE
 
 /* =====================   SPSR_EL2 ======================= */
 /*
@@ -56,9 +57,9 @@
 */
 
 #define SPSR_MASK_ALL    (7 << 6)
-#define SPSR_FIQ_MASK    (1<<6)        /* Fast Interrupt mask */
-#define SPSR_IRQ_MASK    (1<<7)        /* Interrupt mask */
-#define SPSR_ABT_MASK    (1<<8)        /* Asynchronous Abort mask */
+#define SPSR_FIQ_MASK    (1 << 6)        /* Fast Interrupt mask */
+#define SPSR_IRQ_MASK    (1 << 7)        /* Interrupt mask */
+#define SPSR_ABT_MASK    (1 << 8)        /* Asynchronous Abort mask */
 
 
 #define SPSR_INIT SPSR_MASK_ALL    // 关闭所有中断
