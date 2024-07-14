@@ -47,6 +47,7 @@
 // levels of lookup.
 #define NS_TABLE (1 << 63)
 
+/*
 #define TCR_IPS (0 << 32)
 #define TCR_TG1_4K (0b10 << 30)
 #define TCR_SH1_INNER (0b11 << 28)
@@ -59,6 +60,15 @@
     (TCR_IPS |                                                           \
      TCR_TG1_4K | TCR_SH1_INNER | TCR_ORGN1_IRGN1_WRITEBACK_WRITEALLOC | \
      TCR_TG0_4K | TCR_SH0_INNER | TCR_ORGN0_IRGN0_WRITEBACK_WRITEALLOC)
+*/
+
+
+// /*
+#define TCR_T0SZ   (64 - 48)
+#define TCR_TG0_4K (0 << 14)
+#define TCR_VALUE  (TCR_T0SZ | TCR_TG0_4K)
+// */
+
 
 /* Memory Attributes 控制这个页表项对应的内存区域的内存类型,缓存策略 */
 
@@ -77,9 +87,9 @@
 #define PTE_AIDX_MEMORY_NOCACHE (MA_MEMORY_NoCache << 2)
 
 // 这个值 我们一会放到MAIR_EL1 寄存器中
-#define MAIR_VALUE                                       \
-    (MA_DEVICE_nGnRnE_Flags << (8 * MA_DEVICE_nGnRnE)) | \
-        (MA_MEMORY_Flags << (8 * MA_MEMORY)) |           \
+#define MAIR_VALUE                                           \
+        (MA_DEVICE_nGnRnE_Flags << (8 * MA_DEVICE_nGnRnE)) | \
+        (MA_MEMORY_Flags << (8 * MA_MEMORY)) |               \
         (MA_MEMORY_NoCache_Flags << (8 * MA_MEMORY_NoCache))
 
 // 特权读写 AF置位

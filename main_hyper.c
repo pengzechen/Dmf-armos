@@ -3,6 +3,7 @@
 #include <io.h>
 #include <gic.h>
 #include <timer.h>
+#include <mmu.h>
 #include <sys/vtcr.h>
 #include <ept.h>
 
@@ -36,10 +37,10 @@ static inline uint64_t read_vttbr_el2() {
 void vtcr_init(void)
 {
     print_info("    Initialize vtcr...\n");
-    uint64_t vtcr_val = VTCR_NSA|VTCR_NSW|  VTCR_VS|VTCR_PS|
-                        VTCR_TG0_4K|VTCR_SH0_IS|VTCR_ORGN0_NC|VTCR_IRGN0_NC;
+    uint64_t vtcr_val = VTCR_VS|VTCR_PS|
+                        VTCR_TG0_4K|VTCR_SH0_IS|VTCR_ORGN0_WBWA|VTCR_IRGN0_WBWA;
     
-    vtcr_val |= VTCR_T0SZ(0x1a); /* 40 bit IPA */
+    vtcr_val |= VTCR_T0SZ(64 - 40); /* 40 bit IPA */
     vtcr_val |= VTCR_SL0(0x1);   /* P2M starts at first level */
     
 

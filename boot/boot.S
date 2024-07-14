@@ -109,7 +109,7 @@ from_el2:
     ldr x0, =HCR_VALUE
     msr hcr_el2, x0      // 写回HCR_EL2寄存器
 
-    ldr x0, =SPSR_VALUE
+    ldr x0, =SPSR_INIT
     msr spsr_el2, x0
 
     adrp    x0, exception_vector_base_el2

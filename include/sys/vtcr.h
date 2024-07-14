@@ -8,9 +8,6 @@
 #define VTCR_T0SZ(x)    ((x)<<0)
 #define VTCR_SL0(x)     ((x)<<6)
 
-#define VTCR_NSA        (1 << 30)
-#define VTCR_NSW        (1 << 29)
-
 #define VTCR_VS	   (0 << 19)
 #define VTCR_PS	   (2 << 16)
 
