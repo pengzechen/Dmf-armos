@@ -175,6 +175,4 @@ static inline int clean_and_invalidate_dcache_va_range(const void *p, unsigned l
     return 0;
 }
 
-void apply_ept(void *ept);
-
 #endif // __PAGE_H__

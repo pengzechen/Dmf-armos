@@ -35,18 +35,6 @@ void setup_cache(void)
     cacheline_bytes = get_cache_line_size();
 }
 
-void apply_ept(void *ept)
-{
-    isb();
-    // dsb();
-    clean_and_invalidate_dcache_va_range(ept, PAGE_SIZE);
-    isb();
-    // dsb();
-    flush_tlb();
-    isb();
-    // dsb();
-}
-
 void init_page_table()
 {
     setup_cache();

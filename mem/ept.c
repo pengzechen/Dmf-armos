@@ -5,12 +5,6 @@
 #include <page.h>
 #include <io.h>
 
-#define LPAE_SHIFT 9
-#define LPAE_ENTRIES (1 << LPAE_SHIFT)
-#define LPAE_L1_SIZE (8)
-#define LPAE_L2_SIZE (LPAE_L1_SIZE * LPAE_ENTRIES)
-#define LPAE_L3_SIZE (LPAE_L2_SIZE * LPAE_ENTRIES)
-
 extern lpae_t ept_L1[];
 lpae_t *ept_L2_root;
 lpae_t *ept_L3_root;
@@ -27,6 +21,18 @@ static bool isInMemory(unsigned long gpa)
   {
     return 0;
   }
+}
+
+void apply_ept(void *ept)
+{
+  isb();
+  // dsb();
+  clean_and_invalidate_dcache_va_range(ept, PAGE_SIZE);
+  isb();
+  // dsb();
+  flush_tlb();
+  isb();
+  // dsb();
 }
 
 void ept_l3_init(lpae_t *ept_l3)
@@ -150,63 +156,38 @@ void guest_ept_init(void)
 
   ept_l1_init();
 
-  // dsb();
-  // isb();
-  // init_mmio();
-  // dsb();
-  // isb();
-  asm volatile(
-      "msr VTTBR_EL2 , %0\n\t"
-      : /* no out put */
-      : "r"(vttbr_val)
-      :);
-  // Turn on Stage 2 Address Translation
-  // hcr = READ_SYSREG(HCR_EL2);
-  // WRITE_SYSREG(hcr | HCR_PTW | HCR_VM, HCR_EL2);
+  asm volatile("msr VTTBR_EL2 , %0\n\t"
+                : /* no out put */
+                : "r"(vttbr_val)
+              );
   isb();
 }
 
-lpae_t * get_ept_entry(uint64_t gpa)
+lpae_t *get_ept_entry(uint64_t gpa)
 {
   unsigned long page_num;
   page_num = (gpa >> 12);
   return &ept_L3_root[page_num];
 }
 
-static inline uint64_t read_par(void) {
-    uint64_t par;
-    asm volatile("mrs %0, PAR_EL1" : "=r" (par));
-    return par;
+static inline uint64_t gva_to_ipa_par(uint64_t va)
+{
+  uint64_t par, tmp;
+  tmp = read_par();  // 保存当前 PAR 寄存器值
+  write_ats1cpr(va); // 写入 VA 以触发地址转换
+  isb();             // 确保转换结果可用
+  par = read_par();  // 读取转换结果
+  write_par(tmp);    // 恢复 PAR 寄存器值
+  return par;        // 返回转换后的物理地址
 }
 
-static inline void write_par(uint64_t value) {
-    asm volatile("msr PAR_EL1, %0" : : "r" (value));
-}
-
-static inline void write_ats1cpr(uint64_t va) {
-    asm volatile("at s1e1r, %0" : : "r" (va));
-}
-
-static inline uint64_t gva_to_ipa_par(uint64_t va) {
-    uint64_t par, tmp;
-    tmp = read_par();            // 保存当前 PAR 寄存器值
-    write_ats1cpr(va);           // 写入 VA 以触发地址转换
-    isb();                       // 确保转换结果可用
-    par = read_par();            // 读取转换结果
-    write_par(tmp);              // 恢复 PAR 寄存器值
-    return par;                  // 返回转换后的物理地址
-}
-
-#define PAR_F                   (1UL << 0)               // PAR 寄存器中的故障标志位
-#define PADDR_BITS              40
-#define PADDR_MASK              ((1ULL << PADDR_BITS)-1)
-#define PAGE_MASK               (1 << 12)                // 页对齐掩码
-
-int gva_to_ipa(uint64_t va, uint64_t *paddr) {
-    uint64_t par = gva_to_ipa_par(va);
-    if (par & PAR_F) {
-        return -1; // 转换失败
-    }
-    *paddr = (par & PADDR_MASK & PAGE_MASK) | (va & ~PAGE_MASK);
-    return 0; // 转换成功
+int gva_to_ipa(uint64_t va, uint64_t *paddr)
+{
+  uint64_t par = gva_to_ipa_par(va);
+  if (par & PAR_F)
+  {
+    return -1; // 转换失败
+  }
+  *paddr = (par & PADDR_MASK & PAGE_MASK) | (va & ~PAGE_MASK);
+  return 0; // 转换成功
 }
