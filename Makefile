@@ -123,13 +123,19 @@ deasm: $(BUILD_DIR)/kernel.elf
 	$(TOOL_PREFIX)objcopy -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
 
-QEMU_ARGS = -smp 2
+QEMU_ARGS = -m 4G -smp 2 -cpu cortex-a72 -nographic 
+
+QEMU_ARGS += -M virt,gic_version=2
+
+QEMU_ARGS += -M virtualization=on
+
+# QEMU_ARGS += -M secure=on
 
 debug: deasm
-	qemu-system-aarch64 -m 4G -M virt,virtualization=on,gic_version=2 -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf -s -S
+	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf -s -S
 
 run:
-	qemu-system-aarch64 -m 4G -M virt,virtualization=on,gic_version=2 -cpu cortex-a72 $(QEMU_ARGS) -nographic -kernel $(BUILD_DIR)/kernel.elf
+	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf
 
 
 clean:
