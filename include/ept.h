@@ -23,7 +23,7 @@ lpae_t * get_ept_entry(paddr_t gpa);
 
 void apply_ept(void *ept);
 
-void ept_violation_handler(ept_violation_info_t *info);
+void ept_violation_handler(ept_violation_info_t *info, trap_frame_t *);
 
 int gva_to_ipa(uint64_t va, uint64_t *paddr);
 

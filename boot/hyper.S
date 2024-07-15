@@ -7,8 +7,20 @@ test_guest:
   mov x0, 100
   mrs x0, CurrentEL          // Read current exception level
   lsr x0, x0, #2             // 右移两位
-  
-  hvc #0
+
+  mov x0, #0
+  mov x1, #1
+  mov x2, #2
+  mov x3, #3
+  mov x4, #4
+  mov x5, #5
+  mov x6, #0x600
+  mov x7, #7
+  mov x8, #8
+  mov x9, #9
+  mov x10, #10
+
+  // hvc #0
   ldr x0, =0x50000000
   ldr x6, [x0]
 

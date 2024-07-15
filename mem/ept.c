@@ -12,7 +12,7 @@ lpae_t *ept_L2_root;
 lpae_t *ept_L3_root;
 extern cpu_t vcpu;
 
-static int handle_mmio(ept_violation_info_t *info);
+int handle_mmio(ept_violation_info_t *info, trap_frame_t* el2_ctx);
 
 /* Return the cache property of the input gpa */
 /* It is determined depending on whether the address is for device or memory */
@@ -181,13 +181,13 @@ int gva_to_ipa(uint64_t va, uint64_t *paddr)
   return 0; // 转换成功
 }
 
-void ept_violation_handler(ept_violation_info_t *info)
+void ept_violation_handler(ept_violation_info_t *info, trap_frame_t* el2_ctx)
 {
   lpae_t *ept;
   unsigned long tmp;
 
   printf("EPT Violation : %s\n", info->reason == PREFETCH ? "prefetch" : "data");
-  printf("PC : %x\n",vcpu.elr_el2);
+  printf("PC : %x\n",el2_ctx->elr);
   printf("GVA : 0x%x\n", info->gva);
   printf("GPA : 0x%x\n", (unsigned long)info->gpa);
   printf("Register : R%d\n", info->hsr.dabt.reg);
@@ -195,7 +195,7 @@ void ept_violation_handler(ept_violation_info_t *info)
   ept = get_ept_entry(info->gpa);
   tmp = ept->bits & 0xFFFFFFFF;
   printf("EPT Entry : 0x%x(0x%x)\n",ept,tmp);
-  if (handle_mmio(info))
+  if (handle_mmio(info, el2_ctx))
   {
   }
 
@@ -224,7 +224,7 @@ void ept_violation_handler(ept_violation_info_t *info)
   // }
 }
 
-int handle_mmio(ept_violation_info_t *info)
+int handle_mmio(ept_violation_info_t *info, trap_frame_t* el2_ctx)
 {
   paddr_t gpa = info->gpa;
   if (MMIO_ARREA <= gpa && gpa <= (MMIO_ARREA + 4096))
@@ -234,7 +234,7 @@ int handle_mmio(ept_violation_info_t *info)
     }
     else
     {
-      unsigned long regNum;
+      unsigned long reg_num;
       volatile uint64_t *r;
       volatile void *buf;
       volatile unsigned long *src;
@@ -242,14 +242,18 @@ int handle_mmio(ept_violation_info_t *info)
       volatile unsigned long dat;
       spin_lock(&vcpu.lock);
 
-      regNum = info->hsr.dabt.reg;
-      r = (uint64_t *)select_user_reg(regNum);
+      reg_num = info->hsr.dabt.reg;
+      // r = (uint64_t *)select_user_reg(reg_num);
+      r = &el2_ctx->r[reg_num];
       len = 1 << (info->hsr.dabt.size & 0x00000003);
       buf = (void *)r;
+      
       src = (unsigned long *)(unsigned long)gpa;
-      printf("(%d bytes)Read from 0x%x to R%d\n", (unsigned long)len, (unsigned long)gpa, (unsigned long)regNum);
       dat = *src;
-
+      printf("(%d bytes)Read from 0x%x to R%d\n", (unsigned long)len, (unsigned long)gpa, (unsigned long)reg_num);
+      printf("el1 old data: 0x%x\n", buf);
+      printf("real data: 0x%x\n", dat);
+      
       if ((unsigned char)(gpa & 0xF) == 0x4)
       {
         printf("Data read, change data from 0x%x to 0x%x \n", (unsigned long)*src, ~(*src));
@@ -260,7 +264,7 @@ int handle_mmio(ept_violation_info_t *info)
         dat = (*src);
       }
 
-      if (regNum != 14)
+      if (reg_num != 14)
       {
         *(unsigned long *)buf = dat;
       }

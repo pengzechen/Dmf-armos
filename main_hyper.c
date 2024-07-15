@@ -90,6 +90,8 @@ void hyper_main()
     avr_entry->p2m.write = 1;
     apply_ept(avr_entry);
 
+    *(uint64_t*)0x50000000 = 0x1234;
+
     guest_start();
     
     while (1)
