@@ -111,7 +111,7 @@ void main_entry()
     create_task(task2, task2_stack + 3800);
     create_task(task3, task3_stack + 3800);
     create_task(task4, task4_stack + 3800);
-    print_current_task();
+    print_current_task_list();
 
     enable_interrupts();
     // move_to_first_task();

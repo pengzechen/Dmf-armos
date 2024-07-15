@@ -47,7 +47,7 @@ void schedule();
 void switch_to(tcb_t *next_task);
 void timer_tick();
 
-void print_current_task();
+void print_current_task_list();
 void move_to_first_task();
 
 #endif // __TASK_H__

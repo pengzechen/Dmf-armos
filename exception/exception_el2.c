@@ -43,7 +43,7 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
         info.reason = PREFETCH;
         info.gva = read_far_el2();
         gva_to_ipa(info.gva, &info.gpa);
-        ept_violation_handler(&info, ctx_el2);
+        data_abort_handler(&info, ctx_el2);
 
         advance_pc(&info, ctx_el2);
         return;

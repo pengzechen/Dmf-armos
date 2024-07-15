@@ -5,6 +5,9 @@
 tcb_t task_list[MAX_TASKS];
 tcb_t *current_task = (tcb_t *)0;
 uint32_t task_count = 0;
+static char idel_task_stack[4096] = {0};
+static uint64_t idel_num = 0;
+static void idel_task() { while (1) wfi(); }
 
 void create_task(void (*task_func)(), void *stack_top)
 {
@@ -22,21 +25,13 @@ void create_task(void (*task_func)(), void *stack_top)
     task_count++;
 }
 
-void print_current_task()
+void print_current_task_list()
 {
     for (int i = 0; i < task_count; i++)
     {
         tcb_t *task = &task_list[i];
         printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
     }
-}
-
-static char idel_task_stack[4096] = {0};
-static uint64_t idel_num = 0;
-static void idel_task()
-{
-    while (1)
-        wfi();
 }
 
 // 创建一个 idel task, task0

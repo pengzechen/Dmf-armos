@@ -181,7 +181,7 @@ int gva_to_ipa(uint64_t va, uint64_t *paddr)
   return 0; // 转换成功
 }
 
-void ept_violation_handler(ept_violation_info_t *info, trap_frame_t* el2_ctx)
+void data_abort_handler(ept_violation_info_t *info, trap_frame_t* el2_ctx)
 {
   lpae_t *ept;
   unsigned long tmp;

@@ -4,6 +4,7 @@
 
 #include <spinlock.h>
 #include <aj_types.h>
+#include <exception.h>
 
 typedef struct _cpu_sysregs
 {
@@ -88,13 +89,9 @@ typedef struct _cpu_sysregs
 
 typedef struct _cpu_t
 {
-	// general registers
-	uint32_t regs[13];
-	uint32_t elr_el2;
-	uint32_t spsr_el2;
-	spinlock_t lock;
-
-	cpu_sysregs_t  sys_reg;
+	cpu_ctx_t     ctx;
+	cpu_sysregs_t sys_reg;
+	spinlock_t    lock;
 } cpu_t ;
 
 

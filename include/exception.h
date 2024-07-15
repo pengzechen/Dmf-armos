@@ -13,6 +13,8 @@ typedef struct
     uint64_t spsr;        // Saved Process Status Register 可以是 el1， 也可以是el2
 } trap_frame_t;
 
+typedef trap_frame_t cpu_ctx_t;
+
 union hsr
 {
     uint32_t bits;
