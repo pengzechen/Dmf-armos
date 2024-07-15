@@ -8,9 +8,9 @@
 typedef struct
 {
     uint64_t r[NUM_REGS]; // General-purpose registers x0..x30
-    uint64_t usp;         // User Stack Pointer (SP_EL0)
-    uint64_t elr;         // Exception Link Register (ELR_EL3)
-    uint64_t spsr;        // Saved Process Status Register (SPSR_EL3)
+    uint64_t usp;         // 如果是内核就是 el0 的栈，       如果是 hyper 就是 el1 的栈
+    uint64_t elr;         // Exception Link Register       可以是 el1， 也可以是el2
+    uint64_t spsr;        // Saved Process Status Register 可以是 el1， 也可以是el2
 } trap_frame_t;
 
 union hsr
