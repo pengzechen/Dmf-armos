@@ -187,7 +187,7 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t* el2_ctx)
   unsigned long tmp;
 
   printf("EPT Violation : %s\n", info->reason == PREFETCH ? "prefetch" : "data");
-  printf("PC : %x\n",el2_ctx->elr);
+  printf("PC : %x\n",vcpu.ctx.elr);
   printf("GVA : 0x%x\n", info->gva);
   printf("GPA : 0x%x\n", (unsigned long)info->gpa);
   printf("Register : R%d\n", info->hsr.dabt.reg);
@@ -244,7 +244,8 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t* el2_ctx)
 
       reg_num = info->hsr.dabt.reg;
       // r = (uint64_t *)select_user_reg(reg_num);
-      r = &el2_ctx->r[reg_num];
+      // r = &el2_ctx->r[reg_num];
+      r = &vcpu.pctx->r[reg_num];
       len = 1 << (info->hsr.dabt.size & 0x00000003);
       buf = (void *)r;
       

@@ -47,6 +47,7 @@
         "vtcr.h": "c",
         "ept.h": "c",
         "exception.h": "c",
-        "vcpu.h": "c"
+        "vcpu.h": "c",
+        "gic.h": "c"
     }
 }

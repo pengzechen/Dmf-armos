@@ -4,6 +4,7 @@
 #include <exception.h>
 #include <gic.h>
 #include <ept.h>
+#include <hyper/vcpu.h>
 
 void advance_pc(ept_violation_info_t *info, trap_frame_t *context)
 {
@@ -23,6 +24,7 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
     printf("        ec: %x\n", ec);
 
     union hsr hsr = { .bits = el2_esr };
+    save_cpu_ctx(ctx_el2);
 
     if (ec == 0x16)
     { // hvc
@@ -78,6 +80,8 @@ void handle_irq_exception_el2(uint64_t *stack_pointer)
     gic_write_eoir(iar);
 
     printf("\nthis is handle irq el2\n");
+
+    save_cpu_ctx(context);
 
     get_g_handler_vec()[vector](0); // arg not use
 }

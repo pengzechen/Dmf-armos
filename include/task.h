@@ -3,6 +3,7 @@
 #define __TASK_H__
 
 #include <aj_types.h>
+#include <hyper/vcpu.h>
 
 #pragma pack(1)
 typedef struct _contex_t {
@@ -25,7 +26,8 @@ typedef struct _contex_t {
 
 #pragma pack(1)
 typedef struct
-{
+{   
+    cpu_t            *cpu;
     struct _contex_t ctx;
     uint32_t state; // 任务状态 (比如：就绪，运行，阻塞)
     uint32_t counter;
@@ -49,5 +51,7 @@ void timer_tick();
 
 void print_current_task_list();
 void move_to_first_task();
+
+void vm_task_init();
 
 #endif // __TASK_H__

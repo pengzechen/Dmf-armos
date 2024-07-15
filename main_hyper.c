@@ -7,6 +7,7 @@
 #include <sys/vtcr.h>
 #include <ept.h>
 #include <page.h>
+#include <task.h>
 
 static inline uint64_t read_sctlr_el2() {
     uint64_t value;
@@ -77,6 +78,7 @@ void hyper_main()
     vtcr_init();
     guest_ept_init();
     guest_trap_init();
+    vm_task_init();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
