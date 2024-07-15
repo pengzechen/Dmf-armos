@@ -18,7 +18,8 @@ void handle_timer_interrupt(int)
     // if (test_num++ % 1 == 0) {
     // printf("core: %d, handle irq exception\n", get_current_cpu_id());
     // printf("get daif: %x\n", get_daif());
-    schedule();
+    timer_tick();
+    // schedule();
 
     // printf("schedule ok...\n");
     // }

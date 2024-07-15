@@ -5,7 +5,7 @@
 #include <aj_types.h>
 
 #pragma pack(1)
-typedef struct  {
+typedef struct _contex_t {
     uint64_t x19;
     uint64_t x20;
     uint64_t x21;
@@ -20,26 +20,32 @@ typedef struct  {
     uint64_t x30; // Link register (the address to return)
     uint64_t tpidr_el0; // "Thread ID" Register
     uint64_t sp_el1;
-} context ;
+} contex_t ;
 #pragma pack()
 
 #pragma pack(1)
 typedef struct
 {
-    context ctx;
+    struct _contex_t ctx;
     uint32_t state; // 任务状态 (比如：就绪，运行，阻塞)
+    uint32_t counter;
+    uint32_t priority;
     uint32_t id;    // 任务ID
     
 } tcb_t;
 #pragma pack()
 
 #define MAX_TASKS 64
+#define TASK_RUNNING 0
+#define TASK_ZOMBIE  1
 
 #define wfi()       __asm__ volatile("wfi" : : : "memory");
 
 void create_task(void (*task_func)(), void *);
 void schedule_init();
 void schedule();
+void switch_to(tcb_t *next_task);
+void timer_tick();
 
 void print_current_task();
 void move_to_first_task();

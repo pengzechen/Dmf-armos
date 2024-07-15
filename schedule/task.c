@@ -13,10 +13,11 @@ void create_task(void (*task_func)(), void *stack_top)
 
     tcb_t *task = &task_list[task_count];
     task->id = task_count;
-    task->state = 1; // 就绪状态
+    task->state = 0; 
     task->ctx.x30 = (uint64_t)task_func;
     task->ctx.x29 = (uint64_t)(stack_top - 2048); // 分配一个4KB的堆栈并初始化堆栈指针
-    task->ctx.sp_el1 = (uint64_t)stack_top; // 分配一个4KB的堆栈并初始化堆栈指针
+    task->ctx.sp_el1 = (uint64_t)stack_top;       // 分配一个4KB的堆栈并初始化堆栈指针
+    task->counter = 20;
 
     task_count++;
 }
@@ -30,7 +31,7 @@ void print_current_task()
     }
 }
 
-static char idel_task_stack[1024] = {0};
+static char idel_task_stack[4096] = {0};
 static uint64_t idel_num = 0;
 static void idel_task()
 {
@@ -41,7 +42,7 @@ static void idel_task()
 // 创建一个 idel task, task0
 void schedule_init()
 {
-    create_task(idel_task, idel_task_stack + 1024);
+    create_task(idel_task, idel_task_stack + 4096);
 }
 
 void move_to_first_task()
@@ -51,14 +52,14 @@ void move_to_first_task()
     void *entry = idel_task;
     __asm__ __volatile__("mov x30, %0\n"
                          "ret\n"
-                         :              // out put
-                         : "r"(entry)   // in  put
+                         :            // out put
+                         : "r"(entry) // in  put
                          : "x30");
 }
 
 extern void switch_context(tcb_t *, tcb_t *);
 
-void schedule()
+void _schedule()
 {
     if (task_count == 0)
         return;
@@ -81,4 +82,21 @@ void schedule()
         // enable_interrupts();
         switch_context(prev_task, next_task);
     }
+}
+
+void schedule(void)
+{
+	current_task->counter = 0;
+	_schedule();
+}
+
+void timer_tick()
+{
+	--current_task->counter;
+
+	if (current_task->counter > 0)
+		return;
+
+	current_task->counter = 20;
+	_schedule();
 }
