@@ -14,7 +14,7 @@ test_guest:
   mov x3, #3
   mov x4, #4
   mov x5, #5
-  mov x6, #0x600
+  mov x6, #0x17
   mov x7, #7
   mov x8, #8
   mov x9, #9

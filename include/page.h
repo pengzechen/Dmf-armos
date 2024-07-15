@@ -138,7 +138,7 @@ static inline int invalidate_dcache_va_range(const void *p, unsigned long size)
     size_t off;
     const void *end = p + size;
 
-    dsb_op(sy); /* So the CPU issues all writes to the range */
+    dsb(sy); /* So the CPU issues all writes to the range */
 
     off = (unsigned long)p % cacheline_bytes;
     if (off)
@@ -159,7 +159,7 @@ static inline int invalidate_dcache_va_range(const void *p, unsigned long size)
     for (; p < end; p += cacheline_bytes)
         __invalidate_dcache_one(p);
 
-    dsb_op(sy); /* So we know the flushes happen before continuing */
+    dsb(sy); /* So we know the flushes happen before continuing */
 
     return 0;
 }
@@ -167,10 +167,10 @@ static inline int invalidate_dcache_va_range(const void *p, unsigned long size)
 static inline int clean_and_invalidate_dcache_va_range(const void *p, unsigned long size)
 {
     const void *end;
-    dsb_op(sy); /* So the CPU issues all writes to the range */
+    dsb(sy); /* So the CPU issues all writes to the range */
     for (end = p + size; p < end; p += cacheline_bytes)
         __clean_and_invalidate_dcache_one(p);
-    dsb_op(sy); /* So we know the flushes happen before continuing */
+    dsb(sy); /* So we know the flushes happen before continuing */
     /* ARM callers assume that dcache_* functions cannot fail. */
     return 0;
 }

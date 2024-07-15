@@ -31,13 +31,13 @@ static bool isInMemory(unsigned long gpa)
 void apply_ept(void *ept)
 {
   isb();
-  // dsb();
+  dsb(sy);
   clean_and_invalidate_dcache_va_range(ept, PAGE_SIZE);
   isb();
-  // dsb();
+  dsb(sy);
   flush_tlb();
   isb();
-  // dsb();
+  dsb(sy);
 }
 
 void guest_ept_init(void)
@@ -251,7 +251,7 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t* el2_ctx)
       src = (unsigned long *)(unsigned long)gpa;
       dat = *src;
       printf("(%d bytes)Read from 0x%x to R%d\n", (unsigned long)len, (unsigned long)gpa, (unsigned long)reg_num);
-      printf("el1 old data: 0x%x\n", buf);
+      printf("el1 old data: 0x%x\n", *r);
       printf("real data: 0x%x\n", dat);
       
       if ((unsigned char)(gpa & 0xF) == 0x4)
@@ -277,7 +277,7 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t* el2_ctx)
             :          /* Clobber */
         );
       }
-      // dsb();
+      dsb(sy);
       isb();
       spin_unlock(&vcpu.lock);
     }
