@@ -107,16 +107,16 @@ char task1_stack[4096] = {0};
 void main_entry()
 {
     printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
-    create_task(task1, task1_stack + 3800);
-    create_task(task2, task2_stack + 3800);
-    create_task(task3, task3_stack + 3800);
-    create_task(task4, task4_stack + 3800);
-    schedule_init();
-
-    if (get_current_cpu_id() == 0) {
+    if (get_current_cpu_id() == 0)
+    {
+        create_task(task1, task1_stack + 3800);
+        create_task(task2, task2_stack + 3800);
+        create_task(task3, task3_stack + 3800);
+        create_task(task4, task4_stack + 3800);
+        schedule_init();
         print_current_task_list();
     }
-    
+
     enable_interrupts();
     // move_to_first_task();
     // static uint64_t i = 0;
@@ -124,7 +124,7 @@ void main_entry()
     //     if(i++ % 1000000 == 0)
     //     printf("loop in pe: %d\n", get_current_cpu_id());
     // }
-    while(1)
+    while (1)
         ;
 }
 
@@ -149,8 +149,8 @@ void kernel_main(void)
         for (int i = 0; i < 0xfffff; i++)
             ;
 
-    while (1)
-        ;
+    // while (1)
+    //     ;
 
     main_entry();
     // can't reach here !
@@ -161,7 +161,7 @@ void second_kernel_main()
     print_info("starting core");
     printf(" %d ", get_current_cpu_id());
     print_info("...\n");
-    
+
     // 第二个核要初始化 gicc
     gicc_init();
     // 输出当前 gic 初始化情况

@@ -138,7 +138,7 @@ QEMU_ARGS += -M virt,gic_version=2
 
 QEMU_ARGS += -M virtualization=on
 
-QEMU_ARGS += -M secure=on
+# QEMU_ARGS += -M secure=on
 
 debug: deasm
 	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf -s -S

@@ -35,6 +35,13 @@ void timer_init_second()
     write_cntp_tval_el0(100000);
     // 启用定时器
     write_cntp_ctl_el0(0b1);
+
+    gic_enable_int(TIMER_VECTOR, 0);
+
+    if (gic_get_enable(TIMER_VECTOR))
+    {
+        printf("timer enabled successfully ...\n");
+    }
 }
 
 // 每个pe都要配置
