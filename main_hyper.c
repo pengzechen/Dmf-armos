@@ -61,6 +61,8 @@ static void guest_trap_init(void)
     isb();
 }
 
+extern void test_guest();
+extern void test_guest2();
 extern void guest_start();
 
 extern size_t cacheline_bytes;
@@ -78,7 +80,6 @@ void hyper_main()
     vtcr_init();
     guest_ept_init();
     guest_trap_init();
-    vm_task_init();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
@@ -94,6 +95,13 @@ void hyper_main()
 
     *(uint64_t*)0x50000000 = 0x1234;
 
+    craete_vm(test_guest);
+    craete_vm(test_guest2);
+
+    print_current_task_list();
+
+    // enable_interrupts();
+    // move_to_first_vm()
     guest_start();
     
     while (1)

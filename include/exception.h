@@ -166,9 +166,9 @@ static inline uint64_t read_far_el2(void)
     return value;
 }
 
-typedef void (*irq_handler_t)(int);
+typedef void (*irq_handler_t)(uint64_t *);
 
-void irq_install(int vector, void (*h)(int));
+void irq_install(int vector, void (*h)(uint64_t *));
 irq_handler_t *get_g_handler_vec();
 
 #endif // __ECCEPTION_FRAME_H__

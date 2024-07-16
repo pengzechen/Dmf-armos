@@ -97,7 +97,7 @@ typedef struct _cpu_t
 
 
 
-extern cpu_t vcpu;
+extern cpu_t vcpu[];
 
 #define select_user_reg(reg) (&(vcpu.regs[reg]))
 

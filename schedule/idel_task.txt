@@ -1,0 +1,28 @@
+
+#include <aj_types.h>
+
+static char idel_task_stack[4096] = {0};
+static uint64_t idel_num = 0;
+static void idel_task()
+{
+    while (1)
+        wfi();
+}
+
+// 创建一个 idel task, task0
+void schedule_init()
+{
+    create_task(idel_task, idel_task_stack + 4096);
+}
+
+void move_to_first_task()
+{
+    current_task = task_list; // 当前运行的是 idel task
+
+    void *entry = idel_task;
+    __asm__ __volatile__("mov x30, %0\n"
+                         "ret\n"
+                         :            // out put
+                         : "r"(entry) // in  put
+                         : "x30");
+}

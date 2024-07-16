@@ -3,17 +3,17 @@
 #include <hyper/vcpu.h>
 #include <aj_string.h>
 
-cpu_t vcpu;
+cpu_t vcpu[8];
 
-void print_vcpu(void)
+void print_vcpu(int id)
 {
   int reg;
-  spin_lock(&vcpu.lock);
+  spin_lock(&vcpu[id].lock);
   for(reg = 0 ; reg < 31 ; reg++)
   {
-    printf("R%d : %x\n",vcpu.ctx.r[reg]);
+    printf("R%d : %x\n",vcpu[id].ctx.r[reg]);
   }
-  printf("SPSR : %x\n", vcpu.ctx.spsr);
-  printf("LR : %x\n", vcpu.ctx.elr);
-  spin_unlock(&vcpu.lock);
+  printf("SPSR : %x\n", vcpu[id].ctx.spsr);
+  printf("LR : %x\n", vcpu[id].ctx.elr);
+  spin_unlock(&vcpu[id].lock);
 }

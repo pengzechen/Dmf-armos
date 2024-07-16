@@ -41,17 +41,17 @@ typedef struct
 #define TASK_RUNNING 0
 #define TASK_ZOMBIE  1
 
-#define wfi()       __asm__ volatile("wfi" : : : "memory");
+#define wfi()       __asm__ volatile("wfi" : : : "memory")
 
 void create_task(void (*task_func)(), void *);
 void schedule_init();
 void schedule();
 void switch_to(tcb_t *next_task);
-void timer_tick();
+void timer_tick_schedule();
 
 void print_current_task_list();
-void move_to_first_task();
+void move_to_first_vm();
 
-void vm_task_init();
+void craete_vm(void (*task_func)());
 
 #endif // __TASK_H__

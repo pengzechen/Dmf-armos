@@ -11,14 +11,14 @@ static uint64_t test_num = 0;
 
 #define TIMER_VECTOR 30
 
-void handle_timer_interrupt(int)
+void handle_timer_interrupt(uint64_t * sp)
 {
     // 设置定时值
     write_cntp_tval_el0(100000);
     // if (test_num++ % 1 == 0) {
     // printf("core: %d, handle irq exception\n", get_current_cpu_id());
     // printf("get daif: %x\n", get_daif());
-    timer_tick();
+    timer_tick_schedule(sp);
     // schedule();
 
     // printf("schedule ok...\n");

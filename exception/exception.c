@@ -47,7 +47,7 @@ irq_handler_t *get_g_handler_vec()
     return g_handler_vec;
 }
 
-void irq_install(int vector, void (*h)(int))
+void irq_install(int vector, void (*h)(uint64_t *))
 {
     g_handler_vec[vector] = h;
 }
@@ -64,7 +64,7 @@ void handle_irq_exception(uint64_t *stack_pointer)
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
 
-    g_handler_vec[vector](0); // arg not use
+    g_handler_vec[vector]((uint64_t *)context); // arg not use
 }
 
 // 示例使用方式：处理无效异常

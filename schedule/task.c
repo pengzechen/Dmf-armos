@@ -3,17 +3,11 @@
 #include <gic.h>
 #include <hyper/vcpu.h>
 #include <aj_string.h>
+#include <sys/sys.h>
 
 tcb_t task_list[MAX_TASKS];
 tcb_t *current_task = (tcb_t *)0;
 uint32_t task_count = 0;
-static char idel_task_stack[4096] = {0};
-static uint64_t idel_num = 0;
-static void idel_task()
-{
-    while (1)
-        wfi();
-}
 
 void create_task(void (*task_func)(), void *stack_top)
 {
@@ -22,12 +16,29 @@ void create_task(void (*task_func)(), void *stack_top)
 
     tcb_t *task = &task_list[task_count];
     task->id = task_count;
-    task->state = 0;
+    task->state = 1;
     task->ctx.x30 = (uint64_t)task_func;
     task->ctx.x29 = (uint64_t)(stack_top - 2048); // 分配一个4KB的堆栈并初始化堆栈指针
     task->ctx.sp_el1 = (uint64_t)stack_top;       // 分配一个4KB的堆栈并初始化堆栈指针
     task->counter = 20;
+    task->cpu = &vcpu[task_count];
+    task_count++;
+}
 
+void craete_vm(void (*task_func)())
+{
+    if (task_count >= MAX_TASKS)
+        return;
+
+    tcb_t *task = &task_list[task_count];
+    task->id = task_count;
+    task->state = 1;
+    task->cpu = &vcpu[task_count];
+
+    task->cpu->ctx.elr = (uint64_t)task_func; // elr_el2
+    task->cpu->ctx.spsr = SPSR_VALUE;         // spsr_el2
+
+    task->counter = 20;
     task_count++;
 }
 
@@ -36,31 +47,15 @@ void print_current_task_list()
     for (int i = 0; i < task_count; i++)
     {
         tcb_t *task = &task_list[i];
-        printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
+        // printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
+        printf("id: %x, elr: 0x%x\n", task->id, task->cpu->ctx.elr);
     }
 }
 
-// 创建一个 idel task, task0
-void schedule_init()
-{
-    create_task(idel_task, idel_task_stack + 4096);
-}
-
-void move_to_first_task()
-{
-    current_task = task_list; // 当前运行的是 idel task
-
-    void *entry = idel_task;
-    __asm__ __volatile__("mov x30, %0\n"
-                         "ret\n"
-                         :            // out put
-                         : "r"(entry) // in  put
-                         : "x30");
-}
-
 extern void switch_context(tcb_t *, tcb_t *);
+static void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp);
 
-void _schedule()
+void _schedule(uint64_t *sp)
 {
     if (task_count == 0)
         return;
@@ -81,17 +76,20 @@ void _schedule()
         current_task = next_task;
         // printf("prev_task %d switch to next_task %d\n", prev_task->id, next_task->id);
         // enable_interrupts();
-        switch_context(prev_task, next_task);
+        if (sp == NULL)
+            switch_context(prev_task, next_task);
+        else
+            switch_context_el(prev_task, next_task, sp);
     }
 }
 
 void schedule(void)
 {
     current_task->counter = 0;
-    _schedule();
+    _schedule(NULL);
 }
 
-void timer_tick()
+void timer_tick_schedule(uint64_t *sp)
 {
     --current_task->counter;
 
@@ -99,7 +97,7 @@ void timer_tick()
         return;
 
     current_task->counter = 20;
-    _schedule();
+    _schedule(sp);
 }
 
 //  vm 相关
@@ -123,11 +121,9 @@ void save_cpu_ctx(trap_frame_t *sp)
     current_task->cpu->pctx = sp;
 }
 
-void vm_task_init()
+// 这个函数会直接改变 trap frame 里面的内容
+void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp)
 {
-    current_task->cpu = &vcpu;
-}
-
-void switch_context_el(tcb_t *old, tcb_t *new)
-{
+    memcpy(&old->cpu->ctx, sp, sizeof(trap_frame_t)); // 保存上下文到vpu dev 中
+    memcpy(sp, &new->cpu->ctx, sizeof(trap_frame_t)); // 恢复下一个任务的cpu ctx
 }

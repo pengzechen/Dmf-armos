@@ -112,6 +112,8 @@ from_el2:
     ldr x0, =SPSR_INIT
     msr spsr_el2, x0
 
+    msr daifset, #2   // 关闭所有中断
+
     adrp    x0, exception_vector_base_el2
     add     x0, x0, :lo12:exception_vector_base_el2
     msr     vbar_el2, x0
