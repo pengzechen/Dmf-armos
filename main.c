@@ -106,17 +106,25 @@ char task1_stack[4096] = {0};
 
 void main_entry()
 {
+    printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
     create_task(task1, task1_stack + 3800);
     create_task(task2, task2_stack + 3800);
     create_task(task3, task3_stack + 3800);
     create_task(task4, task4_stack + 3800);
-    print_current_task_list();
     schedule_init();
 
+    if (get_current_cpu_id() == 0) {
+        print_current_task_list();
+    }
+    
     enable_interrupts();
     // move_to_first_task();
-
-    while (1)
+    // static uint64_t i = 0;
+    // while (1) {
+    //     if(i++ % 1000000 == 0)
+    //     printf("loop in pe: %d\n", get_current_cpu_id());
+    // }
+    while(1)
         ;
 }
 
@@ -128,23 +136,21 @@ void kernel_main(void)
     gic_init();
     printf("===== timer init =====\n");
     timer_init();
-    /*
-        printf("\n");
-        printf("starting core 1\n");
-        int result = hvc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40090000);
-        if (result != 0)
-        {
-            printf("start core 1 failed!\n");
-        }
+
+    printf("\n");
+    int result = smc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40091000);
+    if (result != 0)
+    {
+        printf("smc_call failed!\n");
+    }
 
     // 做一点休眠 保证第二个核 初始化完成
     for (int j = 0; j < 5; j++)
         for (int i = 0; i < 0xfffff; i++)
             ;
-    */
 
-    // while (1)
-    //     ;
+    while (1)
+        ;
 
     main_entry();
     // can't reach here !
@@ -152,13 +158,20 @@ void kernel_main(void)
 
 void second_kernel_main()
 {
-
+    print_info("starting core");
+    printf(" %d ", get_current_cpu_id());
+    print_info("...\n");
+    
+    // 第二个核要初始化 gicc
+    gicc_init();
+    // 输出当前 gic 初始化情况
     gic_test_init();
-
-    // gicv2_init();
+    // 第二个核要初始化 timer
     timer_init_second();
-    // timer_init();
-    // enable_interrupts();
+
+    print_info("core");
+    printf(" %d ", get_current_cpu_id());
+    print_info("starting is done.\n\n");
 
     main_entry();
     // can't reach here !

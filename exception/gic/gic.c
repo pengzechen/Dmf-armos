@@ -35,6 +35,13 @@ void gic_init(void)
     gic_test_init();
 }
 
+void gicc_init()
+{
+    // 允许所有优先级的中断
+    writel(0xff - 7, (void *)GICC_PMR);
+    writel(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+}
+
 // gicd g0, g1  gicc,  gich enable
 void gic_virtual_init(void)
 {
@@ -43,7 +50,7 @@ void gic_virtual_init(void)
     {
         _gicv2.irq_nr = 1020;
     }
-    
+
     writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
            (void *)GICD_CTLR);
 
@@ -54,7 +61,7 @@ void gic_virtual_init(void)
     writel(0x01, (void *)GICH_HCR);
     for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
         gic_enable_int(i, 0);
-    
+
     gic_test_init();
 
     printf("    gich enable %s\n", readl((void *)GICH_HCR) ? "ok" : "error");
@@ -128,17 +135,17 @@ int gic_get_enable(int vector)
 
 void gic_set_isenabler(uint32_t n, uint32_t value)
 {
-    writel(value, (void*)GICD_ISENABLER(n));
+    writel(value, (void *)GICD_ISENABLER(n));
 }
 
 void gic_set_ipriority(uint32_t n, uint32_t value)
 {
-    writel(value, (void*)GICD_IPRIORITYR(n));
+    writel(value, (void *)GICD_IPRIORITYR(n));
 }
 
 void gic_set_icenabler(uint32_t n, uint32_t value)
 {
-    writel(value, (void*)GICD_ICENABLER(n));
+    writel(value, (void *)GICD_ICENABLER(n));
 }
 
 uint32_t gic_make_virtual_hardware_interrupt(uint32_t vector, uint32_t pintvec, int pri, bool grp1)
@@ -164,7 +171,7 @@ uint32_t gic_make_virtual_software_sgi(uint32_t vector, int cpu_id, int pri, boo
 
 uint32_t gic_read_lr(int n)
 {
-    return readl((void*)GICH_LR(n));
+    return readl((void *)GICH_LR(n));
 }
 
 int gic_lr_read_pri(uint32_t lr_value)
@@ -179,15 +186,15 @@ uint32_t gic_lr_read_vid(uint32_t lr_value)
 
 void gic_write_lr(int n, uint32_t mask)
 {
-    writel(mask, (void*)GICH_LR(n));
+    writel(mask, (void *)GICH_LR(n));
 }
 
 void gic_set_np_int(void)
 {
-    writel(readl((void*)GICH_HCR) | (1 << 3), (void*)GICH_HCR);
+    writel(readl((void *)GICH_HCR) | (1 << 3), (void *)GICH_HCR);
 }
 
 void gic_clear_np_int(void)
 {
-    writel(readl((void*)GICH_HCR) & ~(1 << 3), (void*)GICH_HCR);
+    writel(readl((void *)GICH_HCR) & ~(1 << 3), (void *)GICH_HCR);
 }

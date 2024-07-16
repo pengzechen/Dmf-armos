@@ -19,10 +19,10 @@ void create_task(void (*task_func)(), void *stack_top)
     task->state = 1;
     task->cpu = &vcpu[task_count];
 
-    task->cpu->ctx.elr = (uint64_t)task_func;        // elr_el1
-    task->cpu->ctx.spsr = SPSR_VALUE_IRQ;         // spsr_el1
-    task->cpu->ctx.usp = (uint64_t)stack_top;       
-    
+    task->cpu->ctx.elr = (uint64_t)task_func; // elr_el1
+    task->cpu->ctx.spsr = SPSR_VALUE_IRQ;     // spsr_el1
+    task->cpu->ctx.usp = (uint64_t)stack_top;
+
     task->counter = 20;
     task_count++;
 }
@@ -133,7 +133,7 @@ void save_cpu_ctx(trap_frame_t *sp)
 extern int get_el();
 // 这个函数会直接改变 trap frame 里面的内容
 void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp)
-{   
+{
     // if (get_el() == 1) {
     //     switch_context(old, new);
     //     return;
