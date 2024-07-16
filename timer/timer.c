@@ -11,7 +11,7 @@ static uint64_t test_num = 0;
 
 #define TIMER_VECTOR 30
 
-void handle_timer_interrupt(uint64_t * sp)
+void handle_timer_interrupt(uint64_t *sp)
 {
     // 设置定时值
     write_cntp_tval_el0(100000);
