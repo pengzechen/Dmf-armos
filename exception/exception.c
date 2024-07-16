@@ -4,15 +4,18 @@
 #include <exception.h>
 #include <gic.h>
 #include <timer.h>
+#include <hyper/vcpu.h>
 
 // 示例使用方式：处理同步异常
 void handle_sync_exception(uint64_t *stack_pointer)
 {
-    trap_frame_t *context = (trap_frame_t *)stack_pointer;
+    trap_frame_t *el1_ctx = (trap_frame_t *)stack_pointer;
 
     int el1_esr = read_esr_el1();
 
     int ec = ((el1_esr >> 26) & 0b111111);
+
+    save_cpu_ctx(el1_ctx);
 
     printf("el1 esr: %x\n", el1_esr);
     printf("ec: %x\n", ec);
@@ -26,13 +29,13 @@ void handle_sync_exception(uint64_t *stack_pointer)
     printf("This is handle_sync_exception: \n");
     for (int i = 0; i < 31; i++)
     {
-        uint64_t value = context->r[i];
+        uint64_t value = el1_ctx->r[i];
         printf("General-purpose register: %d, value: %x\n", i, value);
     }
 
-    uint64_t elr_el1_value = context->elr;
-    uint64_t usp_value = context->usp;
-    uint64_t spsr_value = context->spsr;
+    uint64_t elr_el1_value = el1_ctx->elr;
+    uint64_t usp_value = el1_ctx->usp;
+    uint64_t spsr_value = el1_ctx->spsr;
 
     printf("usp: %x, elr: %x, spsr: %x\n", usp_value, elr_el1_value, spsr_value);
 
@@ -55,24 +58,25 @@ void irq_install(int vector, void (*h)(uint64_t *))
 // 示例使用方式：处理 IRQ 异常
 void handle_irq_exception(uint64_t *stack_pointer)
 {
-    trap_frame_t *context = (trap_frame_t *)stack_pointer;
+    trap_frame_t *el1_ctx = (trap_frame_t *)stack_pointer;
 
-    uint64_t x1_value = context->r[1];
-    uint64_t sp_el0_value = context->usp;
+    uint64_t x1_value = el1_ctx->r[1];
+    uint64_t sp_el0_value = el1_ctx->usp;
+    save_cpu_ctx(el1_ctx);
 
     int iar = gic_read_iar();
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
 
-    g_handler_vec[vector]((uint64_t *)context); // arg not use
+    g_handler_vec[vector]((uint64_t *)el1_ctx); // arg not use
 }
 
 // 示例使用方式：处理无效异常
 void invalid_exception(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
 {
-    trap_frame_t *context = (trap_frame_t *)stack_pointer;
+    trap_frame_t *el1_ctx = (trap_frame_t *)stack_pointer;
 
-    uint64_t x2_value = context->r[2];
+    uint64_t x2_value = el1_ctx->r[2];
 
     // 在这里实现处理无效异常的代码
 }

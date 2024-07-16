@@ -106,12 +106,12 @@ char task1_stack[4096] = {0};
 
 void main_entry()
 {
-    // schedule_init();
     create_task(task1, task1_stack + 3800);
     create_task(task2, task2_stack + 3800);
     create_task(task3, task3_stack + 3800);
     create_task(task4, task4_stack + 3800);
     print_current_task_list();
+    schedule_init();
 
     enable_interrupts();
     // move_to_first_task();

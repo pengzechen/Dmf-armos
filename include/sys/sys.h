@@ -65,6 +65,7 @@
 #define SPSR_INIT SPSR_MASK_ALL    // 关闭所有中断
 
 #define SPSR_VALUE (SPSR_MASK_ALL | 0b0101 )
+#define SPSR_VALUE_IRQ (SPSR_FIQ_MASK | SPSR_ABT_MASK | 0b0101 )
 
 
 #endif // __SYS_H__

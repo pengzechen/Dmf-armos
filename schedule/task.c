@@ -17,11 +17,13 @@ void create_task(void (*task_func)(), void *stack_top)
     tcb_t *task = &task_list[task_count];
     task->id = task_count;
     task->state = 1;
-    task->ctx.x30 = (uint64_t)task_func;
-    task->ctx.x29 = (uint64_t)(stack_top - 2048); // 分配一个4KB的堆栈并初始化堆栈指针
-    task->ctx.sp_el1 = (uint64_t)stack_top;       // 分配一个4KB的堆栈并初始化堆栈指针
-    task->counter = 20;
     task->cpu = &vcpu[task_count];
+
+    task->cpu->ctx.elr = (uint64_t)task_func;        // elr_el1
+    task->cpu->ctx.spsr = SPSR_VALUE_IRQ;         // spsr_el1
+    task->cpu->ctx.usp = (uint64_t)stack_top;       
+    
+    task->counter = 20;
     task_count++;
 }
 
@@ -128,9 +130,14 @@ void save_cpu_ctx(trap_frame_t *sp)
     current_task->cpu->pctx = sp;
 }
 
+extern int get_el();
 // 这个函数会直接改变 trap frame 里面的内容
 void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp)
-{
+{   
+    // if (get_el() == 1) {
+    //     switch_context(old, new);
+    //     return;
+    // }
     memcpy(&old->cpu->ctx, sp, sizeof(trap_frame_t)); // 保存上下文到vpu dev 中
     memcpy(sp, &new->cpu->ctx, sizeof(trap_frame_t)); // 恢复下一个任务的cpu ctx
 }
