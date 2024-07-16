@@ -92,16 +92,13 @@ void hyper_main()
     avr_entry->p2m.read = 0;
     avr_entry->p2m.write = 1;
     apply_ept(avr_entry);
-
     *(uint64_t*)0x50000000 = 0x1234;
 
     craete_vm(test_guest);
     craete_vm(test_guest2);
-
+    schedule_init();          // 设置当前 task 为 task0（test_guest）
     print_current_task_list();
 
-    // enable_interrupts();
-    // move_to_first_vm()
     guest_start();
     
     while (1)

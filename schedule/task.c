@@ -42,6 +42,11 @@ void craete_vm(void (*task_func)())
     task_count++;
 }
 
+void schedule_init()
+{
+    current_task = &task_list[0];
+}
+
 void print_current_task_list()
 {
     for (int i = 0; i < task_count; i++)
@@ -50,6 +55,8 @@ void print_current_task_list()
         // printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
         printf("id: %x, elr: 0x%x\n", task->id, task->cpu->ctx.elr);
     }
+    printf("current task id: %d\n", current_task->id);
+    printf("\n");
 }
 
 extern void switch_context(tcb_t *, tcb_t *);

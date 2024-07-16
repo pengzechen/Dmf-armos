@@ -20,25 +20,25 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
 
     int ec = ((el2_esr >> 26) & 0b111111);
 
-    printf("        el2 esr: %x\n", el2_esr);
-    printf("        ec: %x\n", ec);
+    // printf("        el2 esr: %x\n", el2_esr);
+    // printf("        ec: %x\n", ec);
 
     union hsr hsr = { .bits = el2_esr };
     save_cpu_ctx(ctx_el2);
 
     if (ec == 0x16)
     { // hvc
-        printf("            This is hvc call handler\n");
+        print_info("            This is hvc call handler\n");
         return;
     }
     else if (ec == 0x17)
     { // smc
-        printf("            This is smc call handler\n");
+        print_info("            This is smc call handler\n");
         return;
     }
     else if (ec == 0x24)
     { // data abort
-        printf("            This is data abort handler\n");
+        print_info("            This is data abort handler\n");
         ept_violation_info_t info;
         printf("Prefetch abort : %x\n", hsr.bits);
         info.hsr.bits = hsr.bits;
@@ -79,11 +79,11 @@ void handle_irq_exception_el2(uint64_t *stack_pointer)
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
 
-    printf("\nthis is handle irq el2\n");
+    // printf("\nthis is handle irq el2\n");
 
     save_cpu_ctx(context);
 
-    get_g_handler_vec()[vector](0); // arg not use
+    get_g_handler_vec()[vector]((uint64_t*)context); // arg not use
 }
 
 // 示例使用方式：处理无效异常

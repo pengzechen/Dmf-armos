@@ -22,7 +22,7 @@ test_guest:
   mov x9, #9
   mov x10, #10
 
-  // hvc #0
+  hvc #0
   ldr x0, =0x50000000
   ldr x6, [x0]
 
