@@ -46,10 +46,8 @@ typedef struct
 
 
 void schedule();
-void switch_to(tcb_t *next_task);
-void timer_tick_schedule();
+void timer_tick_schedule(uint64_t *);
 void print_current_task_list();
-void move_to_first_vm();
 
 void create_task(void (*task_func)(), void *);
 void craete_vm(void (*task_func)());

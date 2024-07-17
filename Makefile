@@ -29,9 +29,6 @@ $(BUILD_DIR)/main_hyper.o: main_hyper.c
 $(BUILD_DIR)/boot.s.o: boot/boot.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) boot/boot.S $(INCLUDE) -o $(BUILD_DIR)/boot.s.o
 
-$(BUILD_DIR)/hyper.s.o: boot/hyper.S
-	$(TOOL_PREFIX)gcc $(CFLAGS) boot/hyper.S $(INCLUDE) -o $(BUILD_DIR)/hyper.s.o
-
 #  exception
 $(BUILD_DIR)/exception.o: exception/exception.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) exception/exception.c $(INCLUDE) -o $(BUILD_DIR)/exception.o
@@ -96,7 +93,8 @@ $(BUILD_DIR)/vcpu.o: hyper/vcpu.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/vcpu.c $(INCLUDE) -o $(BUILD_DIR)/vcpu.o
 $(BUILD_DIR)/hyper_ctx.s.o: hyper/hyper_ctx.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper_ctx.S $(INCLUDE) -o $(BUILD_DIR)/hyper_ctx.s.o
-
+$(BUILD_DIR)/hyper.s.o: hyper/hyper.S
+	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper.S $(INCLUDE) -o $(BUILD_DIR)/hyper.s.o
 
 $(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
