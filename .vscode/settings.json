@@ -48,6 +48,8 @@
         "ept.h": "c",
         "exception.h": "c",
         "vcpu.h": "c",
-        "gic.h": "c"
+        "gic.h": "c",
+        "smp.h": "c",
+        "psci.h": "c"
     }
 }

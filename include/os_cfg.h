@@ -3,6 +3,9 @@
 #ifndef __OS_CFG_H__
 #define __OS_CFG_H__
 
+#ifndef SMP_NUM
+#define SMP_NUM   1
+#endif
 
 #define UART0_BASE 0x09000000 // PL011 UART 基地址
 

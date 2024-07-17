@@ -2,7 +2,6 @@
 #ifndef __SMP_H__
 #define __SMP_H__
 
-
 #include <aj_types.h>
 
 static inline uint32_t smc_call(uint32_t function_id, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
@@ -38,6 +37,8 @@ static inline uint32_t hvc_call(uint32_t function_id, uint64_t arg0, uint64_t ar
     }
 
 */
+
+void start_secondary_cpus();
 
 
 #endif

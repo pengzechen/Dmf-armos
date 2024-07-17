@@ -25,8 +25,7 @@ void gic_init(void)
         _gicv2.irq_nr = 1020;
     }
 
-    writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
-           (void *)GICD_CTLR);
+    writel(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1, (void *)GICD_CTLR);
 
     // 允许所有优先级的中断
     writel(0xff - 7, (void *)GICC_PMR);

@@ -9,8 +9,12 @@ INCLUDE = -I ./include \
 
 n = -nostdlib -nostdinc -fno-stack-protector
 
+SMP = 1
+HV  = y
+
 CFLAGS = -g -c -O0 -fno-pie  -mgeneral-regs-only \
-	 -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf
+	 -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=$(SMP)
+
 
 all: $(BUILD_DIR) $(BUILD_DIR)/kernel.elf
 
@@ -20,6 +24,10 @@ $(BUILD_DIR):
 #  kernel main
 $(BUILD_DIR)/main.o: main.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) main.c $(INCLUDE) -o $(BUILD_DIR)/main.o
+
+#  kernel smp
+$(BUILD_DIR)/smp.o: smp.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) smp.c $(INCLUDE) -o $(BUILD_DIR)/smp.o
 
 #  kernel main hyper
 $(BUILD_DIR)/main_hyper.o: main_hyper.c
@@ -96,11 +104,12 @@ $(BUILD_DIR)/hyper_ctx.s.o: hyper/hyper_ctx.S
 $(BUILD_DIR)/hyper.s.o: hyper/hyper.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper.S $(INCLUDE) -o $(BUILD_DIR)/hyper.s.o
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o
 	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
 	$(BUILD_DIR)/hyper.s.o          \
 	$(BUILD_DIR)/main.o 			\
+	$(BUILD_DIR)/smp.o              \
 	$(BUILD_DIR)/main_hyper.o 		\
 	$(BUILD_DIR)/exception.s.o 		\
 	$(BUILD_DIR)/exception_el3.s.o  \
@@ -130,13 +139,14 @@ deasm: $(BUILD_DIR)/kernel.elf
 	$(TOOL_PREFIX)objcopy -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
 
-QEMU_ARGS = -m 4G -smp 2 -cpu cortex-a72 -nographic 
+QEMU_ARGS = -m 4G -smp $(SMP) -cpu cortex-a72 -nographic 
 
 QEMU_ARGS += -M virt,gic_version=2
-
-QEMU_ARGS += -M virtualization=on
-
 # QEMU_ARGS += -M secure=on
+
+ifeq ($(HV),y)
+QEMU_ARGS += -M virtualization=on
+endif
 
 debug: deasm
 	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf -s -S

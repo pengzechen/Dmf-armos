@@ -10,7 +10,6 @@
 #include "spinlock.h"
 #include "uart_pl011.h"
 
-extern void second_entry();
 
 void simple_console()
 {
@@ -104,6 +103,9 @@ char task3_stack[4096] = {0};
 char task2_stack[4096] = {0};
 char task1_stack[4096] = {0};
 
+int inited_cpu_num = 0;
+spinlock_t lock;
+
 void main_entry()
 {
     printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
@@ -116,41 +118,32 @@ void main_entry()
         schedule_init();
         print_current_task_list();
     }
+    spin_lock(&lock);
+    inited_cpu_num ++;
+    spin_unlock(&lock);
 
-    enable_interrupts();
-    // move_to_first_task();
-    // static uint64_t i = 0;
-    // while (1) {
-    //     if(i++ % 1000000 == 0)
-    //     printf("loop in pe: %d\n", get_current_cpu_id());
-    // }
+    while(inited_cpu_num != SMP_NUM)
+        wfi();
+
+    if (get_current_cpu_id() == 0)
+        enable_interrupts();
+    if (get_current_cpu_id() == 1)
+        enable_interrupts();
+
     while (1)
         ;
 }
 
 void kernel_main(void)
 {
-    printf("===== uart  init =====\n");
+    print_info("starting primary core 0 ...\n");
     io_init();
-    printf("===== gicv2 init =====\n");
     gic_init();
-    printf("===== timer init =====\n");
     timer_init();
+    print_info("core 0 starting is done.\n\n");
+    spinlock_init(&lock);
 
-    printf("\n");
-    int result = smc_call(PSCI_0_2_FN64_CPU_ON, 1, (uint64_t)(void *)second_entry, 0x40091000);
-    if (result != 0)
-    {
-        printf("smc_call failed!\n");
-    }
-
-    // 做一点休眠 保证第二个核 初始化完成
-    for (int j = 0; j < 5; j++)
-        for (int i = 0; i < 0xfffff; i++)
-            ;
-
-    // while (1)
-    //     ;
+    start_secondary_cpus();
 
     main_entry();
     // can't reach here !

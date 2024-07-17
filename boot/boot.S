@@ -29,7 +29,9 @@ _start:
     b.eq from_el3_to_el1       // Branch if we are in EL3
 
     cmp x0, #2
-    b.eq from_el2       // Branch if we are in EL2
+    b.eq from_el2              // Branch if we are in EL2
+
+    b primary_entry            // Branch if we are in EL1
 
     b   .
 /*
@@ -186,6 +188,8 @@ from_el3_to_el1:
     eret
 
 
+.global _stack_top_second
+
 // 栈空间
 .section .bss
 
@@ -201,5 +205,5 @@ _stack_top_el3:
 
 .align 12
 _stack_bottom_second:
-    .skip 0x2000  // 4KB 的栈空间
+    .skip 0x2000 * 4  // 4KB 的栈空间
 _stack_top_second:
