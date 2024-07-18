@@ -8,6 +8,7 @@
 #include <ept.h>
 #include <page.h>
 #include <task.h>
+#include <aj_string.h>
 
 static inline uint64_t read_sctlr_el2()
 {
@@ -60,8 +61,21 @@ static void guest_trap_init(void)
     isb();
 }
 
+extern void __guset_bin_start();
+extern void __guset_bin_end();
+
+void copy_guest(void)
+{
+    size_t size = (size_t)(__guset_bin_end - __guset_bin_start);
+    unsigned long *from = (unsigned long*)__guset_bin_start;
+    unsigned long *to = (unsigned long*)GUEST_KERNEL_START;
+    printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
+        from,to,size,from[0], from[1]);
+    memcpy(to,from,size);
+    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+}
+
 extern void test_guest();
-extern void test_guest2();
 extern void guest_start();
 
 extern size_t cacheline_bytes;
@@ -78,6 +92,7 @@ void hyper_main()
     vtcr_init();
     guest_ept_init();
     guest_trap_init();
+    copy_guest();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
@@ -88,12 +103,18 @@ void hyper_main()
 
     lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_ARREA);
     avr_entry->p2m.read = 0;
-    avr_entry->p2m.write = 1;
+    avr_entry->p2m.write = 0;
     apply_ept(avr_entry);
     *(uint64_t *)0x50000000 = 0x1234;
 
+    avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD);
+    avr_entry->p2m.read = 0;
+    avr_entry->p2m.write = 0;
+    apply_ept(avr_entry);
+    
+
     craete_vm(test_guest);
-    craete_vm(test_guest2);
+    craete_vm(GUEST_KERNEL_START);
     schedule_init(); // 设置当前 task 为 task0（test_guest）
     print_current_task_list();
 

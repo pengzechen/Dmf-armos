@@ -18,6 +18,10 @@
 #define RAM_START   ((unsigned long long)0x40000000)
 #define RAM_END     (RAM_START + 0x40000000)
 
-#define MMIO_ARREA  0x50000000
+#define MMIO_ARREA          0x50000000
+#define GUEST_KERNEL_START  0x70200000
+
+#define MMIO_AREA_GICD  0x8000000
+#define MMIO_AREA_GICC  0x8010000
 
 #endif // __OS_CFG_H__

@@ -29,7 +29,7 @@ void test_mem_no_maped()
 
 void test_mem_no_maped2()
 {
-    volatile unsigned int *const MEM_ADDR = (unsigned int *)0x40140000;
+    volatile unsigned int *const MEM_ADDR = (unsigned int *)0x50000000;
     *MEM_ADDR = 0x8888;
 }
 

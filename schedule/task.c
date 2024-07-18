@@ -4,10 +4,13 @@
 #include <hyper/vcpu.h>
 #include <aj_string.h>
 #include <sys/sys.h>
+#include <spinlock.h>
 
 tcb_t task_list[MAX_TASKS];
 tcb_t *current_task = (tcb_t *)0;
 uint32_t task_count = 0;
+
+static spinlock_t lock;
 
 void create_task(void (*task_func)(), void *stack_top)
 {
@@ -46,6 +49,7 @@ void craete_vm(void (*task_func)())
 
 void schedule_init()
 {
+    spinlock_init(&lock);
     current_task = &task_list[0];
 }
 
@@ -106,7 +110,9 @@ void timer_tick_schedule(uint64_t *sp)
         return;
 
     current_task->counter = 20;
+    // disable_interrupts();
     _schedule(sp);
+    // enable_interrupts();
 }
 
 //  vm 相关

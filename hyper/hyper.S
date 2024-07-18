@@ -3,7 +3,6 @@
 
 .global guest_start
 .global test_guest
-.global test_guest2
 
 test_guest:
   mov x0, 100
@@ -28,30 +27,11 @@ test_guest:
 
   b .  // el1
 
-test_guest2:
-  mov x0, 100
-  mrs x0, CurrentEL          // Read current exception level
-  lsr x0, x0, #2             // 右移两位
-
-  mov x0, #0
-  mov x1, #1
-  mov x2, #2
-  mov x3, #3
-  mov x4, #4
-  mov x5, #5
-  mov x6, #0x17
-  mov x7, #7
-  mov x8, #8
-  mov x9, #9
-  mov x10, #10
-
-  // hvc #0
-  ldr x0, =0x50000000
-  ldr x6, [x0]
-
-  b .  // el1
+.section .data.guset_bin
+  .incbin "../guest/nimbos/nimbos.bin"
 
 
+.section .text 
 // 这个函数被 guest_entry 取代
 guest_start:
 
