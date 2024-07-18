@@ -166,6 +166,15 @@ static inline uint64_t read_far_el2(void)
     return value;
 }
 
+static inline uint64_t read_hyfar_el2(void)
+{
+    uint64_t value;
+    __asm__ __volatile__(
+        "mrs %0, hpfar_el2 \n"
+        : "=r"(value));
+    return value;
+}
+
 typedef void (*irq_handler_t)(uint64_t *);
 
 void irq_install(int vector, void (*h)(uint64_t *));

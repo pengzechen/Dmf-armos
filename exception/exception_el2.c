@@ -43,6 +43,7 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
         printf("Prefetch abort : %x\n", hsr.bits);
         info.hsr.bits = hsr.bits;
         info.reason = PREFETCH;
+        // info.gva = read_hpfar_el2();  // 目前 hpfar 和 far 读到的内容不同，少了8位
         info.gva = read_far_el2();
         gva_to_ipa(info.gva, &info.gpa);
         data_abort_handler(&info, ctx_el2);
