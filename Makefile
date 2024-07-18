@@ -10,13 +10,21 @@ INCLUDE = -I ./include \
 n = -nostdlib -nostdinc -fno-stack-protector
 
 SMP = 1
-HV  = y
+HV  = n
 
 CFLAGS = -g -c -O0 -fno-pie  -mgeneral-regs-only \
 	 -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=$(SMP)
 
+QEMU_ARGS = -m 4G -smp $(SMP) -cpu cortex-a72 -nographic 
 
-all: $(BUILD_DIR) $(BUILD_DIR)/kernel.elf
+QEMU_ARGS += -M virt,gic_version=2
+
+# QEMU_ARGS += -M secure=on
+
+ifeq ($(HV),y)
+QEMU_ARGS += -M virtualization=on
+endif
+
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -104,8 +112,8 @@ $(BUILD_DIR)/hyper_ctx.s.o: hyper/hyper_ctx.S
 $(BUILD_DIR)/hyper.s.o: hyper/hyper.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper.S $(INCLUDE) -o $(BUILD_DIR)/hyper.s.o
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o
-	$(TOOL_PREFIX)ld -T dmos_link.lds -o $(BUILD_DIR)/kernel.elf \
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o
+	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
 	$(BUILD_DIR)/hyper.s.o          \
 	$(BUILD_DIR)/main.o 			\
@@ -133,25 +141,21 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/mai
 	$(BUILD_DIR)/hyper_ctx.s.o
 
 
-deasm: $(BUILD_DIR)/kernel.elf
+
+# makefile 命令
+
+deasm:
 	$(TOOL_PREFIX)objdump -x -d -S $(BUILD_DIR)/kernel.elf > $(BUILD_DIR)/dis.txt
 	$(TOOL_PREFIX)readelf -a $(BUILD_DIR)/kernel.elf > $(BUILD_DIR)/elf.txt
 	$(TOOL_PREFIX)objcopy -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
-
-QEMU_ARGS = -m 4G -smp $(SMP) -cpu cortex-a72 -nographic 
-
-QEMU_ARGS += -M virt,gic_version=2
-# QEMU_ARGS += -M secure=on
-
-ifeq ($(HV),y)
-QEMU_ARGS += -M virtualization=on
-endif
-
-debug: deasm
+debug: $(BUILD_DIR)/kernel.elf deasm
 	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf -s -S
 
-run:
+gdb:
+	gdb-multiarch
+
+run: $(BUILD_DIR)/kernel.elf
 	qemu-system-aarch64 $(QEMU_ARGS) -kernel $(BUILD_DIR)/kernel.elf
 
 
