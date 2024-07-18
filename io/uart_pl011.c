@@ -1,10 +1,14 @@
 
 #include <uart_pl011.h>
+#include <spinlock.h>
+
+static spinlock_t lock;
 
 void uart_init()
 {
     // 禁用 UART
     UART0_CR = 0x0;
+    spinlock_init(&lock);
 
     // 设置波特率，例如 115200
     // 波特率计算公式：
@@ -32,7 +36,9 @@ void uart_putc(char c)
     // 等待发送 FIFO 不为满
     while (UART0_FR & (1 << 5))
         ;
+    spin_lock(&lock);
     UART0_DR = c;
+    spin_unlock(&lock);
 }
 
 char uart_getc()
