@@ -50,6 +50,7 @@
         "vcpu.h": "c",
         "gic.h": "c",
         "smp.h": "c",
-        "psci.h": "c"
+        "psci.h": "c",
+        "queue.h": "c"
     }
 }

@@ -24,11 +24,23 @@ test_guest:
   hvc #0
   ldr x0, =0x50000000
   ldr x6, [x0]
-
+  ldr x0, =0x50000004
+  ldr x6, [x0]
+  ldr x0, =0x50000040
+  ldr x6, [x0]
+  ldr x0, =0x50000400
+  ldr x6, [x0]
+  ldr x0, =0x50000fff
+  ldr x6, [x0]
+  
+  ldr x0, =0x50010000
+  ldr x6, [x0]
+  
   b .  // el1
 
 .section .data.guset_bin
-  .incbin "../guest/nimbos/nimbos.bin"
+  // .incbin "../guest/nimbos/nimbos.bin"
+  .incbin "../guest/test/testos.bin"
 
 
 .section .text 

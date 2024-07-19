@@ -40,7 +40,7 @@ static inline uint64_t read_vttbr_el2()
 void vtcr_init(void)
 {
     print_info("    Initialize vtcr...\n");
-    uint64_t vtcr_val = VTCR_VS | VTCR_PS |
+    uint64_t vtcr_val = VTCR_VS_8BIT | VTCR_PS_MASK_40_BITS |
                         VTCR_TG0_4K | VTCR_SH0_IS | VTCR_ORGN0_WBWA | VTCR_IRGN0_WBWA;
 
     vtcr_val |= VTCR_T0SZ(64 - 40); /* 40 bit IPA */
@@ -80,6 +80,13 @@ extern void guest_start();
 
 extern size_t cacheline_bytes;
 
+void mmio_map_gicd() {
+    lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD);
+    avr_entry->p2m.read = 0;
+    avr_entry->p2m.write = 0;
+    apply_ept(avr_entry);
+}
+
 void hyper_main()
 {
 
@@ -93,6 +100,7 @@ void hyper_main()
     guest_ept_init();
     guest_trap_init();
     copy_guest();
+    mmio_map_gicd();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
@@ -107,14 +115,8 @@ void hyper_main()
     apply_ept(avr_entry);
     *(uint64_t *)0x50000000 = 0x1234;
 
-    avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD);
-    avr_entry->p2m.read = 0;
-    avr_entry->p2m.write = 0;
-    apply_ept(avr_entry);
-    
-
     craete_vm(test_guest);
-    craete_vm(GUEST_KERNEL_START);
+    craete_vm((void *)GUEST_KERNEL_START);
     schedule_init(); // 设置当前 task 为 task0（test_guest）
     print_current_task_list();
 
