@@ -4,7 +4,7 @@
 
 #include <aj_types.h>
 #include "vcpu.h"
-#include "vgic.h"
+#include <hyper/vgic.h>
 
 typedef struct _vm_t {
     uint32_t id;
@@ -12,7 +12,11 @@ typedef struct _vm_t {
     cpu_t *vcpus;
     uint32_t vcpu_num;
 
-    vgic_t *vgic;
+    struct vgic_t *vgic;
 } vm_t ;
+
+
+struct vgic_t *get_vgic();
+
 
 #endif // __VM_H__

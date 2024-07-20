@@ -4,7 +4,7 @@
 #define __VGIC_H__
 
 #include <aj_types.h>
-#include "vm.h"
+#include <hyper/vm.h>
 #include "gic.h"
 
 typedef struct {
@@ -21,13 +21,13 @@ typedef struct {
     uint8_t ppi_ipriorityr[GIC_FIRST_SPI];
 } vgic_core_state_t;
 
-typedef struct _vgic_t {
+struct vgic_t {
     vm_t *vm;
     
-    uint32_t ptov[SPI_ID_MAX];           // 実irq idを仮想irq idに
+    uint32_t ptov[SPI_ID_MAX];           // 实际中断 ID 到虚拟中断 ID 的映射
     uint32_t vtop[SPI_ID_MAX];
-    uint32_t use_irq[SPI_ID_MAX/32];     // このgicが利用する実irq id
-    uint32_t real_pri;
+    uint32_t use_irq[SPI_ID_MAX/32];     // 一个位掩码数组，标记哪些实际中断 ID 被 VGIC 使用
+    uint32_t real_pri;                   // 设置和管理实际中断的优先级
 
     vgic_core_state_t *core_state;
 
@@ -43,7 +43,11 @@ typedef struct _vgic_t {
     
     uint32_t gicd_icfgr[SPI_ID_MAX/16];
     uint32_t gicd_nsacr[SPI_ID_MAX/16];
-} vgic_t ;
+};
 
+
+void virtual_gic_register_int(struct vgic_t *vgic, uint32_t pintvec, uint32_t vintvec);
+
+void v_timer_handler();
 
 #endif // __VGIC_H__

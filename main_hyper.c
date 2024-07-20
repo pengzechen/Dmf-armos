@@ -9,6 +9,8 @@
 #include <page.h>
 #include <task.h>
 #include <aj_string.h>
+// #include <hyper/vgic.h>
+// #include <hyper/vm.h>
 
 static inline uint64_t read_sctlr_el2()
 {
@@ -103,6 +105,7 @@ void hyper_main()
     guest_trap_init();
     copy_guest();
     // mmio_map_gicd_gicc();
+    vm_init();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());

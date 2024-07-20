@@ -6,6 +6,7 @@
 #include <exception.h>
 #include <thread.h>
 #include <task.h>
+#include <hyper/vgic.h>
 
 static uint64_t test_num = 0;
 
@@ -47,6 +48,7 @@ void timer_init_second()
 
 void test_cntv_handler(uint64_t *sp) {
     // printf("this is cntv handler\n");
+    v_timer_handler();
 }
 
 // 每个pe都要配置
