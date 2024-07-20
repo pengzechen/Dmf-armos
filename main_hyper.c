@@ -40,10 +40,10 @@ static inline uint64_t read_vttbr_el2()
 void vtcr_init(void)
 {
     print_info("    Initialize vtcr...\n");
-    uint64_t vtcr_val = VTCR_VS_8BIT | VTCR_PS_MASK_40_BITS |
+    uint64_t vtcr_val = VTCR_VS_8BIT | VTCR_PS_MASK_36_BITS |
                         VTCR_TG0_4K | VTCR_SH0_IS | VTCR_ORGN0_WBWA | VTCR_IRGN0_WBWA;
 
-    vtcr_val |= VTCR_T0SZ(64 - 40); /* 40 bit IPA */
+    vtcr_val |= VTCR_T0SZ(64 - 36); /* 40 bit IPA */
     vtcr_val |= VTCR_SL0(0x1);      /* P2M starts at first level */
 
     printf("vtcr val: 0x%x\n", vtcr_val);
@@ -80,11 +80,13 @@ extern void guest_start();
 
 extern size_t cacheline_bytes;
 
-void mmio_map_gicd() {
-    lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD);
-    avr_entry->p2m.read = 0;
-    avr_entry->p2m.write = 0;
-    apply_ept(avr_entry);
+void mmio_map_gicd_gicc() {
+    for (int i=0; i<32; i++) {
+        lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD + 0x1000 * i);  // 0800 0000 - 0802 0000  gicd gicc
+        avr_entry->p2m.read = 0;
+        avr_entry->p2m.write = 0;
+        apply_ept(avr_entry);
+    }
 }
 
 void hyper_main()
@@ -100,7 +102,7 @@ void hyper_main()
     guest_ept_init();
     guest_trap_init();
     copy_guest();
-    mmio_map_gicd();
+    // mmio_map_gicd_gicc();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());

@@ -42,6 +42,7 @@ void craete_vm(void (*task_func)())
 
     task->cpu->ctx.elr = (uint64_t)task_func; // elr_el2
     task->cpu->ctx.spsr = SPSR_VALUE;         // spsr_el2
+    task->cpu->sys_reg.spsr_el1 = 0x30C50830;
 
     task->counter = 20;
     task_count++;

@@ -193,7 +193,7 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 
 	ept = get_ept_entry(info->gpa);
 	tmp = ept->bits & 0xFFFFFFFF;
-	printf("EPT Entry : 0x%x(0x%x)\n", ept, tmp);
+	// printf("EPT Entry : 0x%x(0x%x)\n", ept, tmp);
 	if (handle_mmio(info, el2_ctx))
 	{
 	}
@@ -226,10 +226,38 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 int handle_mmio(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 {
 	paddr_t gpa = info->gpa;
-	if (MMIO_ARREA <= gpa && gpa <= (MMIO_ARREA + 4096))
-	{
+	// if (MMIO_ARREA <= gpa && gpa <= (MMIO_ARREA + 4096))
+	// {
 		if (info->hsr.dabt.write)
 		{
+			unsigned long reg_num;
+			volatile uint64_t *r;
+			volatile void *buf;
+			volatile unsigned long len;
+			volatile unsigned long *dst;
+
+			// 获取寄存器编号和 MMIO 操作的大小
+			reg_num = info->hsr.dabt.reg;
+			len = 1 << (info->hsr.dabt.size & 0x00000003);
+
+			// 计算目标缓冲区
+			r = &el2_ctx->r[reg_num];
+			buf = (void *)r;
+
+			// 从 MMIO 地址读取数据
+			dst = (unsigned long *)(unsigned long)gpa;
+			printf("(%d bytes) 0x%x  R%d\n", (unsigned long)len, *dst, (unsigned long)reg_num);
+			
+			printf("old data: 0x%x\n", *dst);
+			// 将数据写入寄存器或进行其他必要的操作
+			if (reg_num != 30)
+			{
+				*dst = *(unsigned long *)buf;
+			}
+			// 确保所有更改都能被看到
+			dsb(sy);
+			isb();
+			printf("new data: 0x%x\n", *dst);
 		}
 		else
 		{
@@ -250,39 +278,21 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 
 			src = (unsigned long *)(unsigned long)gpa;
 			dat = *src;
-			printf("(%d bytes)Read from 0x%x to R%d\n", (unsigned long)len, (unsigned long)gpa, (unsigned long)reg_num);
-			printf("el1 old data: 0x%x\n", *r);
-			printf("real data: 0x%x\n", dat);
-
-			if ((unsigned char)(gpa & 0xF) == 0x4)
-			{
-				printf("Data read, change data from 0x%x to 0x%x \n", (unsigned long)*src, ~(*src));
-				dat = ~(*src);
-			}
-			else
-			{
-				dat = (*src);
-			}
-
-			if (reg_num != 14)
+			printf("(%d bytes) 0x%x R%d\n", (unsigned long)len, *src, (unsigned long)reg_num);
+			
+			printf("old data: 0x%x\n", *r);
+			if (reg_num != 30)
 			{
 				*(unsigned long *)buf = dat;
 			}
-			else
-			{
-				__asm__ __volatile__(
-					"msr elr_el1, %0 \r\n"
-					:		   /* Output */
-					: "r"(dat) /* Input */
-					:		   /* Clobber */
-				);
-			}
 			dsb(sy);
 			isb();
+			printf("new data: 0x%x\n", *r);
+			
 			// spin_unlock(&vcpu.lock);
 		}
 		return 1;
-	}
+	// }
 
-	return 0;
+	// return 0;
 }
