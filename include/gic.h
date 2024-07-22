@@ -139,6 +139,7 @@ uint32_t gic_read_iar(void);
 uint32_t gic_iar_irqnr(uint32_t iar);
 
 void gic_write_eoir(uint32_t irqstat);
+void gic_write_dir(uint32_t irqstat);
 void gic_ipi_send_single(int irq, int cpu);
 void gic_enable_int(int vector, int enable);
 int gic_get_enable(int vector);

@@ -84,6 +84,12 @@ void gic_write_eoir(uint32_t irqstat)
     write32(irqstat, (void *)GICC_EOIR);
 }
 
+void gic_write_dir(uint32_t irqstat)
+{
+    write32(irqstat, (void *)GICC_DIR);
+}
+
+
 // 发送给特定的核（某个核）
 void gic_ipi_send_single(int irq, int cpu)
 {

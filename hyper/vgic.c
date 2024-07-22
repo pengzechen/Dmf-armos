@@ -30,14 +30,14 @@ void v_timer_handler()
 {
     static int flag = 0;
     // struct vgic_t *vgic = get_vgic();
-    uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xff, 1);
     // 0 1 2 3     -  4 5 6 7 
     // 8 9 10 11   -  12 13 14 15
     // 16 17 18 19 - 20 21 22 23 
     // 24 25 26 27
+    uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xff, 0);
     gic_set_ipriority(6, 0x000000ff);
-    // uint32_t mask = gic_make_virtual_software_sgi(7, 0, 10, 0);
-    // virtual_gic_set_lr(vgic, 0, mask);
+    // uint32_t mask = gic_make_virtual_software_sgi(7, 0, 0xff, 0);
+    // gic_set_ipriority(1, 0x000000ff);
     // printf("mask: 0x%x\n", mask);
     if (!flag) {
         printf("read lr: %x\n", gic_read_lr(0));

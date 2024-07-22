@@ -51,6 +51,7 @@
         "gic.h": "c",
         "smp.h": "c",
         "psci.h": "c",
-        "queue.h": "c"
+        "queue.h": "c",
+        "vgic.h": "c"
     }
 }
