@@ -11,10 +11,18 @@
 #include "aj_types.h"
 #include "aj_string.h"
 #include "io.h"
+#include "spinlock.h"
 
 #define BINSTR_SZ (sizeof(uint32_t) * 8 + sizeof(uint32_t) * 2)
 
 #define BUFSZ 2000
+
+spinlock_t lock;
+
+void io_init() 
+{
+	spinlock_init(&lock);
+}
 
 void uart_putstr(const char *str);
 #define puts uart_putstr
@@ -22,7 +30,9 @@ void uart_putstr(const char *str);
 void uart_putchar(char c)
 {
     volatile unsigned int *const UART0DR = (unsigned int *)0x9000000;
+	spin_lock(&lock);
     *UART0DR = (unsigned int)c;
+	spin_unlock(&lock);
 }
 
 void uart_putstr(const char *str)

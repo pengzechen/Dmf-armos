@@ -37,6 +37,9 @@ static inline void write64(uint64_t value, volatile void *addr) {
     *(volatile uint64_t *)addr = value;
 }
 
+
+void io_init();
+
 extern int printf(const char *fmt, ...);
 extern void print_info(const char *info);
 extern void print_warn(const char *info);

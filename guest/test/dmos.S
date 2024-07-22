@@ -4,6 +4,8 @@
 
 _start:
 
+    msr daifset, #2   // 关闭所有中断
+
     adrp    x0, exception_vector_base
     add     x0, x0, :lo12:exception_vector_base
     msr     vbar_el1, x0

@@ -3,6 +3,7 @@
 #include "exception.h"
 #include "gic.h"
 #include "io.h"
+#include "acfg.h"
 
 irq_handler_t g_handler_vec[512] = {0};
 
@@ -63,10 +64,10 @@ void invalid_exception(uint64_t *stack_pointer, uint64_t kind, uint64_t source)
 void cntp_handler(uint64_t *)
 {
     asm volatile("msr cntp_tval_el0, %0" : : "r"(100000));
-    print_info("irq 30\n");
+    // printf("irq %d\n", TIMER);
 }
 
 void exception_init()
 {
-    irq_install(30, cntp_handler);
+    irq_install(TIMER, cntp_handler);
 }

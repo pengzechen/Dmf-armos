@@ -10,10 +10,10 @@ struct gic_t _gicv2;
 
 void gic_test_init(void)
 {
-    // printf("    gicd enable %s\n", read32((void *)GICD_CTLR) ? "ok" : "error");
-    // printf("    gicc enable %s\n", read32((void *)GICC_CTLR) ? "ok" : "error");
-    // printf("    irq numbers: %d\n", _gicv2.irq_nr);
-    // printf("    cpu num: %d\n", cpu_num());
+    printf("    gicd enable %s\n", read32((void *)GICD_CTLR) ? "ok" : "error");
+    printf("    gicc enable %s\n", read32((void *)GICC_CTLR) ? "ok" : "error");
+    printf("    irq numbers: %d\n", _gicv2.irq_nr);
+    printf("    cpu num: %d\n", cpu_num());
 }
 
 // gicd g0, g1  gicc enable
@@ -83,13 +83,13 @@ void gic_enable_int(int vector, int pri)
 {
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
-    // printf("set enable: reg: %d, mask: 0x%x\n", reg, mask);
+    printf("set enable: reg: %d, mask: 0x%x\n", reg, mask);
 
-    write32(mask, (void *)GICD_ISENABLER(reg));
+    write32(mask, (void *)(uint64_t)GICD_ISENABLER(reg));
 
     int n = vector >> 2;
     int m = vector & ((1 << 2) - 1);
-    write32((pri << 3) | (1 << 7), (void *)(GICD_IPRIORITYR(n) + m));
+    write32((pri << 3) | (1 << 7), (void *)(uint64_t)(GICD_IPRIORITYR(n) + m));
 }
 
 // disables the given interrupt.
@@ -97,9 +97,9 @@ void gic_disable_int(int vector, int pri)
 {
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
-    // printf("disable: reg: %d, mask: 0x%x\n", reg, mask);
+    printf("disable: reg: %d, mask: 0x%x\n", reg, mask);
 
-    write32(mask, (void *)GICD_ICENABLER(reg));
+    write32(mask, (void *)(uint64_t)GICD_ICENABLER(reg));
 }
 
 // check the given interrupt.
@@ -108,23 +108,23 @@ int gic_get_enable(int vector)
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
 
-    uint32_t val = read32((void *)GICD_ISENABLER(reg));
+    uint32_t val = read32((void *)(uint64_t)GICD_ISENABLER(reg));
 
-    // printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
+    printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
     return val & mask != 0;
 }
 
 void gic_set_isenabler(uint32_t n, uint32_t value)
 {
-    write32(value, (void *)GICD_ISENABLER(n));
+    write32(value, (void *)(uint64_t)GICD_ISENABLER(n));
 }
 
 void gic_set_ipriority(uint32_t n, uint32_t value)
 {
-    write32(value, (void *)GICD_IPRIORITYR(n));
+    write32(value, (void *)(uint64_t)GICD_IPRIORITYR(n));
 }
 
 void gic_set_icenabler(uint32_t n, uint32_t value)
 {
-    write32(value, (void *)GICD_ICENABLER(n));
+    write32(value, (void *)(uint64_t)GICD_ICENABLER(n));
 }

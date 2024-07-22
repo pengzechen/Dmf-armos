@@ -4,11 +4,7 @@
 #define __GIC_H__
 
 #include "aj_types.h"
-
-
-#define GICD_BASE_ADDR  0x8000000
-#define GICC_BASE_ADDR  0x8010000
-
+#include "acfg.h"
 
 
 
