@@ -9,8 +9,7 @@
 #include <page.h>
 #include <task.h>
 #include <aj_string.h>
-// #include <hyper/vgic.h>
-// #include <hyper/vm.h>
+#include <hyper/vm.h>
 
 static inline uint64_t read_sctlr_el2()
 {
@@ -82,9 +81,10 @@ extern void guest_start();
 
 extern size_t cacheline_bytes;
 
-void mmio_map_gicd_gicc() {
-    for (int i=0; i<32; i++) {
-        lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD + 0x1000 * i);  // 0800 0000 - 0802 0000  gicd gicc
+
+void mmio_map_gicd() {
+    for (int i=0; i<16; i++) {
+        lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD + 0x1000 * i);  // 0800 0000 - 0801 0000  gicd 
         avr_entry->p2m.read = 0;
         avr_entry->p2m.write = 0;
         apply_ept(avr_entry);
@@ -104,7 +104,7 @@ void hyper_main()
     guest_ept_init();
     guest_trap_init();
     copy_guest();
-    // mmio_map_gicd_gicc();
+    mmio_map_gicd();
     vm_init();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");

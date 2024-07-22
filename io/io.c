@@ -22,3 +22,9 @@ void print_info(const char *info)
     // ANSI 转义序列: "\033[32m" 设置绿色前景色, "\033[0m" 重置颜色
     printf("\033[32m%s\033[0m", info);
 }
+
+void print_warn(const char *info)
+{
+    // ANSI 转义序列: "\033[32m" 设置绿色前景色, "\033[0m" 重置颜色
+    printf("\033[33m%s\033[0m", info);
+}

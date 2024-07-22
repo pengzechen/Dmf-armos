@@ -6,6 +6,7 @@
 #include <io.h>
 #include <exception.h>
 #include <hyper/vcpu.h>
+#include <hyper/vgic.h>
 
 extern lpae_t ept_L1[];
 lpae_t *ept_L2_root;
@@ -185,18 +186,21 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 	lpae_t *ept;
 	unsigned long tmp;
 
-	printf("EPT Violation : %s\n", info->reason == PREFETCH ? "prefetch" : "data");
-	printf("PC : %x\n", el2_ctx->elr);
-	printf("GVA : 0x%x\n", info->gva);
-	printf("GPA : 0x%x\n", (unsigned long)info->gpa);
-	printf("Register : R%d\n", info->hsr.dabt.reg);
+	// printf("EPT Violation : %s\n", info->reason == PREFETCH ? "prefetch" : "data");
+	// printf("PC : %x\n", el2_ctx->elr);
+	// printf("GVA : 0x%x\n", info->gva);
+	// printf("GPA : 0x%x\n", (unsigned long)info->gpa);
+	// printf("Register : R%d\n", info->hsr.dabt.reg);
 
 	ept = get_ept_entry(info->gpa);
 	tmp = ept->bits & 0xFFFFFFFF;
 	// printf("EPT Entry : 0x%x(0x%x)\n", ept, tmp);
+	/*
 	if (handle_mmio(info, el2_ctx))
 	{
 	}
+	*/
+	intc_handler(info, el2_ctx);
 
 	/* Do not delete following code block */
 	/* A sample code for modifying EPT */

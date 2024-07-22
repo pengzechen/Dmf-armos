@@ -22,7 +22,7 @@ typedef struct {
 } vgic_core_state_t;
 
 struct vgic_t {
-    vm_t *vm;
+    struct vm_t *vm;
     
     uint32_t ptov[SPI_ID_MAX];           // 实际中断 ID 到虚拟中断 ID 的映射
     uint32_t vtop[SPI_ID_MAX];
@@ -49,5 +49,7 @@ struct vgic_t {
 void virtual_gic_register_int(struct vgic_t *vgic, uint32_t pintvec, uint32_t vintvec);
 
 void v_timer_handler();
+
+void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx);
 
 #endif // __VGIC_H__

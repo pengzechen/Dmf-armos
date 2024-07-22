@@ -6,17 +6,19 @@
 #include "vcpu.h"
 #include <hyper/vgic.h>
 
-typedef struct _vm_t {
+struct vm_t {
     uint32_t id;
 
     cpu_t *vcpus;
     uint32_t vcpu_num;
 
     struct vgic_t *vgic;
-} vm_t ;
+};
 
 
 struct vgic_t *get_vgic();
+
+void vm_init();
 
 
 #endif // __VM_H__

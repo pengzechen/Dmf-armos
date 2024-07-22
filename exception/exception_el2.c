@@ -38,9 +38,9 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
     }
     else if (ec == 0x24)
     { // data abort
-        print_info("            This is data abort handler\n");
+        //print_info("            This is data abort handler\n");
         ept_violation_info_t info;
-        printf("Prefetch abort : %x\n", hsr.bits);
+        //printf("Prefetch abort : %x\n", hsr.bits);
         info.hsr.bits = hsr.bits;
         info.reason = PREFETCH;
         uint64_t hpfar = read_hpfar_el2();  // 目前 hpfar 和 far 读到的内容不同，少了8位

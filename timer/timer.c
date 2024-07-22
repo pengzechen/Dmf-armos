@@ -10,8 +10,8 @@
 
 static uint64_t test_num = 0;
 
-#define TIMER_VECTOR     30
-#define HV_TIMER_VECTOR  27
+#define TIMER_VECTOR 30
+#define HV_TIMER_VECTOR 27
 
 void handle_timer_interrupt(uint64_t *sp)
 {
@@ -46,7 +46,8 @@ void timer_init_second()
     }
 }
 
-void test_cntv_handler(uint64_t *sp) {
+void test_cntv_handler(uint64_t *sp)
+{
     // printf("this is cntv handler\n");
     v_timer_handler();
 }
@@ -64,6 +65,8 @@ void timer_init()
     // 启用定时器
     write_cntp_ctl_el0(0b1);
 
+    irq_install(TIMER_VECTOR, handle_timer_interrupt);
+
     gic_enable_int(TIMER_VECTOR, 0);
 
     if (gic_get_enable(TIMER_VECTOR))
@@ -71,6 +74,5 @@ void timer_init()
         printf("timer enabled successfully ...\n");
     }
 
-    irq_install(TIMER_VECTOR, handle_timer_interrupt);
-    irq_install(HV_TIMER_VECTOR,  test_cntv_handler);
+    irq_install(HV_TIMER_VECTOR, test_cntv_handler);
 }

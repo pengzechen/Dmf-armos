@@ -21,6 +21,7 @@ test_guest:
   mov x9, #9
   mov x10, #10
 
+/*
   hvc #0
   ldr x0, =0x50000000
   ldr x6, [x0]
@@ -35,12 +36,12 @@ test_guest:
   
   ldr x0, =0x50010000
   ldr x6, [x0]
-  
+*/
   b .  // el1
 
 .section .data.guset_bin
-  // .incbin "../guest/nimbos/nimbos.bin"
-  .incbin "../guest/test/testos.bin"
+  .incbin "../guest/nimbos/nimbos.bin"
+  // .incbin "../guest/test/testos.bin"
 
 
 .section .text 

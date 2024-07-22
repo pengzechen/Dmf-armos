@@ -68,4 +68,16 @@
 #define SPSR_VALUE_IRQ (SPSR_FIQ_MASK | SPSR_ABT_MASK | 0b0101 )
 
 
+#define PSM_USR (0x10)
+#define PSM_FIQ (0x11)
+#define PSM_IRQ (0x12)
+#define PSM_SVC (0x13)
+#define PSM_MON (0x16)
+#define PSM_ABT (0x17)
+#define PSM_HYP (0x1a)
+#define PSM_UND (0x1b)
+#define PSM_SYS (0x1f)
+
+
+
 #endif // __SYS_H__

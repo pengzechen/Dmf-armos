@@ -55,6 +55,7 @@ void gic_virtual_init(void)
 
     // 允许所有优先级的中断
     write32(0xff - 7, (void *)GICC_PMR);
+    // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
     write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
 
     write32(0x01, (void *)GICH_HCR);
@@ -83,6 +84,7 @@ void gic_write_eoir(uint32_t irqstat)
     write32(irqstat, (void *)GICC_EOIR);
 }
 
+// 发送给特定的核（某个核）
 void gic_ipi_send_single(int irq, int cpu)
 {
     // assert(cpu < 8);
@@ -149,21 +151,21 @@ void gic_set_icenabler(uint32_t n, uint32_t value)
 
 uint32_t gic_make_virtual_hardware_interrupt(uint32_t vector, uint32_t pintvec, int pri, bool grp1)
 {
-    uint32_t mask = 0x90000000;
-    mask |= ((uint32_t)(pri & 0xf8) << 20) | ((pintvec & 0x1ff) << 10) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30);
+    uint32_t mask = 0x90000000;  // grp0 hw pending
+    mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((pintvec & 0x1ff) << 10) | ((uint32_t)grp1 << 30);
     return mask;
 }
 
 uint32_t gic_make_virtual_software_interrupt(uint32_t vector, int pri, bool grp1)
 {
-    uint32_t mask = 0x10000000;
+    uint32_t mask = 0x10000000;  // grp0  pending
     mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30);
     return mask;
 }
 
 uint32_t gic_make_virtual_software_sgi(uint32_t vector, int cpu_id, int pri, bool grp1)
 {
-    uint32_t mask = 0x10000000;
+    uint32_t mask = 0x10000000;  // grp0  pending
     mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30) | ((uint32_t)cpu_id << 10);
     return mask;
 }
