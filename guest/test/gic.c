@@ -10,10 +10,10 @@ struct gic_t _gicv2;
 
 void gic_test_init(void)
 {
-    printf("    gicd enable %s\n", read32((void *)GICD_CTLR) ? "ok" : "error");
-    printf("    gicc enable %s\n", read32((void *)GICC_CTLR) ? "ok" : "error");
-    printf("    irq numbers: %d\n", _gicv2.irq_nr);
-    printf("    cpu num: %d\n", cpu_num());
+    printf("[guest]     gicd enable %s\n", read32((void *)GICD_CTLR) ? "ok" : "error");
+    printf("[guest]     gicc enable %s\n", read32((void *)GICC_CTLR) ? "ok" : "error");
+    printf("[guest]     irq numbers: %d\n", _gicv2.irq_nr);
+    printf("[guest]     cpu num: %d\n", cpu_num());
 }
 
 // gicd g0, g1  gicc enable
@@ -83,7 +83,7 @@ void gic_enable_int(int vector, int pri)
 {
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
-    printf("set enable: reg: %d, mask: 0x%x\n", reg, mask);
+    printf("[guest] set enable: reg: %d, mask: 0x%x\n", reg, mask);
 
     write32(mask, (void *)(uint64_t)GICD_ISENABLER(reg));
 
@@ -97,7 +97,7 @@ void gic_disable_int(int vector, int pri)
 {
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
-    printf("disable: reg: %d, mask: 0x%x\n", reg, mask);
+    printf("[guest] disable: reg: %d, mask: 0x%x\n", reg, mask);
 
     write32(mask, (void *)(uint64_t)GICD_ICENABLER(reg));
 }
@@ -110,7 +110,7 @@ int gic_get_enable(int vector)
 
     uint32_t val = read32((void *)(uint64_t)GICD_ISENABLER(reg));
 
-    printf("get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
+    printf("[guest] get enable: reg: %x, mask: %x, value: %x\n", reg, mask, val);
     return val & mask != 0;
 }
 

@@ -19,7 +19,7 @@ kernel:
 	$(TOOL_PREFIX)gcc  $(CFLAGS) spinlock.S $(INCLUDE) -o $(BUILD)spinlock.s.o
 
 
-	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD)kernel.elf $(BUILD)spinlock.s.o $(BUILD)print.o $(BUILD)string.o  $(BUILD)dmos.s.o $(BUILD)dmos.o $(BUILD)gic.o $(BUILD)exception.o $(BUILD)exception.s.o
+	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD)kernel.elf $(BUILD)dmos.s.o $(BUILD)spinlock.s.o $(BUILD)print.o $(BUILD)string.o   $(BUILD)dmos.o $(BUILD)gic.o $(BUILD)exception.o $(BUILD)exception.s.o
 	
 	$(TOOL_PREFIX)objdump -x -d -S $(BUILD)kernel.elf > $(BUILD)dis.txt
 	$(TOOL_PREFIX)readelf -a $(BUILD)kernel.elf  > $(BUILD)elf.txt
