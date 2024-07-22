@@ -4,12 +4,11 @@
 
 _start:
 
-    // 读取 SCTLR 寄存器
-    mrs x1, SCTLR_EL1
-    // 禁用对齐检查（清除 A 位）
-    bic x1, x1, #0x2
-    // 写回 SCTLR 寄存器
-    msr SCTLR_EL1, x1
+    adrp    x0, exception_vector_base
+    add     x0, x0, :lo12:exception_vector_base
+    msr     vbar_el1, x0
+    dsb     sy      // 确保所有内存访问完成
+    isb             // 确保所有指令都执行完成
 
     // 设置栈指针
     ldr x0, =_stack_top
@@ -26,4 +25,4 @@ _start:
 .align 12
 .global _stack_top
 _stack_top:
-    .skip 0x2000  // 4KB 的栈空间
+    .skip 0x4000  // 4KB 的栈空间

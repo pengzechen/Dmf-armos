@@ -1,19 +1,7 @@
 
-// 单个字符输出函数
-void uart_putchar(char c)
-{
-    volatile unsigned int *const UART0DR = (unsigned int *)0x9000000;
-    *UART0DR = (unsigned int)c;
-}
-
-// 字符串输出函数
-void uart_putstr(const char *str)
-{
-    while (*str)
-    {
-        uart_putchar(*str++);
-    }
-}
+#include "gic.h"
+#include "io.h"
+#include "exception.h"
 
 void test_mem_maped()
 {
@@ -37,11 +25,15 @@ void test_mem_no_maped2()
 void kernel_main(void)
 {
     // 在这里可以添加你的内核代码
-    uart_putstr("hello world\n");
+    printf("hello world\n");
 
-    test_mem_maped();
-    test_mem_no_maped();
+    exception_init();
 
-    uart_putstr("test mem no map 2\n");
-    test_mem_no_maped2();
+    gic_init();
+
+    asm volatile("msr cntp_tval_el0, %0" : : "r"(100000));
+    asm volatile("msr cntp_ctl_el0, %0" : : "r"(1));
+    gic_enable_int(30, 0);
+
+    enable_interrupts();
 }
