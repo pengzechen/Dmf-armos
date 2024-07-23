@@ -19,9 +19,9 @@ SECTIONS
         . = ALIGN((1 << 10));
         __guset_bin_start = .;
         *(.data.guset_bin)
-        *(.data)
         __guset_bin_end = .;
         . = ALIGN((1 << 10));
+        *(.data)
     }
 
     .bss : {

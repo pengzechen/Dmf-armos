@@ -58,7 +58,10 @@ void gic_virtual_init(void)
     // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
     write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
 
-    write32(0x01, (void *)GICH_HCR);
+    // bit [2] 当虚拟中断列表寄存器中没有条目时，会产生中断。
+    write32((1 << 0)|(1 << 2), (void *)GICH_HCR);
+    write32((1 << 0), (void*)GICH_VMCR);
+
     for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
         gic_enable_int(i, 0);
 

@@ -30,21 +30,21 @@ void v_timer_handler()
 {
     static int flag = 0;
     // struct vgic_t *vgic = get_vgic();
-    // 0 1 2 3     -  4 5 6 7 
-    // 8 9 10 11   -  12 13 14 15
-    // 16 17 18 19 - 20 21 22 23 
-    // 24 25 26 27
-    uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xff, 0);
-    gic_set_ipriority(6, 0x000000ff);
+    //  0  1  2  3 -   4  5  6  7 
+    //  8  9 10 11 -  12 13 14 15
+    // 16 17 18 19 -  20 21 22 23 
+    // 24 25 26 27 -  28 29 30 31
+    uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xf0, 0);
+    gic_set_ipriority(6, 0xf8000000);
     // uint32_t mask = gic_make_virtual_software_sgi(7, 0, 0xff, 0);
     // gic_set_ipriority(1, 0x000000ff);
-    // printf("mask: 0x%x\n", mask);
-    if (!flag) {
-        printf("read lr: %x\n", gic_read_lr(0));
-        gic_write_lr(0, mask);
-        printf("read lr: %x\n", gic_read_lr(0));
-        flag = 1;
-    }
+
+    // if (!flag) {
+    printf("read lr: %x\n", gic_read_lr(0));
+    gic_write_lr(0, mask);
+    printf("read lr: %x\n", gic_read_lr(0));
+    // flag = 1;
+    // }
 }
 
 void vgicd_write(ept_violation_info_t *info, trap_frame_t *el2_ctx, void *paddr)
