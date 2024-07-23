@@ -1,3 +1,6 @@
 [submodule "guest/nimbos"]
 	path = guest/nimbos
 	url = https://github.com/pengzechen/nimbos
+[submodule "guest/testos"]
+	path = guest/testos
+	url = https://github.com/pengzechen/testos
