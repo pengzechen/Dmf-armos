@@ -21,7 +21,7 @@ void start_secondary_cpus()
         }
 
         // 做一点休眠 保证第二个核 初始化完成
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < 10; j++)
             for (int i = 0; i < 0xfffff; i++)
                 ;
     }

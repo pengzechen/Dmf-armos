@@ -8,6 +8,8 @@
 
 tcb_t task_list[MAX_TASKS];
 tcb_t *current_task = (tcb_t *)0;
+
+// 目前只有首核会添加一个任务，所以task_count不需要锁
 uint32_t task_count = 0;
 
 static spinlock_t lock;

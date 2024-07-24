@@ -125,10 +125,10 @@ void main_entry()
     while(inited_cpu_num != SMP_NUM)
         wfi();
 
-    if (get_current_cpu_id() == 0)
+    // if (get_current_cpu_id() == 0)
         enable_interrupts();
-    if (get_current_cpu_id() == 1)
-        enable_interrupts();
+    // if (get_current_cpu_id() == 1)
+        // enable_interrupts();
 
     while (1)
         ;
