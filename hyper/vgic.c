@@ -30,19 +30,14 @@ void v_timer_handler()
 {
     static int flag = 0;
     // struct vgic_t *vgic = get_vgic();
-    //  0  1  2  3 -   4  5  6  7 
-    //  8  9 10 11 -  12 13 14 15
-    // 16 17 18 19 -  20 21 22 23 
-    // 24 25 26 27 -  28 29 30 31
     uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xf0, 0);
+    // 降低权限，host将收不到timer
     gic_set_ipriority(6, 0xf8000000);
-    // uint32_t mask = gic_make_virtual_software_sgi(7, 0, 0xff, 0);
-    // gic_set_ipriority(1, 0x000000ff);
 
     // if (!flag) {
-    printf("read lr: %x\n", gic_read_lr(0));
+    // printf("read lr: %x\n", gic_read_lr(0));
     gic_write_lr(0, mask);
-    printf("read lr: %x\n", gic_read_lr(0));
+    // printf("read lr: %x\n", gic_read_lr(0));
     // flag = 1;
     // }
 }
@@ -136,7 +131,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 printf("gpa: %x, r: %x, len: %d, int id: %d\n", gpa, r, len, HIGHEST_BIT_POSITION(r));
                 
                 // 给它最高优先级
-                gic_enable_int(HIGHEST_BIT_POSITION(r), 0);
+                // gic_enable_int(HIGHEST_BIT_POSITION(r), 0);
                 print_info("      <<< gicd emu write GICD_ISENABLER(0)\n");
             }
             else if (GICD_ISENABLER(1) <= gpa && gpa < GICD_ICENABLER(0))

@@ -41,7 +41,7 @@ test_guest:
 
 .section .data.guset_bin
   .incbin "../guest/nimbos/nimbos.bin"
-  // .incbin "../guest/test/testos.bin"
+  // .incbin "../guest/testos/build/kernel.bin"
 
 
 .section .text 

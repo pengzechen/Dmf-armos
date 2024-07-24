@@ -23,6 +23,7 @@ void handle_timer_interrupt(uint64_t *sp)
     timer_tick_schedule(sp);
     // schedule();
 
+    gic_set_ipriority(6, 0xf0000000);
     // printf("schedule ok...\n");
     // }
 }

@@ -59,7 +59,7 @@ void gic_virtual_init(void)
     write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
 
     // bit [2] 当虚拟中断列表寄存器中没有条目时，会产生中断。
-    write32((1 << 0)|(1 << 2), (void *)GICH_HCR);
+    write32((1 << 0), (void *)GICH_HCR);
     write32((1 << 0), (void*)GICH_VMCR);
 
     for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
@@ -148,6 +148,10 @@ void gic_set_isenabler(uint32_t n, uint32_t value)
     write32(value, (void *)GICD_ISENABLER(n));
 }
 
+//  0  1  2  3 -   4  5  6  7
+//  8  9 10 11 -  12 13 14 15
+// 16 17 18 19 -  20 21 22 23 
+// 24 25 26 27 -  28 29 30 31
 void gic_set_ipriority(uint32_t n, uint32_t value)
 {
     write32(value, (void *)GICD_IPRIORITYR(n));
