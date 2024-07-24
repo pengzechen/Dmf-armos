@@ -6,6 +6,7 @@ struct thread_info {
 	int             cpu;
 	unsigned int    flags;
 	void            *pgtable;
+	void            *current_thread;
 #if 0
 	vector_fn       vector_handlers[VECTOR_MAX];
 	exception_fn    exception_handlers[VECTOR_MAX][EC_MAX];

@@ -3,12 +3,18 @@
 #include "psci.h"
 #include "os_cfg.h"
 #include "io.h"
+#include "thread.h"
+
+struct thread_info threads[SMP_NUM] ;
+
 
 extern void second_entry();
 extern void _stack_top_second();
 
 void start_secondary_cpus()
 {
+    threads[0].cpu = 0;
+    threads[0].current_thread = NULL;
 
     for (int i = 1; i < SMP_NUM; i++)
     {
@@ -19,6 +25,9 @@ void start_secondary_cpus()
         {
             printf("smc_call failed!\n");
         }
+
+        threads[i].cpu = i;
+        threads[i].current_thread = NULL;
 
         // 做一点休眠 保证第二个核 初始化完成
         for (int j = 0; j < 10; j++)

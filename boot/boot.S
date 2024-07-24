@@ -195,15 +195,15 @@ from_el3_to_el1:
 
 .align 12
 _stack_bottom:
-    .skip 0x2000  // 4KB 的栈空间
+    .skip 0x4000  // 16KB 的栈空间
 _stack_top:
 
 .align 12
 _stack_bottom_el3:
-    .skip 0x2000  // 4KB 的栈空间
+    .skip 0x4000  // 16KB 的栈空间
 _stack_top_el3:
 
 .align 12
 _stack_bottom_second:
-    .skip 0x2000 * 4  // 4KB 的栈空间
+    .skip 0x4000 * 4 // 16KB 的栈空间
 _stack_top_second:
