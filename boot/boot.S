@@ -189,21 +189,22 @@ from_el3_to_el1:
 
 
 .global _stack_top_second
+.global _stack_top
 
 // 栈空间
 .section .bss
 
-.align 12
+.align 14
 _stack_bottom:
     .skip 0x4000  // 16KB 的栈空间
 _stack_top:
 
-.align 12
+.align 14
 _stack_bottom_el3:
     .skip 0x4000  // 16KB 的栈空间
 _stack_top_el3:
 
-.align 12
+.align 14
 _stack_bottom_second:
     .skip 0x4000 * 4 // 16KB 的栈空间
 _stack_top_second:
