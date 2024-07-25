@@ -41,8 +41,9 @@ void uart_advance_init()
     // 配置线路控制寄存器: 8 bits, no parity, one stop bit
     UART0_LCRH = (1 << 5) | (1 << 6);
 
+    UART0_IMSC = 0;
     // 使能RX和TX中断
-    UART0_IMSC = 0x30;
+    UART0_IMSC = (0b11 << 4);
 
     // 启用 UART，TX 和 RX
     UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
