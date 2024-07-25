@@ -51,7 +51,7 @@ void gic_virtual_init(void)
     }
 
     write32(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
-           (void *)GICD_CTLR);
+            (void *)GICD_CTLR);
 
     // 允许所有优先级的中断
     write32(0xff - 7, (void *)GICC_PMR);
@@ -60,7 +60,7 @@ void gic_virtual_init(void)
 
     // bit [2] 当虚拟中断列表寄存器中没有条目时，会产生中断。
     write32((1 << 0), (void *)GICH_HCR);
-    write32((1 << 0), (void*)GICH_VMCR);
+    write32((1 << 0), (void *)GICH_VMCR);
 
     for (int i = 0; i < GIC_NR_PRIVATE_IRQS; i++)
         gic_enable_int(i, 0);
@@ -91,7 +91,6 @@ void gic_write_dir(uint32_t irqstat)
 {
     write32(irqstat, (void *)GICC_DIR);
 }
-
 
 // 发送给特定的核（某个核）
 void gic_ipi_send_single(int irq, int cpu)
@@ -150,7 +149,7 @@ void gic_set_isenabler(uint32_t n, uint32_t value)
 
 //  0  1  2  3 -   4  5  6  7
 //  8  9 10 11 -  12 13 14 15
-// 16 17 18 19 -  20 21 22 23 
+// 16 17 18 19 -  20 21 22 23
 // 24 25 26 27 -  28 29 30 31
 void gic_set_ipriority(uint32_t n, uint32_t value)
 {
@@ -164,21 +163,21 @@ void gic_set_icenabler(uint32_t n, uint32_t value)
 
 uint32_t gic_make_virtual_hardware_interrupt(uint32_t vector, uint32_t pintvec, int pri, bool grp1)
 {
-    uint32_t mask = 0x90000000;  // grp0 hw pending
+    uint32_t mask = 0x90000000; // grp0 hw pending
     mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((pintvec & 0x1ff) << 10) | ((uint32_t)grp1 << 30);
     return mask;
 }
 
 uint32_t gic_make_virtual_software_interrupt(uint32_t vector, int pri, bool grp1)
 {
-    uint32_t mask = 0x10000000;  // grp0  pending
+    uint32_t mask = 0x10000000; // grp0  pending
     mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30);
     return mask;
 }
 
 uint32_t gic_make_virtual_software_sgi(uint32_t vector, int cpu_id, int pri, bool grp1)
 {
-    uint32_t mask = 0x10000000;  // grp0  pending
+    uint32_t mask = 0x10000000; // grp0  pending
     mask |= ((uint32_t)(pri & 0xf8) << 20) | (vector & (0x1ff)) | ((uint32_t)grp1 << 30) | ((uint32_t)cpu_id << 10);
     return mask;
 }

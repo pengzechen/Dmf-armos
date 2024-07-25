@@ -5,6 +5,7 @@
 #include <aj_string.h>
 #include <sys/sys.h>
 #include <spinlock.h>
+#include <thread.h>
 
 tcb_t task_list[MAX_TASKS];
 tcb_t *current_task = (tcb_t *)0;

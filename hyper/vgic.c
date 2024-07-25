@@ -34,12 +34,7 @@ void v_timer_handler()
     // 降低权限，host将收不到timer
     gic_set_ipriority(6, 0xf8000000);
 
-    // if (!flag) {
-    // printf("read lr: %x\n", gic_read_lr(0));
     gic_write_lr(0, mask);
-    // printf("read lr: %x\n", gic_read_lr(0));
-    // flag = 1;
-    // }
 }
 
 void vgicd_write(ept_violation_info_t *info, trap_frame_t *el2_ctx, void *paddr)
