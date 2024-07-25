@@ -1,6 +1,19 @@
-
 #include <uart_pl011.h>
 #include <spinlock.h>
+#include <io.h>
+
+// 环形缓冲区大小
+#define BUFFER_SIZE 1024
+
+// 接收环形缓冲区
+char rx_buffer[BUFFER_SIZE];
+int rx_read_idx = 0;
+int rx_write_idx = 0;
+
+// 发送环形缓冲区
+char tx_buffer[BUFFER_SIZE];
+int tx_read_idx = 0;
+int tx_write_idx = 0;
 
 static spinlock_t lock;
 
@@ -26,25 +39,56 @@ void uart_init()
     // 配置线路控制寄存器: 8 bits, no parity, one stop bit
     UART0_LCRH = (1 << 5) | (1 << 6);
 
+    // 使能RX和TX中断
+    UART0_IMSC = 0x30;
+
     // 启用 UART，TX 和 RX
     UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
 }
 
-void uart_putc(char c)
-{
-    
-    // 等待发送 FIFO 不为满
-    while (UART0_FR & (1 << 5))
-        ;
-    spin_lock(&lock);
-    UART0_DR = c;
-    spin_unlock(&lock);
+char uart_getc(void) {
+    while (rx_read_idx == rx_write_idx) {
+        // 等待数据发送到缓冲区
+    }
+    char c = rx_buffer[rx_read_idx];
+    rx_read_idx = (rx_read_idx + 1) % BUFFER_SIZE;
+    return c;
 }
 
-char uart_getc()
-{
-    // 等待接收 FIFO 不为空
-    while (UART0_FR & (1 << 4))
-        ;
-    return (char)UART0_DR;
+void uart_putc(char c) {
+    int next_write_idx = (tx_write_idx + 1) % BUFFER_SIZE;
+    while (next_write_idx == tx_read_idx) {
+        // 等待缓冲区有空闲空间
+    }
+    tx_buffer[tx_write_idx] = c;
+    tx_write_idx = next_write_idx;
+    UART0_IMSC |= 0x20;  // 使能TX中断
+}
+
+// 中断处理程序
+void uart_interrupt_handler(void) {
+    // 处理接收中断
+    if (UART0_MIS & 0x10) {  // RX中断
+        while (!(UART0_FR & 0x10)) {  // RX FIFO不为空
+            char c = UART0_DR;
+            int next_write_idx = (rx_write_idx + 1) % BUFFER_SIZE;
+            if (next_write_idx != rx_read_idx) {
+                rx_buffer[rx_write_idx] = c;
+                rx_write_idx = next_write_idx;
+            }
+        }
+        UART0_ICR = 0x10;  // 清除RX中断
+    }
+    
+    // 处理发送中断
+    if (UART0_MIS & 0x20) {  // TX中断
+        while (!(UART0_FR & 0x20) && (tx_read_idx != tx_write_idx)) {  // TX FIFO不满
+            UART0_DR = tx_buffer[tx_read_idx];
+            tx_read_idx = (tx_read_idx + 1) % BUFFER_SIZE;
+        }
+        if (tx_read_idx == tx_write_idx) {
+            UART0_IMSC &= ~0x20;  // 禁用TX中断
+        }
+        UART0_ICR = 0x20;  // 清除TX中断
+    }
 }

@@ -26,17 +26,6 @@ void virtual_gic_register_int(struct vgic_t *vgic, uint32_t pintvec, uint32_t vi
     // vgic->use_irq[pintvec/32] |= 1 << (pintvec % 32);
 }
 
-void v_timer_handler()
-{
-    static int flag = 0;
-    // struct vgic_t *vgic = get_vgic();
-    uint32_t mask = gic_make_virtual_hardware_interrupt(27, 27, 0xf0, 0);
-    // 降低权限，host将收不到timer
-    gic_set_ipriority(6, 0xf8000000);
-
-    gic_write_lr(0, mask);
-}
-
 void vgicd_write(ept_violation_info_t *info, trap_frame_t *el2_ctx, void *paddr)
 {
     unsigned long reg_num;

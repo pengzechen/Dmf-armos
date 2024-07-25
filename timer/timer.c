@@ -11,7 +11,7 @@
 static uint64_t test_num = 0;
 
 #define TIMER_VECTOR 30
-#define HV_TIMER_VECTOR 27
+
 
 void handle_timer_interrupt(uint64_t *sp)
 {
@@ -47,12 +47,6 @@ void timer_init_second()
     }
 }
 
-void test_cntv_handler(uint64_t *sp)
-{
-    // printf("this is cntv handler\n");
-    v_timer_handler();
-}
-
 // 每个pe都要配置
 void timer_init()
 {
@@ -75,5 +69,4 @@ void timer_init()
         printf("timer enabled successfully ...\n");
     }
 
-    irq_install(HV_TIMER_VECTOR, test_cntv_handler);
 }
