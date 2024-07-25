@@ -94,7 +94,7 @@ void mmio_map_gicd() {
 void hyper_main()
 {
 
-    io_init();
+    io_early_init();
     gic_virtual_init();
     timer_init();
     printf("io, gic, timer, init ok...\n\n");

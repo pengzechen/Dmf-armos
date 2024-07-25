@@ -15,8 +15,12 @@ void simple_console()
 {
     while (1)
     {
-        char c = uart_getc();
-        uart_putc(c);
+        char c = getc();
+        if(c == '\r') {
+            putc('\r');
+            putc('\n');
+        }
+        putc(c);
     }
 }
 
@@ -126,9 +130,11 @@ void main_entry()
         wfi();
 
     // if (get_current_cpu_id() == 0)
-        enable_interrupts();
+        // enable_interrupts();
     // if (get_current_cpu_id() == 1)
         // enable_interrupts();
+    
+    simple_console();
 
     while (1)
         ;
@@ -137,11 +143,12 @@ void main_entry()
 void kernel_main(void)
 {
     print_info("starting primary core 0 ...\n");
-    io_init();
+    io_early_init();
     gic_init();
     timer_init();
     print_info("core 0 starting is done.\n\n");
     spinlock_init(&lock);
+    io_init();
 
     start_secondary_cpus();
 

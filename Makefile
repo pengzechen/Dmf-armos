@@ -12,7 +12,7 @@ n = -nostdlib -nostdinc -fno-stack-protector
 SMP = 1
 HV  = n
 
-CFLAGS = -g -c -O0 -fno-pie  -mgeneral-regs-only \
+CFLAGS = -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc\
 	 -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=$(SMP)
 
 QEMU_ARGS = -m 4G -smp $(SMP) -cpu cortex-a72 -nographic 
@@ -76,8 +76,9 @@ $(BUILD_DIR)/printf.o: io/printf.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) io/printf.c $(INCLUDE) -o $(BUILD_DIR)/printf.o
 
 $(BUILD_DIR)/uart_pl011.o: io/uart_pl011.c
-	$(TOOL_PREFIX)gcc $(CFLAGS) io/uart_pl011.c $(INCLUDE) -o $(BUILD_DIR)/uart_pl011.o
-
+	$(TOOL_PREFIX)gcc $(CFLAGS) io/uart_pl011.c $(INCLUDE) -o $(BUILD_DIR)/uart_pl011.o  
+$(BUILD_DIR)/uart_pl011_early.o: io/uart_pl011_early.c
+	$(TOOL_PREFIX)gcc $(CFLAGS) io/uart_pl011_early.c $(INCLUDE) -o $(BUILD_DIR)/uart_pl011_early.o
 #  mem
 $(BUILD_DIR)/mmu.s.o: mem/mmu.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) mem/mmu.S $(INCLUDE) -o $(BUILD_DIR)/mmu.s.o
@@ -116,7 +117,7 @@ $(BUILD_DIR)/vgic.o: hyper/vgic.c
 $(BUILD_DIR)/vm.o: hyper/vm.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/vm.c $(INCLUDE) -o $(BUILD_DIR)/vm.o
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/uart_pl011_early.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o
 	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
 	$(BUILD_DIR)/hyper.s.o          \
@@ -132,6 +133,7 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(B
 	$(BUILD_DIR)/gic.o 				\
 	$(BUILD_DIR)/io.o 				\
 	$(BUILD_DIR)/uart_pl011.o       \
+	$(BUILD_DIR)/uart_pl011_early.o \
 	$(BUILD_DIR)/printf.o 			\
 	$(BUILD_DIR)/mmu.s.o 			\
 	$(BUILD_DIR)/page.o 			\

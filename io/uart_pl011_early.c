@@ -1,10 +1,11 @@
 
 #include <uart_pl011.h>
 #include <spinlock.h>
+#include <io.h>
 
 static spinlock_t lock;
 
-void uart_init()
+void uart_early_init()
 {
     // 禁用 UART
     UART0_CR = 0x0;
@@ -30,7 +31,7 @@ void uart_init()
     UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
 }
 
-void uart_putc(char c)
+void uart_early_putc(char c)
 {
     
     // 等待发送 FIFO 不为满
@@ -41,7 +42,7 @@ void uart_putc(char c)
     spin_unlock(&lock);
 }
 
-char uart_getc()
+char uart_early_getc()
 {
     // 等待接收 FIFO 不为空
     while (UART0_FR & (1 << 4))

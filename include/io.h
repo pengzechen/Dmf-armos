@@ -39,11 +39,25 @@ static inline void write64(uint64_t value, volatile void *addr) {
     *(volatile uint64_t *)addr = value;
 }
 
+void uart_early_init();
+void uart_early_putc(char c);
+char uart_early_getc();
 
+void uart_advance_init();
+char uart_advance_getc(void);
+void uart_advance_putc(char c);
+
+
+void io_early_init();
+void io_init();
+char getc();
+void putc(char c);
+
+
+/*  printf 函数库  */
 extern void uart_putstr(const char * str);
-
-
 #define puts uart_putstr
+
 extern int printf(const char *fmt, ...);
 extern void print_info(const char *info);
 extern void print_warn(const char *info);
@@ -52,6 +66,6 @@ extern int error(const char *fmt, ...);
 extern int snprintf(char *buf, int size, const char *fmt, ...);
 extern int vsnprintf(char *buf, int size, const char *fmt, va_list va);
 
-extern void io_init();
+
 
 #endif
