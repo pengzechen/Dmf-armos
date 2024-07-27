@@ -32,12 +32,12 @@ void start_secondary_cpus()
             printf("smc_call failed!\n");
         }
 
-        thread_info_init((struct thread_info *)(_stack_top_second - STACK_SIZE * i), 0, i);
-        printf("core %d thread info addr: %x\n", i, (void *)(_stack_top_second - STACK_SIZE * i));
-
         // 做一点休眠 保证第二个核 初始化完成
         for (int j = 0; j < 10; j++)
             for (int k = 0; k < 0xfffff; k++)
                 ;
+        
+        thread_info_init((struct thread_info *)(_stack_top_second - STACK_SIZE * i), 0, i);
+        printf("core %d thread info addr: %x\n", i, (void *)(_stack_top_second - STACK_SIZE * i));
     }
 }

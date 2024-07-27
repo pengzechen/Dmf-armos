@@ -8,12 +8,12 @@
 #include <thread.h>
 
 tcb_t task_list[MAX_TASKS];
-tcb_t *current_task = (tcb_t *)0;
 
 // 目前只有首核会添加一个任务，所以task_count不需要锁
 uint32_t task_count = 0;
 
 static spinlock_t lock;
+static spinlock_t print_lock;
 
 void create_task(void (*task_func)(), void *stack_top)
 {
@@ -54,7 +54,17 @@ void craete_vm(void (*task_func)())
 void schedule_init()
 {
     spinlock_init(&lock);
-    current_task = &task_list[0];
+    spinlock_init(&print_lock);
+    // current_task = &task_list[0];
+}
+
+void schedule_init_local()
+{
+    struct thread_info *info = (tcb_t *)current_thread_info();
+    info->current_thread = &task_list[info->cpu];
+    spin_lock(&print_lock);
+    printf("core %d current task %d\n", info->cpu, ((tcb_t *)info->current_thread)->id);
+    spin_unlock(&print_lock);
 }
 
 void print_current_task_list()
@@ -65,7 +75,7 @@ void print_current_task_list()
         // printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
         printf("id: %x, elr: 0x%x\n", task->id, task->cpu->ctx.elr);
     }
-    printf("current task id: %d\n", current_task->id);
+    // printf("current task id: %d\n", current_task->id);
     printf("\n");
 }
 
@@ -76,44 +86,57 @@ void _schedule(uint64_t *sp)
 {
     if (task_count == 0)
         return;
-
+    
     // 找到下一个就绪的任务
-    uint32_t next_task_id = (current_task->id + 1) % task_count;
-
-    // while (task_list[next_task_id].state != 1)
-    // { // 跳过非就绪状态的任务
-    //     next_task_id = (next_task_id + 1) % task_count;
-    // }
-
-    tcb_t *next_task = &task_list[next_task_id];
-
-    if (current_task != next_task)
+    // 这里多个核不能同时计算
+    spin_lock(&lock);
+    struct thread_info * info = current_thread_info();
+    tcb_t *curr = (tcb_t *)info->current_thread;
+    uint32_t next_task_id = (curr->id + 1) % task_count;
+    for (int i = 2;; i++)
     {
-        tcb_t *prev_task = current_task;
-        current_task = next_task;
-        // printf("prev_task %d switch to next_task %d\n", prev_task->id, next_task->id);
-        // enable_interrupts();
-        if (sp == NULL)
-            switch_context(prev_task, next_task);
+        // 跳过非就绪状态的任务
+        if (task_list[next_task_id].state == RUNNING)
+        {
+            next_task_id = (curr->id + i) % task_count;
+        }
         else
-            switch_context_el(prev_task, next_task, sp);
+        {
+            task_list[curr->id].state = WAITING;
+            task_list[next_task_id].state = RUNNING;
+            info->current_thread = &task_list[next_task_id];
+            break;
+        }
     }
+    tcb_t *next_task = &task_list[next_task_id];
+    tcb_t *prev_task = curr;
+    spin_unlock(&lock);
+    
+    // printf("core %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
+
+    if (sp == NULL)
+        switch_context(prev_task, next_task);
+    else
+        switch_context_el(prev_task, next_task, sp);
 }
 
 void schedule(void)
 {
-    current_task->counter = 0;
+    tcb_t *curr = (tcb_t *)current_thread_info()->current_thread;
+    curr->counter = 0;
     _schedule(NULL);
 }
 
 void timer_tick_schedule(uint64_t *sp)
 {
-    --current_task->counter;
+    struct thread_info * info = current_thread_info();
+    tcb_t *curr = (tcb_t *)info->current_thread;
+    --curr->counter;
 
-    if (current_task->counter > 0)
+    if (curr->counter > 0)
         return;
 
-    current_task->counter = 20;
+    curr->counter = 20;
     // disable_interrupts();
     _schedule(sp);
     // enable_interrupts();
@@ -126,18 +149,23 @@ extern void save_sysregs(cpu_sysregs_t *);
 
 void vm_in()
 {
-    restore_sysregs(&current_task->cpu->sys_reg);
+    struct thread_info * info = current_thread_info();
+    tcb_t *curr = (tcb_t *)info->current_thread;
+    restore_sysregs(&curr->cpu->sys_reg);
 }
 
 void vm_out()
 {
-    save_sysregs(&current_task->cpu->sys_reg);
+    struct thread_info * info = current_thread_info();
+    tcb_t *curr = (tcb_t *)info->current_thread;
+    save_sysregs(&curr->cpu->sys_reg);
 }
 
 void save_cpu_ctx(trap_frame_t *sp)
 {
-    memcpy(&current_task->cpu->ctx, sp, sizeof(trap_frame_t));
-    current_task->cpu->pctx = sp;
+    tcb_t *curr = (tcb_t *)current_thread_info()->current_thread;
+    memcpy(&curr->cpu->ctx, sp, sizeof(trap_frame_t));
+    curr->cpu->pctx = sp;
 }
 
 extern int get_el();

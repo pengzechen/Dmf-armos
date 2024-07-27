@@ -29,7 +29,10 @@ typedef struct
 {   
     cpu_t            *cpu;
     struct _contex_t ctx;
-    uint32_t state; // 任务状态 (比如：就绪，运行，阻塞)
+    enum {
+        RUNNING = 0,
+        WAITING = 1,
+    } state; 
     uint32_t counter;
     uint32_t priority;
     uint32_t id;    // 任务ID
@@ -52,4 +55,5 @@ void print_current_task_list();
 void create_task(void (*task_func)(), void *);
 void craete_vm(void (*task_func)());
 void schedule_init();
+void schedule_init_local();
 #endif // __TASK_H__
