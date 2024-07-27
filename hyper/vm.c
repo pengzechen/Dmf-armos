@@ -1,7 +1,7 @@
 
 #include <hyper/vgic.h>
-#include "hyper/hyper_cfg.h"
-#include "aj_types.h"
+#include <hyper/hyper_cfg.h>
+#include <aj_types.h>
 
 // qemu 准备启动4个核
 // 每个核跑两个 vcpu， 共8个vcpu
