@@ -130,7 +130,7 @@ void main_entry()
         wfi();
 
     // if (get_current_cpu_id() == 0)
-        // enable_interrupts();
+        enable_interrupts();
     // if (get_current_cpu_id() == 1)
         // enable_interrupts();
     

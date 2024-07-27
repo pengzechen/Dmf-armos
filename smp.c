@@ -1,5 +1,5 @@
 
-#include <smp.h>
+#include "smp.h"
 #include "psci.h"
 #include "os_cfg.h"
 #include "io.h"
