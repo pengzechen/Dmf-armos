@@ -123,6 +123,7 @@ void hyper_main()
     craete_vm(test_guest);
     craete_vm((void *)GUEST_KERNEL_START);
     schedule_init(); // 设置当前 task 为 task0（test_guest）
+    schedule_init_local();
     print_current_task_list();
 
     guest_start();
