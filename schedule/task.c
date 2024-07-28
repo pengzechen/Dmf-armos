@@ -60,10 +60,11 @@ void schedule_init()
 
 void schedule_init_local()
 {
-    struct thread_info *info = (tcb_t *)current_thread_info();
-    info->current_thread = &task_list[info->cpu];
     spin_lock(&print_lock);
+    struct thread_info *info = current_thread_info();
+    info->current_thread = &task_list[info->cpu];
     printf("core %d current task %d\n", info->cpu, ((tcb_t *)info->current_thread)->id);
+    task_list[info->cpu].state = RUNNING;
     spin_unlock(&print_lock);
 }
 
@@ -89,7 +90,7 @@ void _schedule(uint64_t *sp)
     
     // 找到下一个就绪的任务
     // 这里多个核不能同时计算
-    spin_lock(&lock);
+    // spin_lock(&lock);
     struct thread_info * info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
     uint32_t next_task_id = (curr->id + 1) % task_count;
@@ -110,7 +111,6 @@ void _schedule(uint64_t *sp)
     }
     tcb_t *next_task = &task_list[next_task_id];
     tcb_t *prev_task = curr;
-    spin_unlock(&lock);
     
     // printf("core %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
 
@@ -118,6 +118,8 @@ void _schedule(uint64_t *sp)
         switch_context(prev_task, next_task);
     else
         switch_context_el(prev_task, next_task, sp);
+
+    // spin_unlock(&lock);
 }
 
 void schedule(void)

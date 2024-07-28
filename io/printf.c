@@ -5,7 +5,7 @@
  * under the terms of the GNU Library General Public License version 2.
  */
 
-#define BUFSZ 2000
+#define BUFSZ 1024
 
 #include <stdarg.h>
 #include <aj_types.h>
@@ -14,7 +14,7 @@
 
 #define BINSTR_SZ (sizeof(uint32_t) * 8 + sizeof(uint32_t) * 2)
 
-#define BUFSZ 2000
+#define BUFSZ 1024
 
 static char digits[16] = "0123456789abcdef";
 

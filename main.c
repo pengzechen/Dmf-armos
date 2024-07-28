@@ -60,9 +60,9 @@ void task7()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('4');
-        // uart_putc('\n');
-        printf("task 7: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('7');
+        // putc('\n');
+        // printf("task 7: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -72,9 +72,9 @@ void task6()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('3');
-        // uart_putc('\n');
-        printf("task 6: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('6');
+        // putc('\n');
+        // printf("task 6: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -84,9 +84,9 @@ void task5()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('2');
-        // uart_putc('\n');
-        printf("task 5: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('5');
+        // putc('\n');
+        // printf("task 5: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -96,9 +96,9 @@ void task4()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('4');
-        // uart_putc('\n');
-        printf("task 4: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('4');
+        // putc('\n');
+        // printf("task 4: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -108,9 +108,9 @@ void task3()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('3');
-        // uart_putc('\n');
-        printf("task 3: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('3');
+        // putc('\n');
+        // printf("task 3: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -120,9 +120,9 @@ void task2()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('2');
-        // uart_putc('\n');
-        printf("task 2: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('2');
+        // putc('\n');
+        // printf("task 2: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -132,9 +132,9 @@ void task1()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('1');
-        // uart_putc('\n');
-        printf("task 1: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('1');
+        // putc('\n');
+        // printf("task 1: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
@@ -144,20 +144,20 @@ void task0()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        // uart_putc('1');
-        // uart_putc('\n');
-        printf("task 0: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('0');
+        // putc('\n');
+        // printf("task 0: get_current_cpu_id: %d\n", get_current_cpu_id());
     }
 }
 
-char task7_stack[4096] = {0};
-char task6_stack[4096] = {0};
-char task5_stack[4096] = {0};
-char task4_stack[4096] = {0};
-char task3_stack[4096] = {0};
-char task2_stack[4096] = {0};
-char task1_stack[4096] = {0};
-char task0_stack[4096] = {0};
+char task7_stack[8192] = {0};
+char task6_stack[8192] = {0};
+char task5_stack[8192] = {0};
+char task4_stack[8192] = {0};
+char task3_stack[8192] = {0};
+char task2_stack[8192] = {0};
+char task1_stack[8192] = {0};
+char task0_stack[8192] = {0};
 
 int inited_cpu_num = 0;
 spinlock_t lock;
@@ -167,14 +167,14 @@ void main_entry()
     printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
     if (get_current_cpu_id() == 0)
     {
-        create_task(task0, task0_stack + 3800);
-        create_task(task1, task1_stack + 3800);
-        create_task(task2, task2_stack + 3800);
-        create_task(task3, task3_stack + 3800);
-        create_task(task4, task4_stack + 3800);
-        create_task(task5, task5_stack + 3800);
-        create_task(task6, task6_stack + 3800);
-        create_task(task7, task7_stack + 3800);
+        create_task(task0, task0_stack + 4096);
+        create_task(task1, task1_stack + 4096);
+        create_task(task2, task2_stack + 4096);
+        create_task(task3, task3_stack + 4096);
+        create_task(task4, task4_stack + 4096);
+        create_task(task5, task5_stack + 4096);
+        create_task(task6, task6_stack + 4096);
+        create_task(task7, task7_stack + 4096);
         schedule_init();
         print_current_task_list();
     }
@@ -186,7 +186,7 @@ void main_entry()
         wfi();
 
     schedule_init_local();
-    // enable_interrupts();
+    enable_interrupts();
     
     // simple_console();
 

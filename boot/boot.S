@@ -41,21 +41,16 @@ _start:
 // 此时CPU已经工作在EL1状态
 second_entry:
     // 查看当前异常等级
-    mrs x0, CurrentEL          // Read current exception level
-    lsr x0, x0, #2             // 右移两位
+    //mrs x0, CurrentEL          // Read current exception level
+    //lsr x0, x0, #2             // 右移两位
     
     // 设置栈指针
-    ldr x0, =_stack_top_second
     mov sp, x0
 
     msr daifset, #2   // 关闭所有中断
     
     // 使用 cpu0 的页表
     bl      enable_mmu
-
-    // 设置栈指针
-    ldr x0, =_stack_top_second
-    mov sp, x0
 
     adrp    x0, exception_vector_base
     add     x0, x0, :lo12:exception_vector_base
