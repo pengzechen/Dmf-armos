@@ -24,9 +24,12 @@ SECTIONS
         *(.data)
     }
 
+    . = ALIGN((1<<10));
+    __bss_start = .;
     .bss : {
         *(.bss)
     }
+    __bss_end = .;
 
     . = ALIGN((1 << 14));
     ept_L1 = .;
