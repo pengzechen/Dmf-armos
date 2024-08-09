@@ -33,6 +33,10 @@ void create_task(void (*task_func)(), void *stack_top)
     task_count++;
 }
 
+
+static cpu_sysregs_t initial_sysregs;
+extern void get_all_sysregs(cpu_sysregs_t *);
+
 void craete_vm(void (*task_func)())
 {
     if (task_count >= MAX_TASKS)
@@ -45,7 +49,11 @@ void craete_vm(void (*task_func)())
 
     task->cpu->ctx.elr = (uint64_t)task_func; // elr_el2
     task->cpu->ctx.spsr = SPSR_VALUE;         // spsr_el2
-    // task->cpu->sys_reg.spsr_el1 = 0x30C50830;
+    task->cpu->ctx.r[0] = (0x70000000);
+
+    // get_all_sysregs(&initial_sysregs);
+    // memcpy(&task->cpu->sys_reg, &initial_sysregs, sizeof(cpu_sysregs_t));
+    task->cpu->sys_reg.spsr_el1 = 0x30C50830;
 
     task->counter = 20;
     task_count++;

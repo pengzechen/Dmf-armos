@@ -21,6 +21,12 @@ SECTIONS
         *(.data.guset_bin)
         __guset_bin_end = .;
         . = ALIGN((1 << 10));
+
+        __guset_dtb_start = .;
+        *(.data.guest_dtb)
+        __guset_dtb_end = .;
+        . = ALIGN((1 << 10));
+
         *(.data)
     }
 

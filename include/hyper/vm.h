@@ -15,9 +15,6 @@ struct vm_t {
     struct vgic_t *vgic;
 };
 
-
-struct vgic_t *get_vgic();
-
 void vm_init();
 
 

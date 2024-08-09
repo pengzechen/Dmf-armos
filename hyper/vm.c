@@ -7,7 +7,7 @@
 // 每个核跑两个 vcpu， 共8个vcpu
 // 跑4个vm每个vm使用2个vcpu 或者 跑2个vm每个vm使用4个vcpu
 
-struct vgic_t _vgic[VM_NUM_MAX];
+
 static uint32_t _vgic_num = 0;
 vgic_core_state_t _state[VCPU_NUM_MAX];
 static uint32_t _state_num = 0;
@@ -33,12 +33,8 @@ void test_cntv_handler(uint64_t *sp)
 
 void vm_init()
 {
-    virtual_gic_register_int(&_vgic[0], 27, 27);
+    virtual_gic_register_int(get_vgic(0), 27, 27);
 
     irq_install(HV_TIMER_VECTOR, test_cntv_handler);
 }
 
-struct vgic_t *get_vgic()
-{
-    return &_vgic[0];
-}

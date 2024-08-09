@@ -21,6 +21,9 @@ test_guest:
   mov x9, #9
   mov x10, #10
 
+/* 目前这条指令会陷入 el2 异常 */
+  mrs	x3, ctr_el0
+
 /*
   hvc #0
   ldr x0, =0x50000000
@@ -42,7 +45,10 @@ test_guest:
 .section .data.guset_bin
   .incbin "../guest/nimbos/nimbos.bin"
   // .incbin "../guest/testos/build/kernel.bin"
+  // .incbin "../guest/linux/linux-aarch64.bin"
 
+.section .data.guest_dtb
+  .incbin "../guest/linux/linux-aarch64.dtb"
 
 .section .text 
 // 这个函数被 guest_entry 取代

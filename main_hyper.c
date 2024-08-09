@@ -64,6 +64,8 @@ static void guest_trap_init(void)
 
 extern void __guset_bin_start();
 extern void __guset_bin_end();
+extern void __guset_dtb_start();
+extern void __guset_dtb_end();
 
 void copy_guest(void)
 {
@@ -71,6 +73,17 @@ void copy_guest(void)
     unsigned long *from = (unsigned long*)__guset_bin_start;
     unsigned long *to = (unsigned long*)GUEST_KERNEL_START;
     printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
+        from,to,size,from[0], from[1]);
+    memcpy(to,from,size);
+    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+}
+
+void copy_dtb(void)
+{
+    size_t size = (size_t)(__guset_dtb_end - __guset_dtb_start);
+    unsigned long *from = (unsigned long*)__guset_dtb_start;
+    unsigned long *to = (unsigned long*)GUEST_DTB_START;
+    printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
         from,to,size,from[0], from[1]);
     memcpy(to,from,size);
     printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
@@ -103,6 +116,7 @@ void hyper_main()
     vtcr_init();
     guest_ept_init();
     guest_trap_init();
+    copy_dtb();
     copy_guest();
     mmio_map_gicd();
     vm_init();

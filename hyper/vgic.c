@@ -6,6 +6,7 @@
 #include <aj_types.h>
 #include <hyper/vm.h>
 #include <exception.h>
+#include <hyper/hyper_cfg.h>
 #include <io.h>
 
 #define HIGHEST_BIT_POSITION(x) \
@@ -17,6 +18,14 @@
         } \
         _i; \
     })
+
+static struct vgic_t _vgic[VM_NUM_MAX];
+static uint8_t _vgic_num;
+
+struct vgic_t *get_vgic(uint8_t id)
+{
+    return &_vgic[id];
+}
 
 // 建立 vint 和 pint 的映射关系
 void virtual_gic_register_int(struct vgic_t *vgic, uint32_t pintvec, uint32_t vintvec)
@@ -94,7 +103,7 @@ void vgicd_read(ept_violation_info_t *info, trap_frame_t *el2_ctx, void *paddr)
 // handle gicd emu
 void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 {
-    struct vgic_t *vgic = get_vgic();
+    struct vgic_t *vgic = get_vgic(0);
     paddr_t gpa = info->gpa;
     if (GICD_BASE_ADDR <= gpa && gpa <= (GICD_BASE_ADDR + 0x0010000))
     {
