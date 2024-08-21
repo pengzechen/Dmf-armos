@@ -21,6 +21,7 @@
 
 // trap related
 #define HCR_TACR (1 << 21)
+#define HCR_TSC  (1 << 19)
 #define HCR_TID3 (1 << 18)
 #define HCR_TID2 (1 << 17)
 #define HCR_TID1 (1 << 16)
@@ -37,11 +38,11 @@
 #define HCR_VM	 (1 << 0) // stage 2 translation enable
 
 #define HCR_VALUE_NO_ROUTE                                                 \
-	(HCR_TACR | HCR_TID3 | HCR_TID2 | HCR_TID1 | HCR_TWE | HCR_TWI |       \
+	(HCR_TACR | HCR_TID3 | HCR_TID1 | HCR_TWE | HCR_TWI |       \
 	 HCR_E2H | HCR_RW | HCR_TGE | HCR_SWIO | HCR_VM)
 
 #define HCR_VALUE_ROUTE                                                    \
-	(HCR_TACR | HCR_TID3 | HCR_TID2 | HCR_TID1 | HCR_TWE | HCR_TWI |       \
+	(HCR_TACR | HCR_TSC | HCR_TWE |    \
 	 HCR_E2H | HCR_RW | HCR_TGE | HCR_AMO | HCR_IMO | HCR_FMO | HCR_SWIO | HCR_VM)
 
 #define HCR_VALUE HCR_VALUE_ROUTE

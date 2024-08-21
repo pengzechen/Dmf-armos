@@ -27,6 +27,11 @@ SECTIONS
         __guset_dtb_end = .;
         . = ALIGN((1 << 10));
 
+        __guset_fs_start = .;
+        *(.data.guest_fs)
+        __guset_fs_end = .;
+        . = ALIGN((1 << 10));
+
         *(.data)
     }
 

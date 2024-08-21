@@ -20,21 +20,36 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
 
     int ec = ((el2_esr >> 26) & 0b111111);
 
-    // printf("        el2 esr: %x\n", el2_esr);
-    // printf("        ec: %x\n", ec);
+    printf("        el2 esr: %x, ec: %x\n", el2_esr, ec);
 
     union hsr hsr = { .bits = el2_esr };
     save_cpu_ctx(ctx_el2);
-
-    if (ec == 0x16)
+    if (ec == 0x1) {
+        // wfi
+        ept_violation_info_t info;
+        //printf("Prefetch abort : %x\n", hsr.bits);
+        info.hsr.bits = hsr.bits;
+        print_info("            This is wfi trap handler\n");
+        advance_pc(&info, ctx_el2);
+        return;
+    }
+    else if (ec == 0x16)
     { // hvc
         print_info("            This is hvc call handler\n");
         return;
     }
     else if (ec == 0x17)
     { // smc
+        ept_violation_info_t info;
+        //printf("Prefetch abort : %x\n", hsr.bits);
+        info.hsr.bits = hsr.bits;
         print_info("            This is smc call handler\n");
+        advance_pc(&info, ctx_el2);
         return;
+    }
+    else if (ec == 0x18)
+    {
+        print_info("            This is sys instr handler\n");
     }
     else if (ec == 0x24)
     { // data abort

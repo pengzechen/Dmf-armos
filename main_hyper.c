@@ -66,6 +66,8 @@ extern void __guset_bin_start();
 extern void __guset_bin_end();
 extern void __guset_dtb_start();
 extern void __guset_dtb_end();
+extern void __guset_fs_start();
+extern void __guset_fs_end();
 
 void copy_guest(void)
 {
@@ -84,6 +86,17 @@ void copy_dtb(void)
     unsigned long *from = (unsigned long*)__guset_dtb_start;
     unsigned long *to = (unsigned long*)GUEST_DTB_START;
     printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
+        from,to,size,from[0], from[1]);
+    memcpy(to,from,size);
+    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+}
+
+void copy_fs(void)
+{
+    size_t size = (size_t)(__guset_fs_end - __guset_fs_start);
+    unsigned long *from = (unsigned long*)__guset_fs_start;
+    unsigned long *to = (unsigned long*)GUEST_FS_START;
+    printf("Copy guest fs from %x to %x (%d bytes): 0x%x / 0x%x\n",
         from,to,size,from[0], from[1]);
     memcpy(to,from,size);
     printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
@@ -118,6 +131,7 @@ void hyper_main()
     guest_trap_init();
     copy_dtb();
     copy_guest();
+    copy_fs();
     mmio_map_gicd();
     vm_init();
 
