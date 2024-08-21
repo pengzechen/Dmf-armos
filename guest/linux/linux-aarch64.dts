@@ -381,7 +381,7 @@
 	};
 
 	chosen {
-		linux,initrd-end = <0x78736157>;
+		linux,initrd-end = <0x79309055>;   
 		linux,initrd-start = <0x78000000>;
 		bootargs = "root=/dev/vda rootfstype=ext4 rw console=ttyAMA0";
 		stdout-path = "/pl011@9000000";
