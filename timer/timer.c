@@ -47,6 +47,10 @@ void timer_init_second()
     }
 }
 
+void fake_console() {
+    print_info("fake console 33");
+}
+
 // 每个pe都要配置
 void timer_init()
 {
@@ -69,4 +73,6 @@ void timer_init()
         printf("timer enabled successfully ...\n");
     }
 
+
+    irq_install(33, fake_console);
 }

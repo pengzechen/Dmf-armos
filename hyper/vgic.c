@@ -124,7 +124,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 printf("gpa: %x, r: %x, len: %d, int id: %d\n", gpa, r, len, HIGHEST_BIT_POSITION(r));
                 
                 // 给它最高优先级
-                // gic_enable_int(HIGHEST_BIT_POSITION(r), 0);
+                gic_enable_int(HIGHEST_BIT_POSITION(r), 0);
                 print_info("      <<< gicd emu write GICD_ISENABLER(0)\n");
             }
             else if (GICD_ISENABLER(1) <= gpa && gpa < GICD_ICENABLER(0))
