@@ -98,7 +98,7 @@ void handle_irq_exception_el2(uint64_t *stack_pointer)
     int iar = gic_read_iar();
     int vector = gic_iar_irqnr(iar);
     gic_write_eoir(iar);
-    // gic_write_dir(iar);
+    gic_write_dir(iar);
 
     // printf("\nthis is handle irq el2\n");
 

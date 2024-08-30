@@ -129,6 +129,18 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
             }
             else if (GICD_ISENABLER(1) <= gpa && gpa < GICD_ICENABLER(0))
             {
+                int reg_num = info->hsr.dabt.reg;
+                // r = (uint64_t *)select_user_reg(reg_num);
+                // r = &vcpu.pctx->r[reg_num];
+                int r = el2_ctx->r[reg_num];
+                int len = 1 << (info->hsr.dabt.size & 0x00000003);
+                
+                int id = ( (gpa - GICD_ISENABLER(0)) / 0x4 ) * 32;
+                printf("gpa: %x, r: %x, len: %d, int id: %d\n", gpa, r, len, HIGHEST_BIT_POSITION(r) + id);
+                
+                // 给它最高优先级
+                gic_enable_int(HIGHEST_BIT_POSITION(r) + id, 0);
+
                 print_info("      <<< gicd emu write GICD_ISENABLER(i)\n");
             }
             /* ic enable reg*/

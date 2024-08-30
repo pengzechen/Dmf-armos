@@ -23,9 +23,9 @@ void handle_timer_interrupt(uint64_t *sp)
     timer_tick_schedule(sp);
     // schedule();
 
+    // 这里给其它的irq提高优先级
     gic_set_ipriority(6, 0xf0000000);
-    // printf("schedule ok...\n");
-    // }
+    // gic_set_ipriority(8, 0x0000f000);
 }
 
 void timer_init_second()
@@ -47,9 +47,6 @@ void timer_init_second()
     }
 }
 
-void fake_console() {
-    print_info("fake console 33");
-}
 
 // 每个pe都要配置
 void timer_init()
@@ -73,6 +70,4 @@ void timer_init()
         printf("timer enabled successfully ...\n");
     }
 
-
-    irq_install(33, fake_console);
 }
