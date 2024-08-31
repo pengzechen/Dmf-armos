@@ -31,7 +31,7 @@ void fake_console()
     // 降低优先级，host将收不到timer
     gic_set_ipriority(8, 0x0000f800);
 
-    printf("irq 33");
+    // printf("irq 33");
 
     gic_write_lr(0, mask);
 }

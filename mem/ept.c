@@ -200,7 +200,16 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 	{
 	}
 	*/
-	intc_handler(info, el2_ctx);
+	if (GICD_BASE_ADDR <= info->gpa && info->gpa <= (GICD_BASE_ADDR + 0x0010000)) {
+		intc_handler(info, el2_ctx);
+		return;
+	}
+	
+	if (GICC_BASE_ADDR <= info->gpa && info->gpa <= (GICC_BASE_ADDR + 0x0010000)) {
+		info->gpa = info->gpa + 0x30000;
+		handle_mmio(info, el2_ctx);
+		return;
+	}
 
 	/* Do not delete following code block */
 	/* A sample code for modifying EPT */
@@ -230,6 +239,7 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 int handle_mmio(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 {
 	paddr_t gpa = info->gpa;
+	printf("operation gpa: 0x%x\n", gpa);
 	// if (MMIO_ARREA <= gpa && gpa <= (MMIO_ARREA + 4096))
 	// {
 		if (info->hsr.dabt.write)

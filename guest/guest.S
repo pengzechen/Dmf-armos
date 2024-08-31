@@ -69,7 +69,7 @@ guest_start:
 
 
 .section .data.guset_bin
-  // .incbin "nimbos/nimbos.bin"
+  // .incbin "../guest/nimbos/nimbos.bin"
   // .incbin "testos/build/kernel.bin"
   .incbin "../guest/linux/linux-aarch64.bin"
 

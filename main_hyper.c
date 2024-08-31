@@ -119,6 +119,17 @@ void mmio_map_gicd()
     }
 }
 
+void mmio_map_gicc()
+{
+    for (int i = 0; i < 16; i++)
+    {
+        lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICC + 0x1000 * i); // 0800 0000 - 0801 0000  gicd
+        avr_entry->p2m.read = 0;
+        avr_entry->p2m.write = 0;
+        apply_ept(avr_entry);
+    }
+}
+
 void hyper_main()
 {
 
@@ -135,6 +146,7 @@ void hyper_main()
     copy_guest();
     copy_fs();
     mmio_map_gicd();
+    mmio_map_gicc();
     vm_init();
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
