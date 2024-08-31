@@ -38,7 +38,7 @@ void gicc_init()
     // 设置优先级 为 0xf8
     write32(0xff - 7, (void *)GICC_PMR);
     // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
-    write32(GICC_CTRL_ENABLE_GROUP0 | (1 << 9), (void *)GICC_CTLR);
+    write32(GICC_CTRL_ENABLE_GROUP0 , (void *)GICC_CTLR);
 }
 
 // gicd g0, g1  gicc,  gich enable
