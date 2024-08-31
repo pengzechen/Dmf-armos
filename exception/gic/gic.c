@@ -199,6 +199,14 @@ uint32_t gic_lr_read_vid(uint32_t lr_value)
     return lr_value & 0x1ff;
 }
 
+uint32_t gic_apr() {
+    return read32((void *)GICH_APR);
+}
+
+uint32_t gic_elsr0() {
+    return read32((void *)GICH_ELSR0);
+}
+
 void gic_write_lr(int n, uint32_t mask)
 {
     write32(mask, (void *)GICH_LR(n));

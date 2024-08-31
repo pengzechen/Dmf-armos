@@ -159,4 +159,7 @@ void gic_write_lr(int n, uint32_t mask);
 void gic_set_np_int(void);
 void gic_clear_np_int(void);
 
+uint32_t gic_apr();
+uint32_t gic_elsr0();
+
 #endif // __GIC_H__
