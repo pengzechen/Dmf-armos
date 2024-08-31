@@ -73,34 +73,34 @@ extern void __guset_fs_end();
 void copy_guest(void)
 {
     size_t size = (size_t)(__guset_bin_end - __guset_bin_start);
-    unsigned long *from = (unsigned long*)__guset_bin_start;
-    unsigned long *to = (unsigned long*)GUEST_KERNEL_START;
+    unsigned long *from = (unsigned long *)__guset_bin_start;
+    unsigned long *to = (unsigned long *)GUEST_KERNEL_START;
     printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
-        from,to,size,from[0], from[1]);
-    memcpy(to,from,size);
-    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+           from, to, size, from[0], from[1]);
+    memcpy(to, from, size);
+    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
 }
 
 void copy_dtb(void)
 {
     size_t size = (size_t)(__guset_dtb_end - __guset_dtb_start);
-    unsigned long *from = (unsigned long*)__guset_dtb_start;
-    unsigned long *to = (unsigned long*)GUEST_DTB_START;
+    unsigned long *from = (unsigned long *)__guset_dtb_start;
+    unsigned long *to = (unsigned long *)GUEST_DTB_START;
     printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
-        from,to,size,from[0], from[1]);
-    memcpy(to,from,size);
-    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+           from, to, size, from[0], from[1]);
+    memcpy(to, from, size);
+    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
 }
 
 void copy_fs(void)
 {
     size_t size = (size_t)(__guset_fs_end - __guset_fs_start);
-    unsigned long *from = (unsigned long*)__guset_fs_start;
-    unsigned long *to = (unsigned long*)GUEST_FS_START;
+    unsigned long *from = (unsigned long *)__guset_fs_start;
+    unsigned long *to = (unsigned long *)GUEST_FS_START;
     printf("Copy guest fs from %x to %x (%d bytes): 0x%x / 0x%x\n",
-        from,to,size,from[0], from[1]);
-    memcpy(to,from,size);
-    printf("Copy end : 0x%x / 0x%x\n",to[0], to[1]);
+           from, to, size, from[0], from[1]);
+    memcpy(to, from, size);
+    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
 }
 
 extern void test_guest();
@@ -108,10 +108,11 @@ extern void guest_start();
 
 extern size_t cacheline_bytes;
 
-
-void mmio_map_gicd() {
-    for (int i=0; i<16; i++) {
-        lpae_t * avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD + 0x1000 * i);  // 0800 0000 - 0801 0000  gicd 
+void mmio_map_gicd()
+{
+    for (int i = 0; i < 16; i++)
+    {
+        lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICD + 0x1000 * i); // 0800 0000 - 0801 0000  gicd
         avr_entry->p2m.read = 0;
         avr_entry->p2m.write = 0;
         apply_ept(avr_entry);

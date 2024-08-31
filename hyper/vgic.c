@@ -9,14 +9,15 @@
 #include <hyper/hyper_cfg.h>
 #include <io.h>
 
-#define HIGHEST_BIT_POSITION(x) \
-    ({ \
-        unsigned int _i = 0; \
+#define HIGHEST_BIT_POSITION(x)        \
+    ({                                 \
+        unsigned int _i = 0;           \
         unsigned long long _val = (x); \
-        while (_val >>= 1) { \
-            _i++; \
-        } \
-        _i; \
+        while (_val >>= 1)             \
+        {                              \
+            _i++;                      \
+        }                              \
+        _i;                            \
     })
 
 static struct vgic_t _vgic[VM_NUM_MAX];
@@ -111,7 +112,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
         { // 寄存器写到内存
             if (gpa == GICD_CTLR)
             {
-                print_info("      <<< gicd emu write GICD_CTLR\n");   
+                print_info("      <<< gicd emu write GICD_CTLR\n");
             }
             /*  is enable reg*/
             else if (gpa == GICD_ISENABLER(0))
@@ -122,7 +123,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 int r = el2_ctx->r[reg_num];
                 int len = 1 << (info->hsr.dabt.size & 0x00000003);
                 printf("gpa: %x, r: %x, len: %d, int id: %d\n", gpa, r, len, HIGHEST_BIT_POSITION(r));
-                
+
                 // 给它最高优先级
                 gic_enable_int(HIGHEST_BIT_POSITION(r), 0);
                 print_info("      <<< gicd emu write GICD_ISENABLER(0)\n");
@@ -134,10 +135,10 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 // r = &vcpu.pctx->r[reg_num];
                 int r = el2_ctx->r[reg_num];
                 int len = 1 << (info->hsr.dabt.size & 0x00000003);
-                
-                int id = ( (gpa - GICD_ISENABLER(0)) / 0x4 ) * 32;
+
+                int id = ((gpa - GICD_ISENABLER(0)) / 0x4) * 32;
                 printf("gpa: %x, r: %x, len: %d, int id: %d\n", gpa, r, len, HIGHEST_BIT_POSITION(r) + id);
-                
+
                 // 给它最高优先级
                 gic_enable_int(HIGHEST_BIT_POSITION(r) + id, 0);
 
@@ -190,7 +191,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 print_info("      <<< gicd emu write GICD_ITARGETSR(i)\n");
             }
             /* sgi reg*/
-            else if (gpa == GICD_SGIR)      // wo
+            else if (gpa == GICD_SGIR) // wo
             {
                 print_info("      <<< gicd emu write GICD_SGIR(i)\n");
             }
@@ -206,13 +207,13 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
             {
                 print_warn("      >>> gicd emu read GICD_CTLR\n");
             }
-            else if (gpa == GICD_TYPER)  // ro
+            else if (gpa == GICD_TYPER) // ro
             {
                 print_warn("      >>> gicd emu read GICD_TYPER\n");
             }
-            else if (gpa == GICD_IIDR)   // ro
+            else if (gpa == GICD_IIDR) // ro
             {
-                print_warn("      >>> gicd emu read GICD_IIDR\n");   
+                print_warn("      >>> gicd emu read GICD_IIDR\n");
             }
 
             /*  is enable reg*/
@@ -271,7 +272,7 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
                 print_warn("      >>> gicd emu read GICD_ITARGETSR(i)\n");
             }
         }
-        return ;
+        return;
     }
 
     print_info("emu gicd error\n");

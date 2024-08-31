@@ -56,7 +56,7 @@ void gic_virtual_init(void)
     // 允许所有优先级的中断
     write32(0xff - 7, (void *)GICC_PMR);
     // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
-    write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+    write32(GICC_CTRL_ENABLE|(1 << 9), (void *)GICC_CTLR);
 
     // bit [2] 当虚拟中断列表寄存器中没有条目时，会产生中断。
     write32((1 << 0), (void *)GICH_HCR);
