@@ -10,6 +10,7 @@
 #include "task.h"
 #include "aj_string.h"
 #include "hyper/vm.h"
+#include "os_cfg.h"
 
 static inline uint64_t read_sctlr_el2()
 {

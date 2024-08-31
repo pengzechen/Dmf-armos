@@ -45,17 +45,6 @@ mov x10, #10
 */
   b .  // el1
 
-.section .data.guset_bin
-  // .incbin "../guest/nimbos/nimbos.bin"
-  // .incbin "../guest/testos/build/kernel.bin"
-  .incbin "../guest/linux/linux-aarch64.bin"
-
-.section .data.guest_dtb
-  .incbin "../guest/linux/linux-aarch64.dtb"
-
-.section .data.guest_fs
-  .incbin "../guest/linux/initrd.gz"
-
 
 .section .text 
 // 这个函数被 guest_entry 取代
@@ -77,3 +66,15 @@ guest_start:
 
   mov x0, #0x0
   eret
+
+
+.section .data.guset_bin
+  // .incbin "../guest/nimbos/nimbos.bin"
+  // .incbin "../guest/testos/build/kernel.bin"
+  .incbin "../guest/linux/linux-aarch64.bin"
+
+.section .data.guest_dtb
+  .incbin "../guest/linux/linux-aarch64.dtb"
+
+.section .data.guest_fs
+  .incbin "../guest/linux/initrd.gz"

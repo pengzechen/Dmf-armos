@@ -110,17 +110,20 @@ $(BUILD_DIR)/vcpu.o: hyper/vcpu.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/vcpu.c $(INCLUDE) -o $(BUILD_DIR)/vcpu.o
 $(BUILD_DIR)/hyper_ctx.s.o: hyper/hyper_ctx.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper_ctx.S $(INCLUDE) -o $(BUILD_DIR)/hyper_ctx.s.o
-$(BUILD_DIR)/hyper.s.o: hyper/hyper.S
-	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/hyper.S $(INCLUDE) -o $(BUILD_DIR)/hyper.s.o
 $(BUILD_DIR)/vgic.o: hyper/vgic.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/vgic.c $(INCLUDE) -o $(BUILD_DIR)/vgic.o
 $(BUILD_DIR)/vm.o: hyper/vm.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) hyper/vm.c $(INCLUDE) -o $(BUILD_DIR)/vm.o
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/hyper.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/uart_pl011_early.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o
+#  guest
+$(BUILD_DIR)/guest.s.o: guest/guest.S
+	$(TOOL_PREFIX)gcc $(CFLAGS) guest/guest.S $(INCLUDE) -o $(BUILD_DIR)/guest.s.o
+
+
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/guest.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/uart_pl011_early.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o
 	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
-	$(BUILD_DIR)/hyper.s.o          \
+	$(BUILD_DIR)/guest.s.o          \
 	$(BUILD_DIR)/main.o 			\
 	$(BUILD_DIR)/smp.o              \
 	$(BUILD_DIR)/main_hyper.o 		\
