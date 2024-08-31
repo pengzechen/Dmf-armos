@@ -141,6 +141,7 @@ void gic_write_eoir(uint32_t irqstat);
 void gic_write_dir(uint32_t irqstat);
 void gic_ipi_send_single(int irq, int cpu);
 void gic_enable_int(int vector, int enable);
+void gic_disable_int(int vector);
 int gic_get_enable(int vector);
 uint32_t cpu_num();
 

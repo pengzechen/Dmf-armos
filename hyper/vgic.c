@@ -278,3 +278,44 @@ void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 
     print_info("emu gicd error\n");
 }
+
+// vgic inject
+void vgic_inject(uint32_t vector)
+{
+
+    // printf("vgic inject vector: %d\n", vector);
+    uint32_t mask = gic_make_virtual_hardware_interrupt(vector, vector, 0, 0);
+
+    
+    // 降低优先级，host将收不到timer
+    gic_set_ipriority(6, 0xf8000000);
+    gic_set_ipriority(8, 0x0000f800);
+
+    // uint32_t is_empty = gic_elsr0();
+    // uint32_t is_active = gic_apr();
+    // uint32_t pri = gic_lr_read_pri(mask);
+    // uint32_t irq_no = gic_lr_read_vid(mask);
+
+    // printf("is_empty: 0x%x, is_active: 0x%x, pri: 0x%x, irq_no: %d\n", is_empty, is_active, pri, irq_no);
+
+    // for(int i=0;i<GICH_LR_NUM;i++){
+    //     if(is_empty&(1 << i)){
+    //         gic_write_lr(i, mask);
+    //         return;
+    //     }
+    //     uint32_t prev_lr  = gic_read_lr(i);
+    //     uint8_t prev_pri = gic_lr_read_pri(prev_lr);
+
+    //     if(prev_pri > pri){
+    //         gic_write_lr(i, mask);
+    //         mask = prev_lr;
+    //         pri = prev_pri;
+    //         printf("!!! premeption !!!\n");
+    //     }
+    // }
+    gic_write_lr(0, mask);
+
+
+    // gic_disable_int(27);
+    // gic_set_np_int();
+}

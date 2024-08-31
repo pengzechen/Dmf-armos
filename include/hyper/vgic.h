@@ -54,6 +54,8 @@ void v_timer_handler();
 
 void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx);
 
+void vgic_inject(uint32_t vector);
+
 struct vgic_t *get_vgic(uint8_t);
 
 #endif // __VGIC_H__

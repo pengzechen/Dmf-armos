@@ -20,7 +20,7 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
 
     int ec = ((el2_esr >> 26) & 0b111111);
 
-    printf("        el2 esr: %x, ec: %x\n", el2_esr, ec);
+    // printf("        el2 esr: %x, ec: %x\n", el2_esr, ec);
 
     union hsr hsr = { .bits = el2_esr };
     save_cpu_ctx(ctx_el2);

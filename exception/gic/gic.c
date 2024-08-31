@@ -122,7 +122,7 @@ void gic_enable_int(int vector, int pri)
 }
 
 // disables the given interrupt.
-void gic_disable_int(int vector, int pri)
+void gic_disable_int(int vector)
 {
     int reg = vector >> 5;                     //  vec / 32
     int mask = 1 << (vector & ((1 << 5) - 1)); //  vec % 32
@@ -212,11 +212,13 @@ void gic_write_lr(int n, uint32_t mask)
     write32(mask, (void *)GICH_LR(n));
 }
 
+// 启用非优先级中断，这种中断允许在虚拟化环境下处理一些低优先级的中断。
 void gic_set_np_int(void)
 {
     write32(read32((void *)GICH_HCR) | (1 << 3), (void *)GICH_HCR);
 }
 
+// 禁用非优先级中断，确保虚拟机只处理优先级较高的中断。
 void gic_clear_np_int(void)
 {
     write32(read32((void *)GICH_HCR) & ~(1 << 3), (void *)GICH_HCR);

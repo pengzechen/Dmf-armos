@@ -25,7 +25,7 @@ void handle_timer_interrupt(uint64_t *sp)
 
     // 这里给其它的irq提高优先级
     gic_set_ipriority(6, 0xf0000000);
-    // gic_set_ipriority(8, 0x0000f000);
+    gic_set_ipriority(8, 0x0000f000);
 }
 
 void timer_init_second()
