@@ -6,7 +6,7 @@ aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 smp.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/smp.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 main_hyper.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/main_hyper.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 boot/boot.S -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/boot.s.o
-aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 hyper/hyper.S -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/hyper.s.o
+aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 guest/guest.S -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/guest.s.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 exception/exception.S -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/exception.s.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 exception/exception.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/exception.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 io/io.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/io.o
@@ -30,17 +30,9 @@ aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 hyper/hyper_ctx.S -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/hyper_ctx.s.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 hyper/vgic.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/vgic.o
 aarch64-linux-musl-gcc -g -c -O0 -fno-pie  -mgeneral-regs-only -fno-builtin-getc -fno-builtin-putc -fno-builtin-vsnprintf -fno-builtin-snprintf -fno-builtin-printf -DSMP_NUM=1 hyper/vm.c -I ./include -I /home/ajax/rust/usb/first_state/aarch64-linux-musl-cross/aarch64-linux-musl/include -o build/vm.o
-hyper/vm.c: In function ‘fake_console’:
-hyper/vm.c:34:5: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
-   34 |     printf("irq 33");
-      |     ^~~~~~
-hyper/vm.c:4:1: note: ‘printf’ is defined in header ‘<stdio.h>’; did you forget to ‘#include <stdio.h>’?
-    3 | #include <hyper/hyper_cfg.h>
-  +++ |+#include <stdio.h>
-    4 | #include <aj_types.h>
 aarch64-linux-musl-ld -T link.lds -o build/kernel.elf \
 build/boot.s.o                  \
-build/hyper.s.o          \
+build/guest.s.o          \
 build/main.o                    \
 build/smp.o              \
 build/main_hyper.o              \
@@ -140,253 +132,137 @@ core 0 current task 0
 id: 0, elr: 0x40080178
 id: 1, elr: 0x70200000
 
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 9382000f, ec: 24
       >>> gicd emu read GICD_TYPER
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_CTLR
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 9384004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 939f004f, ec: 24
       <<< gicd emu write GICD_ICFGR(i)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9385004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(spi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICPENDER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICENABLER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICPENDER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICENABLER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICPENDER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICENABLER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICPENDER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICENABLER(i)
-        el2 esr: 9380004f, ec: 24
       <<< gicd emu write GICD_CTLR
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICPENDER(i)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_ICENABLER(0)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9386004f, ec: 24
       <<< gicd emu write GICD_IPRIORITYR(sgi-ppi)
-        el2 esr: 9381004f, ec: 24
+# unsupported access
+gpa: 0x8010000
 gpa: 8000100, r: 1, len: 4, int id: 0
 set enable: reg: 0, mask: 0x1
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 2, len: 4, int id: 1
 set enable: reg: 0, mask: 0x2
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 4, len: 4, int id: 2
 set enable: reg: 0, mask: 0x4
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 8, len: 4, int id: 3
 set enable: reg: 0, mask: 0x8
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 10, len: 4, int id: 4
 set enable: reg: 0, mask: 0x10
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 20, len: 4, int id: 5
 set enable: reg: 0, mask: 0x20
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 40, len: 4, int id: 6
 set enable: reg: 0, mask: 0x40
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9381004f, ec: 24
 gpa: 8000100, r: 8000000, len: 4, int id: 27
 set enable: reg: 0, mask: 0x8000000
       <<< gicd emu write GICD_ISENABLER(0)
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
-        el2 esr: 5e000000, ec: 17
             This is smc call handler
 [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd083]
 [    0.000000] Linux version 6.2.15 (ajax@ajax-X99) (aarch64-linux-musl-gcc (GCC) 11.2.1 20211120, GNU ld (GNU Binutils) 2.37) #6 SMP PREEMPT Fri Aug 30 22:06:21 CST 2024
@@ -441,833 +317,263 @@ set enable: reg: 0, mask: 0x8000000
 [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
 [    0.000000] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
 [    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
-[    0.000095] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
-[    0.007329] Console: colour dummy device 80x25
-[    0.009997] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
-[    0.010169] pid_max: default: 32768 minimum: 301
-[    0.011621] LSM: initializing lsm=capability,integrity
-[    0.014618] Mount-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
-[    0.014699] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
-[    0.083443] cacheinfo: Unable to detect cache hierarchy for CPU 0
-[    0.127104] cblist_init_generic: Setting adjustable number of callback queues.
-[    0.127267] cblist_init_generic: Setting shift to 0 and lim to 1.
-[    0.128014] cblist_init_generic: Setting shift to 0 and lim to 1.
-[    0.130612] rcu: Hierarchical SRCU implementation.
-[    0.130674] rcu:     Max phase no-delay instances is 1000.
-[    0.136068] EFI services will not be available.
-[    0.137024] smp: Bringing up secondary CPUs ...
-[    0.137222] smp: Brought up 1 node, 1 CPU
-[    0.137281] SMP: Total of 1 processors activated.
-[    0.137416] CPU features: detected: 32-bit EL0 Support
-[    0.137453] CPU features: detected: 32-bit EL1 Support
-[    0.137529] CPU features: detected: CRC32 instructions
-[    0.141199] CPU: All CPU(s) started at EL1
-[    0.141447] alternatives: applying system-wide alternatives
-[    0.193674] devtmpfs: initialized
-[    0.210547] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
-[    0.210907] futex hash table entries: 256 (order: 2, 16384 bytes, linear)
-[    0.216348] pinctrl core: initialized pinctrl subsystem
-[    0.264750] DMI not present or invalid.
-[    0.274687] NET: Registered PF_NETLINK/PF_ROUTE protocol family
-[    0.287926] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
-[    0.288678] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
-[    0.288949] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
-[    0.289294] audit: initializing netlink subsys (disabled)
-[    0.333936] thermal_sys: Registered thermal governor 'step_wise'
-[    0.333995] thermal_sys: Registered thermal governor 'power_allocator'
-[    0.335072] audit: type=2000 audit(0.000:1): state=initialized audit_enabled=0 res=1
-[    0.335497] cpuidle: using governor menu
-[    0.337337] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
-[    0.338115] ASID allocator initialised with 65536 entries
-[    0.347659] Serial: AMBA PL011 UART driver
-[    0.478394] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
-[    0.479750] printk: console [ttyAMA0] enabled
-[    0.554527] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
-[    0.554834] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
-[    0.555247] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
-[    0.555526] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
-[    0.555757] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
-[    0.555983] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
-[    0.556200] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
-[    0.556452] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
-[    0.603464] ACPI: Interpreter disabled.
-[    0.613251] iommu: Default domain type: Translated 
-[    0.613621] iommu: DMA domain TLB invalidation policy: strict mode 
-[    0.615983] SCSI subsystem initialized
-[    0.619323] usbcore: registered new interface driver usbfs
-[    0.619828] usbcore: registered new interface driver hub
-[    0.620181] usbcore: registered new device driver usb
-[    0.623934] pps_core: LinuxPPS API ver. 1 registered
-[    0.624145] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
-[    0.624665] PTP clock support registered
-[    0.625860] EDAC MC: Ver: 3.0.0
-[    0.635001] FPGA manager framework
-[    0.670400] Advanced Linux Sound Architecture Driver Initialized.
-[    0.683223] vgaarb: loaded
-[    0.687503] clocksource: Switched to clocksource arch_sys_counter
-[    0.689615] VFS: Disk quotas dquot_6.6.0
-[    0.689930] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-[    0.692260] pnp: PnP ACPI: disabled
-[    0.755481] NET: Registered PF_INET protocol family
-[    0.758031] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
-[    0.763398] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
-[    0.764128] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
-[    0.764640] TCP established hash table entries: 2048 (order: 2, 16384 bytes, linear)
-[    0.765129] TCP bind hash table entries: 2048 (order: 4, 65536 bytes, linear)
-[    0.765587] TCP: Hash tables configured (established 2048 bind 2048)
-[    0.767259] UDP hash table entries: 256 (order: 1, 8192 bytes, linear)
-[    0.767993] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes, linear)
-[    0.769986] NET: Registered PF_UNIX/PF_LOCAL protocol family
-[    0.808881] RPC: Registered named UNIX socket transport module.
-[    0.809160] RPC: Registered udp transport module.
-[    0.809356] RPC: Registered tcp transport module.
-[    0.809524] RPC: Registered tcp NFSv4.1 backchannel transport module.
-[    0.809875] PCI: CLS 0 bytes, default 64
-[    0.816243] Unpacking initramfs...
-[    1.165760] Freeing initrd memory: 7384K
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9380000f, ec: 24
-        el2 esr: 9381004f, ec: 24
+[    0.000094] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.011582] Console: colour dummy device 80x25
+[    0.014571] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
+[    0.014823] pid_max: default: 32768 minimum: 301
+[    0.016134] LSM: initializing lsm=capability,integrity
+[    0.019585] Mount-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.019653] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.126685] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.136720] cblist_init_generic: Setting adjustable number of callback queues.
+[    0.136884] cblist_init_generic: Setting shift to 0 and lim to 1.
+[    0.137967] cblist_init_generic: Setting shift to 0 and lim to 1.
+[    0.141063] rcu: Hierarchical SRCU implementation.
+[    0.141125] rcu:     Max phase no-delay instances is 1000.
+[    0.148445] EFI services will not be available.
+[    0.150157] smp: Bringing up secondary CPUs ...
+[    0.150288] smp: Brought up 1 node, 1 CPU
+[    0.150328] SMP: Total of 1 processors activated.
+[    0.150435] CPU features: detected: 32-bit EL0 Support
+[    0.151703] CPU features: detected: 32-bit EL1 Support
+[    0.151797] CPU features: detected: CRC32 instructions
+[    0.154614] CPU: All CPU(s) started at EL1
+[    0.155099] alternatives: applying system-wide alternatives
+[    0.207890] devtmpfs: initialized
+[    0.226151] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.261606] futex hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    0.267508] pinctrl core: initialized pinctrl subsystem
+[    0.282308] DMI not present or invalid.
+[    0.292801] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.341249] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[    0.342763] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.343081] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.343464] audit: initializing netlink subsys (disabled)
+[    0.350984] audit: type=2000 audit(0.160:1): state=initialized audit_enabled=0 res=1
+[    0.355036] thermal_sys: Registered thermal governor 'step_wise'
+[    0.355095] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.355763] cpuidle: using governor menu
+[    0.357606] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.358274] ASID allocator initialised with 65536 entries
+[    0.402873] Serial: AMBA PL011 UART driver
+[    0.537758] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+[    0.539127] printk: console [ttyAMA0] enabled
+[    0.618282] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.618622] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.618881] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.619610] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.619880] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.620105] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.620343] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.620581] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.634882] ACPI: Interpreter disabled.
+[    0.679381] iommu: Default domain type: Translated 
+[    0.679673] iommu: DMA domain TLB invalidation policy: strict mode 
+[    0.681808] SCSI subsystem initialized
+[    0.685553] usbcore: registered new interface driver usbfs
+[    0.686158] usbcore: registered new interface driver hub
+[    0.686604] usbcore: registered new device driver usb
+[    0.690954] pps_core: LinuxPPS API ver. 1 registered
+[    0.691215] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.692058] PTP clock support registered
+[    0.693387] EDAC MC: Ver: 3.0.0
+[    0.703610] FPGA manager framework
+[    0.739449] Advanced Linux Sound Architecture Driver Initialized.
+[    0.753103] vgaarb: loaded
+[    0.757848] clocksource: Switched to clocksource arch_sys_counter
+[    0.759908] VFS: Disk quotas dquot_6.6.0
+[    0.762602] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.764909] pnp: PnP ACPI: disabled
+[    0.831710] NET: Registered PF_INET protocol family
+[    0.834347] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.876696] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.877430] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.878289] TCP established hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[    0.878833] TCP bind hash table entries: 2048 (order: 4, 65536 bytes, linear)
+[    0.879293] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.881026] UDP hash table entries: 256 (order: 1, 8192 bytes, linear)
+[    0.882174] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes, linear)
+[    0.884129] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.888997] RPC: Registered named UNIX socket transport module.
+[    0.889327] RPC: Registered udp transport module.
+[    0.889512] RPC: Registered tcp transport module.
+[    0.890630] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.891069] PCI: CLS 0 bytes, default 64
+[    0.897547] Unpacking initramfs...
 gpa: 8000100, r: 800000, len: 4, int id: 23
 set enable: reg: 0, mask: 0x800000
       <<< gicd emu write GICD_ISENABLER(0)
-[    1.172239] hw perfevents: enabled with armv8_pmuv3 PMU driver, 5 counters available
-[    1.173503] kvm [1]: HYP mode not available
-[    1.179512] Initialise system trusted keyrings
-[    1.182240] workingset: timestamp_bits=42 max_order=16 bucket_order=0
-[    1.219575] squashfs: version 4.0 (2009/01/31) Phillip Lougher
-[    1.222870] NFS: Registering the id_resolver key type
-[    1.223629] Key type id_resolver registered
-[    1.223862] Key type id_legacy registered
-[    1.224690] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
-[    1.225040] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
-[    1.226673] 9p: Installing v9fs 9p2000 file system support
-[    1.294125] Key type asymmetric registered
-[    1.294398] Asymmetric key parser 'x509' registered
-[    1.295053] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
-[    1.295470] io scheduler mq-deadline registered
-[    1.295896] io scheduler kyber registered
-        el2 esr: 9380000f, ec: 24
+[    0.907586] hw perfevents: enabled with armv8_pmuv3 PMU driver, 5 counters available
+[    0.908657] kvm [1]: HYP mode not available
+[    1.017288] Initialise system trusted keyrings
+[    1.020672] workingset: timestamp_bits=42 max_order=16 bucket_order=0
+[    1.024398] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    1.028059] NFS: Registering the id_resolver key type
+[    1.028850] Key type id_resolver registered
+[    1.029083] Key type id_legacy registered
+[    1.030777] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    1.031232] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[    1.032761] 9p: Installing v9fs 9p2000 file system support
+[    1.170602] Key type asymmetric registered
+[    1.170869] Asymmetric key parser 'x509' registered
+[    1.171699] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+[    1.172107] io scheduler mq-deadline registered
+[    1.172366] io scheduler kyber registered
       >>> gicd emu read GICD_ICFGR(i)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000104, r: 80, len: 4, int id: 39
 set enable: reg: 1, mask: 0x80
       <<< gicd emu write GICD_ISENABLER(i)
-        el2 esr: 9300004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-[    1.374917] pl061_gpio 9030000.pl061: PL061 GPIO chip registered
-[    1.386054] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
-[    1.387253] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
-[    1.422332] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
-[    1.422754] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
-[    1.423776] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
-[    1.424783] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
-[    1.427098] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
-[    1.427682] pci_bus 0000:00: root bus resource [bus 00-ff]
-[    1.427943] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
-[    1.428235] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
-[    1.428491] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.432472] pci 0000:00:01.0: [8000:0000] type 0e class 0x000080
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.434040] pci 0000:00:01.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.435821] pci 0000:00:02.0: [0000:0001] type 0e class 0x000100
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.437022] pci 0000:00:02.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.438705] pci 0000:00:03.0: [8000:0001] type 0e class 0x000180
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.439937] pci 0000:00:03.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.441539] pci 0000:00:04.0: [0000:0002] type 0e class 0x000200
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.442665] pci 0000:00:04.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.444270] pci 0000:00:05.0: [8000:0002] type 0e class 0x000280
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.445527] pci 0000:00:05.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.447101] pci 0000:00:06.0: [0000:0003] type 0e class 0x000300
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.448336] pci 0000:00:06.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.449935] pci 0000:00:07.0: [8000:0003] type 0e class 0x000380
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.451202] pci 0000:00:07.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.452844] pci 0000:00:08.0: [0000:0004] type 0e class 0x000400
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.454057] pci 0000:00:08.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.455729] pci 0000:00:09.0: [8000:0004] type 0e class 0x000480
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.457091] pci 0000:00:09.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.492760] pci 0000:00:0a.0: [0000:0005] type 0e class 0x000500
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.493996] pci 0000:00:0a.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.495589] pci 0000:00:0b.0: [8000:0005] type 0e class 0x000580
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.496818] pci 0000:00:0b.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.498409] pci 0000:00:0c.0: [0000:0006] type 0e class 0x000600
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.499558] pci 0000:00:0c.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.501156] pci 0000:00:0d.0: [8000:0006] type 0e class 0x000680
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.502342] pci 0000:00:0d.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.503972] pci 0000:00:0e.0: [0000:0007] type 0e class 0x000700
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.505091] pci 0000:00:0e.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.506769] pci 0000:00:0f.0: [8000:0007] type 0e class 0x000780
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.507928] pci 0000:00:0f.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.509559] pci 0000:00:10.0: [0000:0008] type 0e class 0x000800
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.510789] pci 0000:00:10.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.512281] pci 0000:00:11.0: [8000:0008] type 0e class 0x000880
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.513584] pci 0000:00:11.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.515236] pci 0000:00:12.0: [0000:0009] type 0e class 0x000900
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.516493] pci 0000:00:12.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.518094] pci 0000:00:13.0: [8000:0009] type 0e class 0x000980
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.519219] pci 0000:00:13.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.520895] pci 0000:00:14.0: [0000:000a] type 0e class 0x000a00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.522130] pci 0000:00:14.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.523792] pci 0000:00:15.0: [8000:000a] type 0e class 0x000a80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.525030] pci 0000:00:15.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.526545] pci 0000:00:16.0: [0000:000b] type 0e class 0x000b00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.561841] pci 0000:00:16.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.563474] pci 0000:00:17.0: [8000:000b] type 0e class 0x000b80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.564762] pci 0000:00:17.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.566367] pci 0000:00:18.0: [0000:000c] type 0e class 0x000c00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.567558] pci 0000:00:18.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.569175] pci 0000:00:19.0: [8000:000c] type 0e class 0x000c80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.570415] pci 0000:00:19.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.572028] pci 0000:00:1a.0: [0000:000d] type 0e class 0x000d00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.573168] pci 0000:00:1a.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.574859] pci 0000:00:1b.0: [8000:000d] type 0e class 0x000d80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.576052] pci 0000:00:1b.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.577744] pci 0000:00:1c.0: [0000:000e] type 0e class 0x000e00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.578965] pci 0000:00:1c.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.580497] pci 0000:00:1d.0: [8000:000e] type 0e class 0x000e80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.581772] pci 0000:00:1d.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.583428] pci 0000:00:1e.0: [0000:000f] type 0e class 0x000f00
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.584662] pci 0000:00:1e.0: unknown header type 0e, ignoring device
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93000004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93810004, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-[    1.586259] pci 0000:00:1f.0: [8000:000f] type 0e class 0x000f80
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-        el2 esr: 93400004, ec: 24
-emu gicd error
-        el2 esr: 93440044, ec: 24
-emu gicd error
-[    1.587460] pci 0000:00:1f.0: unknown header type 0e, ignoring device
-[    1.633223] EINJ: ACPI disabled.
-[    1.839727] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-[    1.853388] SuperH (H)SCI(F) driver initialized
-[    1.855981] msm_serial: driver initialized
-[    1.864419] cacheinfo: Unable to detect cache hierarchy for CPU 0
-[    1.925669] loop: module loaded
-[    1.930212] megasas: 07.719.03.00-rc1
-[    1.975371] physmap-flash 0.flash: physmap platform flash device: [mem 0x00000000-0x03ffffff]
-[    1.977469] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
-[    1.978393] Intel/Sharp Extended Query Table at 0x0031
-[    1.979676] Using buffer write method
-[    1.980718] physmap-flash 0.flash: physmap platform flash device: [mem 0x04000000-0x07ffffff]
-[    1.981672] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
-[    1.982273] Intel/Sharp Extended Query Table at 0x0031
-[    1.983074] Using buffer write method
-[    1.983434] Concatenating MTD devices:
-[    1.983605] (0): "0.flash"
-[    1.983830] (1): "0.flash"
-[    1.983999] into device "0.flash"
-[    2.139863] tun: Universal TUN/TAP device driver, 1.6
-[    2.144175] thunder_xcv, ver 1.0
-[    2.144522] thunder_bgx, ver 1.0
-[    2.178882] nicpf, ver 1.0
-[    2.185041] hns3: Hisilicon Ethernet Network Driver for Hip08 Family - version
-[    2.185308] hns3: Copyright (c) 2017 Huawei Corporation.
-[    2.186190] hclge is initializing
-[    2.186562] e1000: Intel(R) PRO/1000 Network Driver
-[    2.186775] e1000: Copyright (c) 1999-2006 Intel Corporation.
-[    2.187148] e1000e: Intel(R) PRO/1000 Network Driver
-[    2.187474] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-[    2.188027] igb: Intel(R) Gigabit Ethernet Network Driver
-[    2.188251] igb: Copyright (c) 2007-2014 Intel Corporation.
-[    2.188606] igbvf: Intel(R) Gigabit Virtual Function Network Driver
-[    2.188839] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
-[    2.190796] sky2: driver version 1.30
-[    2.197176] VFIO - User Level meta-driver version: 0.3
-[    2.211751] usbcore: registered new interface driver usb-storage
-[    2.262378] rtc-pl031 9010000.pl031: registered as rtc0
-[    2.263344] rtc-pl031 9010000.pl031: setting system clock to 2024-08-30T15:34:02 UTC (1725032042)
-        el2 esr: 9380000f, ec: 24
+[    1.427451] pl061_gpio 9030000.pl061: PL061 GPIO chip registered
+[    1.439927] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+[    1.441292] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+[    1.442804] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+[    1.443278] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+[    1.444391] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+[    1.445460] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+[    1.448314] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+[    1.449020] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    1.449413] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+[    1.450129] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+[    1.450620] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+[    1.453245] pci 0000:00:01.0: [8000:0000] type 0e class 0x000080
+[    1.556362] pci 0000:00:01.0: unknown header type 0e, ignoring device
+[    1.557170] pci 0000:00:02.0: [0000:0001] type 0e class 0x000100
+[    1.558078] pci 0000:00:02.0: unknown header type 0e, ignoring device
+[    1.558786] pci 0000:00:03.0: [8000:0001] type 0e class 0x000180
+[    1.559311] pci 0000:00:03.0: unknown header type 0e, ignoring device
+[    1.559965] pci 0000:00:04.0: [0000:0002] type 0e class 0x000200
+[    1.560413] pci 0000:00:04.0: unknown header type 0e, ignoring device
+[    1.561121] pci 0000:00:05.0: [8000:0002] type 0e class 0x000280
+[    1.561565] pci 0000:00:05.0: unknown header type 0e, ignoring device
+[    1.562741] pci 0000:00:06.0: [0000:0003] type 0e class 0x000300
+[    1.563186] pci 0000:00:06.0: unknown header type 0e, ignoring device
+[    1.563843] pci 0000:00:07.0: [8000:0003] type 0e class 0x000380
+[    1.564342] pci 0000:00:07.0: unknown header type 0e, ignoring device
+[    1.564991] pci 0000:00:08.0: [0000:0004] type 0e class 0x000400
+[    1.565440] pci 0000:00:08.0: unknown header type 0e, ignoring device
+[    1.566695] pci 0000:00:09.0: [8000:0004] type 0e class 0x000480
+[    1.567110] pci 0000:00:09.0: unknown header type 0e, ignoring device
+[    1.567868] pci 0000:00:0a.0: [0000:0005] type 0e class 0x000500
+[    1.568337] pci 0000:00:0a.0: unknown header type 0e, ignoring device
+[    1.569000] pci 0000:00:0b.0: [8000:0005] type 0e class 0x000580
+[    1.569575] pci 0000:00:0b.0: unknown header type 0e, ignoring device
+[    1.570646] pci 0000:00:0c.0: [0000:0006] type 0e class 0x000600
+[    1.571119] pci 0000:00:0c.0: unknown header type 0e, ignoring device
+[    1.571812] pci 0000:00:0d.0: [8000:0006] type 0e class 0x000680
+[    1.572260] pci 0000:00:0d.0: unknown header type 0e, ignoring device
+[    1.572954] pci 0000:00:0e.0: [0000:0007] type 0e class 0x000700
+[    1.573411] pci 0000:00:0e.0: unknown header type 0e, ignoring device
+[    1.574602] pci 0000:00:0f.0: [8000:0007] type 0e class 0x000780
+[    1.575043] pci 0000:00:0f.0: unknown header type 0e, ignoring device
+[    1.575721] pci 0000:00:10.0: [0000:0008] type 0e class 0x000800
+[    1.576234] pci 0000:00:10.0: unknown header type 0e, ignoring device
+[    1.576880] pci 0000:00:11.0: [8000:0008] type 0e class 0x000880
+[    1.577329] pci 0000:00:11.0: unknown header type 0e, ignoring device
+[    1.578600] pci 0000:00:12.0: [0000:0009] type 0e class 0x000900
+[    1.579018] pci 0000:00:12.0: unknown header type 0e, ignoring device
+[    1.579776] pci 0000:00:13.0: [8000:0009] type 0e class 0x000980
+[    1.580220] pci 0000:00:13.0: unknown header type 0e, ignoring device
+[    1.580872] pci 0000:00:14.0: [0000:000a] type 0e class 0x000a00
+[    1.581372] pci 0000:00:14.0: unknown header type 0e, ignoring device
+[    1.582394] pci 0000:00:15.0: [8000:000a] type 0e class 0x000a80
+[    1.582834] pci 0000:00:15.0: unknown header type 0e, ignoring device
+[    1.583624] pci 0000:00:16.0: [0000:000b] type 0e class 0x000b00
+[    1.584057] pci 0000:00:16.0: unknown header type 0e, ignoring device
+[    1.584718] pci 0000:00:17.0: [8000:000b] type 0e class 0x000b80
+[    1.585276] pci 0000:00:17.0: unknown header type 0e, ignoring device
+[    1.586297] pci 0000:00:18.0: [0000:000c] type 0e class 0x000c00
+[    1.586835] pci 0000:00:18.0: unknown header type 0e, ignoring device
+[    1.587515] pci 0000:00:19.0: [8000:000c] type 0e class 0x000c80
+[    1.587963] pci 0000:00:19.0: unknown header type 0e, ignoring device
+[    1.588762] pci 0000:00:1a.0: [0000:000d] type 0e class 0x000d00
+[    1.589183] pci 0000:00:1a.0: unknown header type 0e, ignoring device
+[    1.696860] Freeing initrd memory: 7384K
+[    1.697969] pci 0000:00:1b.0: [8000:000d] type 0e class 0x000d80
+[    1.698418] pci 0000:00:1b.0: unknown header type 0e, ignoring device
+[    1.699189] pci 0000:00:1c.0: [0000:000e] type 0e class 0x000e00
+[    1.699761] pci 0000:00:1c.0: unknown header type 0e, ignoring device
+[    1.700533] pci 0000:00:1d.0: [8000:000e] type 0e class 0x000e80
+[    1.701053] pci 0000:00:1d.0: unknown header type 0e, ignoring device
+[    1.702138] pci 0000:00:1e.0: [0000:000f] type 0e class 0x000f00
+[    1.702787] pci 0000:00:1e.0: unknown header type 0e, ignoring device
+[    1.703558] pci 0000:00:1f.0: [8000:000f] type 0e class 0x000f80
+[    1.704106] pci 0000:00:1f.0: unknown header type 0e, ignoring device
+[    1.716788] EINJ: ACPI disabled.
+[    1.979069] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.992362] SuperH (H)SCI(F) driver initialized
+[    1.995910] msm_serial: driver initialized
+[    2.038843] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    2.101877] loop: module loaded
+[    2.107027] megasas: 07.719.03.00-rc1
+[    2.118267] physmap-flash 0.flash: physmap platform flash device: [mem 0x00000000-0x03ffffff]
+[    2.120427] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    2.121459] Intel/Sharp Extended Query Table at 0x0031
+[    2.123065] Using buffer write method
+[    2.124153] physmap-flash 0.flash: physmap platform flash device: [mem 0x04000000-0x07ffffff]
+[    2.125248] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    2.126159] Intel/Sharp Extended Query Table at 0x0031
+[    2.127300] Using buffer write method
+[    2.127639] Concatenating MTD devices:
+[    2.127821] (0): "0.flash"
+[    2.127948] (1): "0.flash"
+[    2.128068] into device "0.flash"
+[    2.329191] tun: Universal TUN/TAP device driver, 1.6
+[    2.334416] thunder_xcv, ver 1.0
+[    2.335017] thunder_bgx, ver 1.0
+[    2.335331] nicpf, ver 1.0
+[    2.376425] hns3: Hisilicon Ethernet Network Driver for Hip08 Family - version
+[    2.376795] hns3: Copyright (c) 2017 Huawei Corporation.
+[    2.377678] hclge is initializing
+[    2.378466] e1000: Intel(R) PRO/1000 Network Driver
+[    2.378706] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    2.379397] e1000e: Intel(R) PRO/1000 Network Driver
+[    2.379653] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    2.380043] igb: Intel(R) Gigabit Ethernet Network Driver
+[    2.380290] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    2.380898] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[    2.381172] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[    2.383614] sky2: driver version 1.30
+[    2.391487] VFIO - User Level meta-driver version: 0.3
+[    2.407692] usbcore: registered new interface driver usb-storage
+[    2.461253] rtc-pl031 9010000.pl031: registered as rtc0
+[    2.462653] rtc-pl031 9010000.pl031: setting system clock to 2024-08-31T16:03:09 UTC (1725120189)
       >>> gicd emu read GICD_ICFGR(i)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000104, r: 4, len: 4, int id: 34
 set enable: reg: 1, mask: 0x4
       <<< gicd emu write GICD_ISENABLER(i)
-        el2 esr: 9300004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-[    2.269354] i2c_dev: i2c /dev entries driver
-[    2.329188] ghes_edac: GHES probing device list is empty
-[    2.339077] sdhci: Secure Digital Host Controller Interface driver
-[    2.339532] sdhci: Copyright(c) Pierre Ossman
-[    2.343390] Synopsys Designware Multimedia Card Interface Driver
-[    2.348281] sdhci-pltfm: SDHCI platform and OF driver helper
-[    2.390981] ledtrig-cpu: registered to indicate activity on CPUs
-        el2 esr: 5e000000, ec: 17
+[    2.468530] i2c_dev: i2c /dev entries driver
+[    2.531468] ghes_edac: GHES probing device list is empty
+[    2.539953] sdhci: Secure Digital Host Controller Interface driver
+[    2.540491] sdhci: Copyright(c) Pierre Ossman
+[    2.544840] Synopsys Designware Multimedia Card Interface Driver
+[    2.584381] sdhci-pltfm: SDHCI platform and OF driver helper
+[    2.594631] ledtrig-cpu: registered to indicate activity on CPUs
             This is smc call handler
-[    2.396738] SMCCC: SOC_ID: ARCH_FEATURES(ARCH_SOC_ID) returned error: 80000001
-[    2.401575] usbcore: registered new interface driver usbhid
-[    2.401881] usbhid: USB HID core driver
-[    2.468714] NET: Registered PF_PACKET protocol family
-[    2.470161] 9pnet: Installing 9P2000 support
-[    2.470905] Key type dns_resolver registered
-[    2.534891] registered taskstats version 1
-[    2.536197] Loading compiled-in X.509 certificates
-[    2.597803] input: gpio-keys as /devices/platform/gpio-keys/input/input0
-[    2.605484] ALSA device list:
-[    2.605739]   No soundcards found.
-        el2 esr: 9380000f, ec: 24
+[    2.601313] SMCCC: SOC_ID: ARCH_FEATURES(ARCH_SOC_ID) returned error: 80000001
+[    2.607290] usbcore: registered new interface driver usbhid
+[    2.607609] usbhid: USB HID core driver
+[    2.678813] NET: Registered PF_PACKET protocol family
+[    2.680258] 9pnet: Installing 9P2000 support
+[    2.681048] Key type dns_resolver registered
+[    2.749479] registered taskstats version 1
+[    2.785342] Loading compiled-in X.509 certificates
+[    2.816576] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    2.859671] ALSA device list:
+[    2.859949]   No soundcards found.
       >>> gicd emu read GICD_ICFGR(i)
-        el2 esr: 9381004f, ec: 24
 gpa: 8000104, r: 2, len: 4, int id: 33
 set enable: reg: 1, mask: 0x2
       <<< gicd emu write GICD_ISENABLER(i)
-        el2 esr: 9300004f, ec: 24
       <<< gicd emu write GICD_ITARGETSR(i)
-[    2.610996] uart-pl011 9000000.pl011: no DMA platform data
-[    2.735143] Freeing unused kernel memory: 7936K
-[    2.735520] Kernel memory protection disabled.
-[    2.736052] Run /init as init process
+[    2.867014] uart-pl011 9000000.pl011: no DMA platform data
+[    2.999521] Freeing unused kernel memory: 7936K
+[    3.000046] Kernel memory protection disabled.
+[    3.000661] Run /init as init process
 Loading, please wait...
 /bin/sh: can't access tty; job control turned off
+~ # ls
+bin      init     mnt      root     sys
+dev      linuxrc  proc     sbin     tmp
 ~ #
