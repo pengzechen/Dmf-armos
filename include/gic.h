@@ -71,28 +71,27 @@
 #define GICH_LR(x) (GICH_BASE_ADDR + 0x0100 + 0x4 * (x))
 #define GICH_LR_NUM 4
 
+/*  GICD 操作掩码 */
 
-
-
-/*  GICD 操作掩码*/
-
-#define GICD_CTRL_ENABLE_GROUP0   (1 << 0)  // 启用组0中断
-#define GICD_CTRL_ENABLE_GROUP1   (1 << 1)  // 启用组1中断
+#define GICD_CTRL_ENABLE_GROUP0 (1 << 0)	// 启用组0中断
+#define GICD_CTRL_ENABLE_GROUP1 (1 << 1)	// 启用组1中断
 #define GICD_CTRL_ENABLE_GROUP1_NS (1 << 2) // 启用非安全组1中断
-#define GICD_CTRL_DS              (1 << 31) // 区分安全和非安全状态行为
+#define GICD_CTRL_DS (1 << 31)				// 区分安全和非安全状态行为
 
+/* GICC 操作掩码 */
 
-#define GICC_CTRL_ENABLE      (1 << 0)  // 启用GIC CPU接口
-#define GICC_CTRL_FIQEN       (1 << 1)  // 启用快速中断（FIQ）模式
-#define GICC_CTRL_ACKCTL      (1 << 2)  // 控制中断确认机制
-#define GICC_CTRL_SBPR        (1 << 3)  // 启用安全中断的优先级分离
-#define GICC_CTRL_EOIMODENS   (1 << 31) // 控制非安全状态的结束中断处理模式
+#define GICC_CTRL_ENABLE_GROUP0 (1 << 0) // 启用GIC CPU接口
+#define GICC_CTRL_ENABLE_GROUP1 (1 << 1) // 启用GIC CPU接口
 
-
+#define GICC_CTRL_FIQEN (1 << 1)	  // 启用快速中断（FIQ）模式
+#define GICC_CTRL_ACKCTL (1 << 2)	  // 控制中断确认机制
+#define GICC_CTRL_SBPR (1 << 3)		  // 启用安全中断的优先级分离
+#define GICC_CTRL_EOIMODE (1 << 4)	  // 控制中断结束模式
+#define GICC_CTRL_EOIMODENS (1 << 31) // 控制非安全状态的结束中断处理模式
 
 #define GICC_IAR_INT_ID_MASK 0x3ff
 
-#include <aj_types.h>
+
 
 typedef struct gic_t
 {
@@ -144,8 +143,6 @@ void gic_ipi_send_single(int irq, int cpu);
 void gic_enable_int(int vector, int enable);
 int gic_get_enable(int vector);
 uint32_t cpu_num();
-
-
 
 void gic_set_isenabler(uint32_t n, uint32_t value);
 void gic_set_ipriority(uint32_t n, uint32_t value);

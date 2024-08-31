@@ -25,38 +25,39 @@ void gic_init(void)
         _gicv2.irq_nr = 1020;
     }
 
+    // GICD 启用组0中断、组1中断转发，服从优先级规则
     write32(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1, (void *)GICD_CTLR);
 
-    // 允许所有优先级的中断
-    write32(0xff - 7, (void *)GICC_PMR);
-    write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+    gicc_init();
 
     gic_test_init();
 }
 
 void gicc_init()
 {
-    // 允许所有优先级的中断
+    // 设置优先级 为 0xf8
     write32(0xff - 7, (void *)GICC_PMR);
-    write32(GICC_CTRL_ENABLE, (void *)GICC_CTLR);
+    // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
+    write32(GICC_CTRL_ENABLE_GROUP0 | (1 << 9), (void *)GICC_CTLR);
 }
 
 // gicd g0, g1  gicc,  gich enable
 void gic_virtual_init(void)
 {
+    // 获得 gicd irq numbers
     _gicv2.irq_nr = GICD_TYPER_IRQS(read32((void *)GICD_TYPER));
     if (_gicv2.irq_nr > 1020)
     {
         _gicv2.irq_nr = 1020;
     }
 
-    write32(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1,
-            (void *)GICD_CTLR);
+    // GICD 启用组0中断、组1中断转发，服从优先级规则
+    write32(GICD_CTRL_ENABLE_GROUP0 | GICD_CTRL_ENABLE_GROUP1, (void *)GICD_CTLR);
 
-    // 允许所有优先级的中断
+    // 设置优先级 为 0xf8
     write32(0xff - 7, (void *)GICC_PMR);
     // EOImodeNS, bit [9] Controls the behavior of Non-secure accesses to GICC_EOIR GICC_AEOIR, and GICC_DIR
-    write32(GICC_CTRL_ENABLE|(1 << 9), (void *)GICC_CTLR);
+    write32(GICC_CTRL_ENABLE_GROUP0 | (1 << 9), (void *)GICC_CTLR);
 
     // bit [2] 当虚拟中断列表寄存器中没有条目时，会产生中断。
     write32((1 << 0), (void *)GICH_HCR);
