@@ -70,11 +70,11 @@ guest_start:
 
 .section .data.guset_bin
   // .incbin "nimbos/nimbos.bin"
-  .incbin "testos/build/kernel.bin"
-  // .incbin "linux/linux-aarch64.bin"
+  // .incbin "testos/build/kernel.bin"
+  .incbin "../guest/linux/linux-aarch64.bin"
 
 .section .data.guest_dtb
-  .incbin "linux/linux-aarch64.dtb"
+  .incbin "../guest/linux/linux-aarch64.dtb"
 
 .section .data.guest_fs
-  .incbin "linux/initrd.gz"
+  .incbin "../guest/linux/initrd.gz"
