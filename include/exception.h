@@ -3,7 +3,7 @@
 
 #define NUM_REGS 31
 
-#include <aj_types.h>
+#include "aj_types.h"
 
 typedef struct
 {

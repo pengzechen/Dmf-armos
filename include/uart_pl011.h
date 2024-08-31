@@ -3,9 +3,9 @@
 #ifndef __PL011_H__
 #define __PL011_H__
 
-#include <aj_types.h>
+#include "aj_types.h"
 
-#include <os_cfg.h>
+#include "os_cfg.h"
 
 #define UART0_DR (*(volatile uint32_t *)(UART0_BASE + 0x00))   // 数据寄存器
 #define UART0_FR (*(volatile uint32_t *)(UART0_BASE + 0x18))   // 标志寄存器

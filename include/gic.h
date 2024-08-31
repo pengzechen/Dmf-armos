@@ -3,14 +3,14 @@
 #ifndef __GIC_H__
 #define __GIC_H__
 
-#include <aj_types.h>
+#include "aj_types.h"
 
 #define GIC_NR_PRIVATE_IRQS 32
 #define GIC_FIRST_SPI GIC_NR_PRIVATE_IRQS
 
 #define SPI_ID_MAX 512
 
-#include <os_cfg.h>
+#include "os_cfg.h"
 
 /* Distributor registers */
 #define GICD_CTLR (GICD_BASE_ADDR + 0x000)

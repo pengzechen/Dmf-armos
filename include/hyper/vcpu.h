@@ -2,9 +2,9 @@
 #ifndef __VCPU_H__
 #define __VCPU_H__
 
-#include <spinlock.h>
-#include <aj_types.h>
-#include <exception.h>
+#include "../spinlock.h"
+#include "../aj_types.h"
+#include "../exception.h"
 
 typedef struct _cpu_sysregs
 {

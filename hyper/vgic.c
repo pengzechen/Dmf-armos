@@ -8,6 +8,7 @@
 #include <exception.h>
 #include <hyper/hyper_cfg.h>
 #include <io.h>
+#include <barrier.h>
 
 #define HIGHEST_BIT_POSITION(x)        \
     ({                                 \

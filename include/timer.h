@@ -3,7 +3,7 @@
 #ifndef __TIMER_H__
 #define  __TIMER_H__
 
-#include <aj_types.h>
+#include "aj_types.h"
 
 
 

@@ -2,9 +2,10 @@
 #ifndef __VM_H__
 #define __VM_H__
 
-#include <aj_types.h>
+#include "../aj_types.h"
+
 #include "vcpu.h"
-#include <hyper/vgic.h>
+#include "vgic.h"
 
 struct vm_t {
     uint32_t id;

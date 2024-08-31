@@ -7,7 +7,7 @@
 #ifndef __STRING_H
 #define __STRING_H
 
-#include <aj_types.h>
+#include "aj_types.h"
 
 extern unsigned long strlen(const char *buf);
 extern char *strcat(char *dest, const char *src);

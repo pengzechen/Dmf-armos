@@ -3,9 +3,11 @@
 #ifndef __VGIC_H__
 #define __VGIC_H__
 
-#include <aj_types.h>
-#include <hyper/vm.h>
-#include "gic.h"
+#include "../gic.h"
+
+#include "aj_types.h"
+#include "vm.h"
+
 
 typedef struct {
     uint32_t id;

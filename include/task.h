@@ -2,8 +2,9 @@
 #ifndef __TASK_H__
 #define __TASK_H__
 
-#include <aj_types.h>
-#include <hyper/vcpu.h>
+#include "aj_types.h"
+
+#include "hyper/vcpu.h"
 
 #pragma pack(1)
 typedef struct _contex_t {
