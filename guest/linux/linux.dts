@@ -383,7 +383,7 @@
 	chosen {
 		linux,initrd-end = <0x78736355>;
 		linux,initrd-start = <0x78000000>;
-		bootargs = "root=/dev/vda rootfstype=ext4 rw console=ttyAMA0 rodata=off";
+		bootargs = "root=/dev/vda rootfstype=ext4 rw console=ttyAMA0";
 		stdout-path = "/pl011@9000000";
 		rng-seed = <0x2042ef85 0x7359a362 0xa80384fa 0x494effd2 0xd1e13e05 0xb6fae544 0xd3a19513 0x1cebc2c8>;
 		kaslr-seed = <0x9cdbc23d 0x3256a986>;
