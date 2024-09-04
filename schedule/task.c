@@ -95,13 +95,16 @@ void _schedule(uint64_t *sp)
 {
     if (task_count == 0)
         return;
-    
+
     // 找到下一个就绪的任务
     // 这里多个核不能同时计算
-    // spin_lock(&lock);
-    struct thread_info * info = current_thread_info();
+
+    struct thread_info *info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
-    uint32_t next_task_id = (curr->id + 1) % task_count;
+
+    uint32_t next_task_id;
+    spin_lock(&lock);
+    next_task_id = (curr->id + 1) % task_count;
     for (int i = 2;; i++)
     {
         // 跳过非就绪状态的任务
@@ -117,17 +120,16 @@ void _schedule(uint64_t *sp)
             break;
         }
     }
+    spin_unlock(&lock);
+
     tcb_t *next_task = &task_list[next_task_id];
     tcb_t *prev_task = curr;
-    
     // printf("core %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
 
     if (sp == NULL)
         switch_context(prev_task, next_task);
     else
         switch_context_el(prev_task, next_task, sp);
-
-    // spin_unlock(&lock);
 }
 
 void schedule(void)
