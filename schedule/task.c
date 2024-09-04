@@ -6,57 +6,62 @@
 #include <sys/sys.h>
 #include <spinlock.h>
 #include <thread.h>
+#include <hyper/vm.h>
 
 tcb_t task_list[MAX_TASKS];
 
 // 目前只有首核会添加一个任务，所以task_count不需要锁
 uint32_t task_count = 0;
 
+// 任务时间片
+#define TASK_SLICE  20
+
 static spinlock_t lock;
 static spinlock_t print_lock;
 
-void create_task(void (*task_func)(), void *stack_top)
-{
+// 分配一个任务，返回一个任务的指针
+// 返回值为 NULL 表示没有分配成功
+tcb_t * allocate_task() {
     if (task_count >= MAX_TASKS)
-        return;
+        return NULL;
 
-    tcb_t *task = &task_list[task_count];
+    tcb_t * task = &task_list[task_count];
     task->id = task_count;
-    task->state = 1;
-    task->cpu = &vcpu[task_count];
-
-    task->cpu->ctx.elr = (uint64_t)task_func; // elr_el1
-    task->cpu->ctx.spsr = SPSR_VALUE_IRQ;     // spsr_el1
-    task->cpu->ctx.usp = (uint64_t)stack_top;
-
-    task->counter = 20;
+    task->state = WAITING;
+    // task->cpu = &vcpu[task_count];
+    task->counter = TASK_SLICE;
     task_count++;
+
+    return task;
 }
 
-
-static cpu_sysregs_t initial_sysregs;
-extern void get_all_sysregs(cpu_sysregs_t *);
-
-void craete_vm(void (*task_func)())
+void create_task(void (*task_func)(), void *stack_top)
 {
-    if (task_count >= MAX_TASKS)
+    tcb_t * task = allocate_task();
+    if (task == NULL) {
+        print_warn("no task to allocate\n");
         return;
+    }
+    task->ctx.elr = (uint64_t)task_func; // elr_el1
+    task->ctx.spsr = SPSR_VALUE_IRQ;     // spsr_el1
+    task->ctx.usp = (uint64_t)stack_top;
+}
 
-    tcb_t *task = &task_list[task_count];
-    task->id = task_count;
-    task->state = 1;
-    task->cpu = &vcpu[task_count];
+vcpu_t * create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
+{
+    tcb_t * task = allocate_task();
+    if (task == NULL) {
+        print_warn("no task to allocate\n");
+        return NULL;
+    }
+    task->ctx.elr = (uint64_t)vcpu_entry; // elr_el2
+    task->ctx.spsr = SPSR_VALUE;         // spsr_el2
+    task->ctx.r[0] = (0x70000000);
 
-    task->cpu->ctx.elr = (uint64_t)task_func; // elr_el2
-    task->cpu->ctx.spsr = SPSR_VALUE;         // spsr_el2
-    task->cpu->ctx.r[0] = (0x70000000);
+    vm_sys_reg[vm_id].spsr_el1 = 0x30C50830;
+    task->vm_id = vm_id;
 
-    // get_all_sysregs(&initial_sysregs);
-    // memcpy(&task->cpu->sys_reg, &initial_sysregs, sizeof(cpu_sysregs_t));
-    task->cpu->sys_reg.spsr_el1 = 0x30C50830;
-
-    task->counter = 20;
-    task_count++;
+    return (vcpu_t *)task;
 }
 
 void schedule_init()
@@ -82,7 +87,7 @@ void print_current_task_list()
     {
         tcb_t *task = &task_list[i];
         // printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
-        printf("id: %x, elr: 0x%x\n", task->id, task->cpu->ctx.elr);
+        printf("id: %x, elr: 0x%x\n", task->id, task->ctx.elr);
     }
     // printf("current task id: %d\n", current_task->id);
     printf("\n");
@@ -154,30 +159,11 @@ void timer_tick_schedule(uint64_t *sp)
     // enable_interrupts();
 }
 
-//  vm 相关
-
-extern void restore_sysregs(cpu_sysregs_t *);
-extern void save_sysregs(cpu_sysregs_t *);
-
-void vm_in()
-{
-    struct thread_info * info = current_thread_info();
-    tcb_t *curr = (tcb_t *)info->current_thread;
-    restore_sysregs(&curr->cpu->sys_reg);
-}
-
-void vm_out()
-{
-    struct thread_info * info = current_thread_info();
-    tcb_t *curr = (tcb_t *)info->current_thread;
-    save_sysregs(&curr->cpu->sys_reg);
-}
-
 void save_cpu_ctx(trap_frame_t *sp)
 {
     tcb_t *curr = (tcb_t *)current_thread_info()->current_thread;
-    memcpy(&curr->cpu->ctx, sp, sizeof(trap_frame_t));
-    curr->cpu->pctx = sp;
+    memcpy(&curr->ctx, sp, sizeof(trap_frame_t));
+    curr->pctx = sp;
 }
 
 extern int get_el();
@@ -188,6 +174,6 @@ void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp)
     //     switch_context(old, new);
     //     return;
     // }
-    memcpy(&old->cpu->ctx, sp, sizeof(trap_frame_t)); // 保存上下文到vpu dev 中
-    memcpy(sp, &new->cpu->ctx, sizeof(trap_frame_t)); // 恢复下一个任务的cpu ctx
+    memcpy(&old->ctx, sp, sizeof(trap_frame_t)); // 保存上下文到vpu dev 中
+    memcpy(sp, &new->ctx, sizeof(trap_frame_t)); // 恢复下一个任务的cpu ctx
 }

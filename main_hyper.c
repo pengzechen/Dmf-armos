@@ -41,7 +41,6 @@ static inline uint64_t read_vttbr_el2()
 
 void vtcr_init(void)
 {
-    print_info("    Initialize vtcr...\n");
     uint64_t vtcr_val = VTCR_VS_8BIT | VTCR_PS_MASK_36_BITS |
                         VTCR_TG0_4K | VTCR_SH0_IS | VTCR_ORGN0_WBWA | VTCR_IRGN0_WBWA;
 
@@ -54,7 +53,6 @@ void vtcr_init(void)
 
 static void guest_trap_init(void)
 {
-    print_info("    Initialize trap...\n");
     unsigned long hcr;
     hcr = read_hcr_el2();
     // WRITE_SYSREG(hcr | HCR_TGE, HCR_EL2);
@@ -103,8 +101,6 @@ void copy_fs(void)
     printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
 }
 
-extern void test_guest();
-extern void guest_start();
 
 extern size_t cacheline_bytes;
 
@@ -130,40 +126,62 @@ void mmio_map_gicc()
     }
 }
 
+// map test addr "Not read or write"
+void mem_test() {
+    lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_ARREA);
+    avr_entry->p2m.read = 0;
+    avr_entry->p2m.write = 0;
+    apply_ept(avr_entry);
+    *(uint64_t *)0x50000000 = 0x1234;
+}
+
+
+void vm1() {
+    // guest 中断初始化
+    guest_trap_init();
+
+    // guest 内存初始化
+    vtcr_init();
+    guest_ept_init();
+    mmio_map_gicd();
+    mmio_map_gicc();
+
+    // guest 数据初始化
+    copy_dtb();
+    copy_guest();
+    copy_fs();
+
+    printf("\nHello Hyper:\nthere's some hyper tests: \n");
+    printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
+    printf("hcr_el2: 0x%x\n", read_hcr_el2());
+    printf("read_vttbr_el2: 0x%x\n", read_vttbr_el2());
+    printf("\n");
+
+    // guest vcpu 初始化
+    vcpu_t * vcpus[2] = {NULL};
+    vcpus[0] = create_vcpu((void *)GUEST_KERNEL_START, 1);
+    vm_init(vcpus, 1);
+}
+
+extern void test_guest();
+extern void guest_start();
+
 void hyper_main()
 {
 
     io_early_init();
     gic_virtual_init();
     timer_init();
+    printf("cacheline_bytes: %d\n", cacheline_bytes);
     printf("io, gic, timer, init ok...\n\n");
 
-    // 准备启动 guest ...
-    vtcr_init();
-    guest_ept_init();
-    guest_trap_init();
-    copy_dtb();
-    copy_guest();
-    copy_fs();
-    mmio_map_gicd();
-    mmio_map_gicc();
-    vm_init();
+    
+    vcpu_t * first_vcpus[2] = {NULL};
+    first_vcpus[0] = create_vcpu(test_guest, 0);;
+    vm_init(first_vcpus, 1);
 
-    printf("\nHello Hyper:\nthere's some hyper tests: \n");
-    printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
-    printf("hcr_el2: 0x%x\n", read_hcr_el2());
-    printf("read_vttbr_el2: 0x%x\n", read_vttbr_el2());
-    printf("cacheline_bytes: %d\n", cacheline_bytes);
-    printf("\n");
-
-    lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_ARREA);
-    avr_entry->p2m.read = 0;
-    avr_entry->p2m.write = 0;
-    apply_ept(avr_entry);
-    *(uint64_t *)0x50000000 = 0x1234;
-
-    craete_vm(test_guest);
-    craete_vm((void *)GUEST_KERNEL_START);
+    vm1();
+    
     schedule_init(); // 设置当前 task 为 task0（test_guest）
     schedule_init_local();
     print_current_task_list();
