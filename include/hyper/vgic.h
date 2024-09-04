@@ -21,7 +21,7 @@ typedef struct {
 
     uint32_t ppi_isenabler;
     uint8_t ppi_ipriorityr[GIC_FIRST_SPI];
-} vgic_core_state_t;
+} vgicc_state_t;
 
 struct vgic_t {
     struct vm_t *vm;
@@ -31,7 +31,7 @@ struct vgic_t {
     uint32_t use_irq[SPI_ID_MAX/32];     // 一个位掩码数组，标记哪些实际中断 ID 被 VGIC 使用
     uint32_t real_pri;                   // 设置和管理实际中断的优先级
 
-    vgic_core_state_t *core_state;
+    vgicc_state_t *core_state;
 
     bool enable_g0;
     bool enable_g1;
@@ -55,6 +55,8 @@ void v_timer_handler();
 void intc_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx);
 
 void vgic_inject(uint32_t vector);
+
+struct vgic_t *allocate_vgic(uint8_t id);
 
 struct vgic_t *get_vgic(uint8_t);
 

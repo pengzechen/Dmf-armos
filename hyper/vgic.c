@@ -22,7 +22,14 @@
     })
 
 static struct vgic_t _vgic[VM_NUM_MAX];
-static uint8_t _vgic_num;
+static uint8_t _vgic_index = 0;
+
+struct vgic_t *allocate_vgic(uint8_t id)
+{
+    struct vgic_t * vgic = &_vgic[_vgic_index];
+    _vgic_index++;
+    return vgic;
+}
 
 struct vgic_t *get_vgic(uint8_t id)
 {
