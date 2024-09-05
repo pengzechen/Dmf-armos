@@ -14,18 +14,19 @@ tcb_t task_list[MAX_TASKS];
 uint32_t task_count = 0;
 
 // 任务时间片
-#define TASK_SLICE  20
+#define TASK_SLICE 20
 
 static spinlock_t lock;
 static spinlock_t print_lock;
 
 // 分配一个任务，返回一个任务的指针
 // 返回值为 NULL 表示没有分配成功
-tcb_t * allocate_task() {
+tcb_t *allocate_task()
+{
     if (task_count >= MAX_TASKS)
         return NULL;
 
-    tcb_t * task = &task_list[task_count];
+    tcb_t *task = &task_list[task_count];
     task->id = task_count;
     task->state = WAITING;
     // task->cpu = &vcpu[task_count];
@@ -37,8 +38,9 @@ tcb_t * allocate_task() {
 
 void create_task(void (*task_func)(), void *stack_top)
 {
-    tcb_t * task = allocate_task();
-    if (task == NULL) {
+    tcb_t *task = allocate_task();
+    if (task == NULL)
+    {
         print_warn("no task to allocate\n");
         return;
     }
@@ -47,15 +49,16 @@ void create_task(void (*task_func)(), void *stack_top)
     task->ctx.usp = (uint64_t)stack_top;
 }
 
-vcpu_t * create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
+vcpu_t *create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
 {
-    tcb_t * task = allocate_task();
-    if (task == NULL) {
+    tcb_t *task = allocate_task();
+    if (task == NULL)
+    {
         print_warn("no task to allocate\n");
         return NULL;
     }
     task->ctx.elr = (uint64_t)vcpu_entry; // elr_el2
-    task->ctx.spsr = SPSR_VALUE;         // spsr_el2
+    task->ctx.spsr = SPSR_VALUE;          // spsr_el2
     task->ctx.r[0] = (0x70000000);
 
     vm_sys_reg[vm_id].spsr_el1 = 0x30C50830;
@@ -98,15 +101,14 @@ static void switch_context_el(tcb_t *old, tcb_t *new, uint64_t *sp);
 
 void _schedule(uint64_t *sp)
 {
-    if (task_count == 0)
+    if (task_count <= 1)
         return;
-
-    // 找到下一个就绪的任务
-    // 这里多个核不能同时计算
 
     struct thread_info *info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
 
+    // 找到下一个就绪的任务
+    // 这里多个核不能同时计算
     uint32_t next_task_id;
     spin_lock(&lock);
     next_task_id = (curr->id + 1) % task_count;
@@ -114,9 +116,7 @@ void _schedule(uint64_t *sp)
     {
         // 跳过非就绪状态的任务
         if (task_list[next_task_id].state == RUNNING)
-        {
             next_task_id = (curr->id + i) % task_count;
-        }
         else
         {
             task_list[curr->id].state = WAITING;
@@ -146,17 +146,15 @@ void schedule(void)
 
 void timer_tick_schedule(uint64_t *sp)
 {
-    struct thread_info * info = current_thread_info();
+    struct thread_info *info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
     --curr->counter;
 
     if (curr->counter > 0)
         return;
 
-    curr->counter = 20;
-    // disable_interrupts();
+    curr->counter = TASK_SLICE;
     _schedule(sp);
-    // enable_interrupts();
 }
 
 void save_cpu_ctx(trap_frame_t *sp)

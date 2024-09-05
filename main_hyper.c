@@ -174,10 +174,15 @@ void hyper_main()
     timer_init();
     printf("cacheline_bytes: %d\n", cacheline_bytes);
     printf("io, gic, timer, init ok...\n\n");
-
     
+
+    // 初始化一次就行
+    vtcr_init();
+    // 初始化一次就行
+    guest_ept_init();
+
     vcpu_t * first_vcpus[2] = {NULL};
-    first_vcpus[0] = create_vcpu(test_guest, 0);;
+    first_vcpus[0] = create_vcpu(test_guest, 0);
     vm_init(first_vcpus, 1);
 
     vm1();
@@ -188,6 +193,6 @@ void hyper_main()
 
     guest_start();
 
-    while (1)
-        ;
+    // while (1)
+    //     ;
 }
