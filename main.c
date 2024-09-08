@@ -167,6 +167,7 @@ void main_entry()
     printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
     if (get_current_cpu_id() == 0)
     {
+        schedule_init();
         create_task(task0, 0); //task0_stack + 4096);
         create_task(task1, 0); //task1_stack + 4096);
         create_task(task2, 0); //task2_stack + 4096);
@@ -175,7 +176,6 @@ void main_entry()
         create_task(task5, 0); //task5_stack + 4096);
         create_task(task6, 0); //task6_stack + 4096);
         create_task(task7, 0); //task7_stack + 4096);
-        schedule_init();
         print_current_task_list();
     }
     spin_lock(&lock);
@@ -185,6 +185,7 @@ void main_entry()
     while(inited_cpu_num != SMP_NUM)
         wfi();
 
+    // 让每个核都跑idel task
     schedule_init_local();
     enable_interrupts();
     

@@ -11,7 +11,10 @@
 tcb_t task_list[MAX_TASKS];
 
 // 目前只有首核会添加一个任务，所以task_count不需要锁
-uint32_t task_count = 0;
+static uint32_t task_count = 0;
+
+static list_t ready_list;
+static list_t running_list;
 
 // 任务时间片
 #define TASK_SLICE 20
@@ -28,7 +31,7 @@ tcb_t *allocate_task()
 
     tcb_t *task = &task_list[task_count];
     task->id = task_count;
-    task->state = WAITING;
+    task->state = READY;
     // task->cpu = &vcpu[task_count];
     task->counter = TASK_SLICE;
     task_count++;
@@ -36,17 +39,19 @@ tcb_t *allocate_task()
     return task;
 }
 
-void create_task(void (*task_func)(), void *stack_top)
+tcb_t *create_task(void (*task_func)(), void *stack_top)
 {
     tcb_t *task = allocate_task();
     if (task == NULL)
     {
         print_warn("no task to allocate\n");
-        return;
+        return NULL;
     }
     task->ctx.elr = (uint64_t)task_func; // elr_el1
     task->ctx.spsr = SPSR_VALUE_IRQ;     // spsr_el1
     task->ctx.usp = (uint64_t)stack_top;
+
+    return task;
 }
 
 vcpu_t *create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
@@ -67,30 +72,45 @@ vcpu_t *create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
     return (vcpu_t *)task;
 }
 
+
+void idel_task()
+{
+    while (1)
+        wfi();
+}
+
 void schedule_init()
 {
     spinlock_init(&lock);
     spinlock_init(&print_lock);
-    // current_task = &task_list[0];
+    list_init(&ready_list);
+    list_init(&running_list);
+    #ifdef HV
+    create_vcpu(idel_task, 0);
+    #else
+    create_task(idel_task, NULL);
+    #endif
 }
 
 void schedule_init_local()
 {
     spin_lock(&print_lock);
     struct thread_info *info = current_thread_info();
-    info->current_thread = &task_list[info->cpu];
+    info->current_thread = &task_list[0];
     printf("core %d current task %d\n", info->cpu, ((tcb_t *)info->current_thread)->id);
-    task_list[info->cpu].state = RUNNING;
     spin_unlock(&print_lock);
 }
 
 void print_current_task_list()
 {
+    printf("\n");
     for (int i = 0; i < task_count; i++)
     {
         tcb_t *task = &task_list[i];
-        // printf("id: %x, sp: 0x%x, lr: 0x%x\n", task->id, task->ctx.x29, task->ctx.x30);
-        printf("id: %x, elr: 0x%x\n", task->id, task->ctx.elr);
+        if (task->id == 0)
+            printf("[idel task] id: %x, elr: 0x%x\n", task->id, task->ctx.elr);
+        else
+            printf("[task %d] id: %x, elr: 0x%x\n", task->id, task->id, task->ctx.elr);
     }
     // printf("current task id: %d\n", current_task->id);
     printf("\n");
@@ -111,15 +131,15 @@ void _schedule(uint64_t *sp)
     // 这里多个核不能同时计算
     uint32_t next_task_id;
     spin_lock(&lock);
+    task_list[curr->id].state = READY;
     next_task_id = (curr->id + 1) % task_count;
     for (int i = 2;; i++)
     {
         // 跳过非就绪状态的任务
-        if (task_list[next_task_id].state == RUNNING)
+        if (task_list[next_task_id].state != READY)
             next_task_id = (curr->id + i) % task_count;
         else
         {
-            task_list[curr->id].state = WAITING;
             task_list[next_task_id].state = RUNNING;
             info->current_thread = &task_list[next_task_id];
             break;

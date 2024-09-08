@@ -136,7 +136,7 @@ void mem_test() {
 }
 
 
-void vm1() {
+void vm2() {
     // guest 中断初始化
     guest_trap_init();
 
@@ -159,7 +159,7 @@ void vm1() {
 
     // guest vcpu 初始化
     vcpu_t * vcpus[2] = {NULL};
-    vcpus[0] = create_vcpu((void *)GUEST_KERNEL_START, 1);
+    vcpus[0] = create_vcpu((void *)GUEST_KERNEL_START, 2);
     vm_init(vcpus, 1);
 }
 
@@ -175,6 +175,7 @@ void hyper_main()
     printf("cacheline_bytes: %d\n", cacheline_bytes);
     printf("io, gic, timer, init ok...\n\n");
     
+    vmm_init();
 
     // 初始化一次就行
     vtcr_init();
@@ -182,10 +183,10 @@ void hyper_main()
     guest_ept_init();
 
     vcpu_t * first_vcpus[2] = {NULL};
-    first_vcpus[0] = create_vcpu(test_guest, 0);
+    first_vcpus[0] = create_vcpu(test_guest, 1);
     vm_init(first_vcpus, 1);
 
-    vm1();
+    vm2();
     
     schedule_init(); // 设置当前 task 为 task0（test_guest）
     schedule_init_local();

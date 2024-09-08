@@ -5,6 +5,7 @@
 #include "aj_types.h"
 
 #include "hyper/vcpu.h"
+#include "list.h"
 
 #pragma pack(1)
 typedef struct
@@ -13,8 +14,11 @@ typedef struct
 	cpu_ctx_t     *pctx;   // 指向trap的栈，可以修改restore的数据
     enum {
         RUNNING = 0,
-        WAITING = 1,
+        READY = 1,
     } state; 
+    list_node_t ready_node;
+    list_node_t running_node;
+    
     uint32_t counter;
     uint32_t priority;
     uint32_t id;    // 任务ID
@@ -37,7 +41,7 @@ void schedule();
 void timer_tick_schedule(uint64_t *);
 void print_current_task_list();
 
-void create_task(void (*task_func)(), void *);
+tcb_t *create_task(void (*task_func)(), void *stack_top);
 vcpu_t * create_vcpu(void (*task_func)(), uint8_t);
 void schedule_init();
 void schedule_init_local();

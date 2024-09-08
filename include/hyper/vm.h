@@ -101,6 +101,7 @@ struct vm_t {
     struct vgic_t *vgic;
 };
 
+void vmm_init();
 void vm_init(vcpu_t * vcpus[], uint32_t vcpu_num);
 
 extern void restore_sysregs(vm_sysregs_t *);

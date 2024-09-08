@@ -46,9 +46,17 @@ void interrupt_init(uint32_t index)
     irq_install(PL011_INT, fake_console);
 }
 
-void vm_init(vcpu_t * vcpus[], uint32_t vcpu_num)
+/*
+ * vm_list[0] 不使用，为的是和vcpu那边保持统一
+ */
+void vmm_init()
 {
-    // 设置vm中各个vcpu的指针指向创建的vcpu 
+    _vm_index++;
+}
+
+void vm_init(vcpu_t *vcpus[], uint32_t vcpu_num)
+{
+    // 设置vm中各个vcpu的指针指向创建的vcpu
     for (uint32_t i = 0; i < vcpu_num; i++)
     {
         vm_list[_vm_index].vcpus[i] = vcpus[i];
@@ -56,7 +64,6 @@ void vm_init(vcpu_t * vcpus[], uint32_t vcpu_num)
     vm_list[_vm_index].id = _vm_index;
     vm_list[_vm_index].vcpu_num = vcpu_num;
     vm_list[_vm_index].vgic = allocate_vgic(_vm_index);
-    
 
     interrupt_init(_vm_index);
 
