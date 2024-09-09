@@ -42,6 +42,6 @@ SECTIONS
     }
     __bss_end = .;
 
-    . = ALIGN((1 << 14));
+    . = ALIGN((1 << 12));
     ept_L1 = .;
 }

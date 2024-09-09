@@ -44,7 +44,7 @@ void vtcr_init(void)
     uint64_t vtcr_val = VTCR_VS_8BIT | VTCR_PS_MASK_36_BITS |
                         VTCR_TG0_4K | VTCR_SH0_IS | VTCR_ORGN0_WBWA | VTCR_IRGN0_WBWA;
 
-    vtcr_val |= VTCR_T0SZ(64 - 36); /* 40 bit IPA */
+    vtcr_val |= VTCR_T0SZ(64 - 39); /* 40 bit IPA */
     vtcr_val |= VTCR_SL0(0x1);      /* P2M starts at first level */
 
     printf("vtcr val: 0x%x\n", vtcr_val);
