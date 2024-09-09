@@ -56,17 +56,25 @@ void test_types()
 
 spinlock_t print_lock;
 
+uint64_t stack_test(uint64_t i) {
+    uint64_t res = i + 1;
+    return res;
+}
+
 void task7()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 7: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('7');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 7 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -74,13 +82,16 @@ void task6()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 6: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('6');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 6 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -88,13 +99,16 @@ void task5()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 5: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('5');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 5 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -102,13 +116,16 @@ void task4()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 4: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('4');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 4 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -116,13 +133,16 @@ void task3()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 3: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('3');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 3 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -130,13 +150,16 @@ void task2()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 2: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('2');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 2 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
@@ -144,25 +167,29 @@ void task1()
 {
     while (1)
     {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        // spin_lock(&print_lock);
-        // printf("task 1: get_current_cpu_id: %d\n", get_current_cpu_id());
-        putc('1');
-        // spin_unlock(&print_lock);
-        // putc('\n');
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 1 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
     }
 }
 
 
-char task7_stack[8192] = {0};
-char task6_stack[8192] = {0};
-char task5_stack[8192] = {0};
-char task4_stack[8192] = {0};
-char task3_stack[8192] = {0};
-char task2_stack[8192] = {0};
-char task1_stack[8192] = {0};
-char task0_stack[8192] = {0};
+
+
+char task7_stack[16384] = {0};
+char task6_stack[16384] = {0};
+char task5_stack[16384] = {0};
+char task4_stack[16384] = {0};
+char task3_stack[16384] = {0};
+char task2_stack[16384] = {0};
+char task1_stack[16384] = {0};
 
 int inited_cpu_num = 0;
 spinlock_t lock;
@@ -173,13 +200,13 @@ void main_entry()
     if (get_current_cpu_id() == 0)
     {
         schedule_init();
-        create_task(task1, task1_stack + 4096);
-        create_task(task2, task2_stack + 4096);
-        create_task(task3, task3_stack + 4096);
-        create_task(task4, task4_stack + 4096);
-        // create_task(task5, 0); //task5_stack + 4096);
-        // create_task(task6, 0); //task6_stack + 4096);
-        // create_task(task7, 0); //task7_stack + 4096);
+        create_task(task1, task1_stack + 12288);
+        create_task(task2, task2_stack + 12288);
+        create_task(task3, task3_stack + 12288);
+        create_task(task4, task4_stack + 12288);
+        create_task(task5, task5_stack + 12288);
+        create_task(task6, task6_stack + 12288);
+        create_task(task7, task7_stack + 12288);
         print_current_task_list();
         spinlock_init(&print_lock);
     }

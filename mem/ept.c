@@ -16,7 +16,7 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t *el2_ctx);
 
 /* Return the cache property of the input gpa */
 /* It is determined depending on whether the address is for device or memory */
-static bool isInMemory(unsigned long gpa)
+static bool isInMemory(uint64_t gpa)
 {
 	if (RAM_START <= gpa && gpa < RAM_END)
 	{
@@ -43,15 +43,15 @@ void apply_ept(void *ept)
 void guest_ept_init(void)
 {
 	int index_l1, index_l2, index_l3;
-	unsigned long long gpa = 0;
-	unsigned long vttbr_val = (unsigned long)ept_L1;
-	unsigned long hcr;
+	uint64_t gpa = 0;
+	uint64_t vttbr_val = (uint64_t)ept_L1;
+	uint64_t hcr;
 
 	/* Calculate next level page table address */
 	/* Level 1 */
 	void *ept_L1_root = &ept_L1[LPAE_L1_SIZE];
 	/* Level 2 */
-	ept_L2_root = (lpae_t *)(((unsigned long)ept_L1_root + (1 << 12)) & ~0xFFF); /* Align */
+	ept_L2_root = (lpae_t *)(((uint64_t)ept_L1_root + (1 << 12)) & ~0xFFF); /* Align */
 	/* Level 3 */
 	ept_L3_root = &ept_L2_root[LPAE_L2_SIZE];
 
@@ -63,6 +63,8 @@ void guest_ept_init(void)
 	printf("LPAE_L2_SIZE : %d\n", LPAE_L2_SIZE);
 	printf("LPAE_L3_SIZE : %d\n", LPAE_L3_SIZE);
 
+	uint64_t l3_end = 0;
+
 	for (index_l1 = 0; index_l1 < LPAE_L1_SIZE; index_l1++)
 	{
 		lpae_t entry_l1;
@@ -72,19 +74,20 @@ void guest_ept_init(void)
 		entry_l1.bits = 0;
 		entry_l1.p2m.valid = 1;
 		entry_l1.p2m.table = 1;
-		entry_l1.bits |= (unsigned long)ept_l2;
+		entry_l1.bits |= (uint64_t)ept_l2;
 		ept_L1[index_l1].bits = entry_l1.bits;
 		for (index_l2 = 0; index_l2 < LPAE_ENTRIES; index_l2++)
 		{
 			lpae_t entry_l2;
 			lpae_t *ept_l3 = &ept_L3_root[LPAE_ENTRIES * LPAE_ENTRIES * index_l1 + LPAE_ENTRIES * index_l2];
 			// printf("(EPT_L3)0x%x - %d/%d (%d)\n",ept_l3, index_l1,index_l2, LPAE_L2_SIZE * LPAE_ENTRIES * index_l1  + LPAE_ENTRIES * index_l2);
+			l3_end = (uint64_t)ept_l3;
 
 			/* Set second level page table entries */
 			entry_l2.bits = 0;
 			entry_l2.p2m.valid = 1;
 			entry_l2.p2m.table = 1;
-			entry_l2.bits |= (unsigned long)ept_l3;
+			entry_l2.bits |= (uint64_t)ept_l3;
 			ept_l2[index_l2].bits = entry_l2.bits;
 
 			for (index_l3 = 0; index_l3 < LPAE_ENTRIES; index_l3++)
@@ -124,15 +127,15 @@ void guest_ept_init(void)
 				//   if(pept != &ept_l3[index_l3])
 				//   {
 				//     printf("(Index)%d/%d/%d - ", index_l1,index_l2,index_l3);
-				//     printf("(L1)0x%x - ",(unsigned long)entry_l1.bits);
-				//     printf("(L2Adr)0x%x - ",(unsigned long)&ept_l2[index_l2]);
-				//     printf("(L2)0x%x - ",(unsigned long)entry_l2.bits);
-				//     printf("(L3Adr)0x%x - ",(unsigned long)&ept_l3[index_l3]);
-				//     printf("(L3)0x%x - ",(unsigned long)entry_l3.bits);
-				//     printf("(GPA)0x%x - ",(unsigned long)gpa);
+				//     printf("(L1)0x%x - ",(uint64_t)entry_l1.bits);
+				//     printf("(L2Adr)0x%x - ",(uint64_t)&ept_l2[index_l2]);
+				//     printf("(L2)0x%x - ",(uint64_t)entry_l2.bits);
+				//     printf("(L3Adr)0x%x - ",(uint64_t)&ept_l3[index_l3]);
+				//     printf("(L3)0x%x - ",(uint64_t)entry_l3.bits);
+				//     printf("(GPA)0x%x - ",(uint64_t)gpa);
 				//     printf("Error - ");
 				//     printf("(EPT)0x%x - ",ept_l3);
-				//     printf("(PAddr)0x%x - (PVAL)0x%x\n",pept,(unsigned long)pept->bits);
+				//     printf("(PAddr)0x%x - (PVAL)0x%x\n",pept,(uint64_t)pept->bits);
 				//   }
 				// }
 				gpa += (4 * 1024); /* 4KB page frame */
@@ -140,8 +143,14 @@ void guest_ept_init(void)
 			apply_ept(ept_l3);
 		}
 		apply_ept(ept_l2);
+
+		printf("index l1: %d, gpa: 0x%x\n", index_l1, gpa);
 	}
 	apply_ept(ept_L1);
+
+	printf("index1: %d, index2: %d, index3: %d, gpa: 0x%x, l3_end: 0x%x\n",
+		   index_l1, index_l2, index_l3, gpa, l3_end + 0x1000);
+	printf("\n");
 
 	// Write EPT to VTTBR
 	asm volatile(
@@ -154,7 +163,7 @@ void guest_ept_init(void)
 
 lpae_t *get_ept_entry(paddr_t gpa)
 {
-	unsigned long page_num;
+	uint64_t page_num;
 	page_num = (gpa >> 12);
 	return &ept_L3_root[page_num];
 }
@@ -184,12 +193,12 @@ int gva_to_ipa(uint64_t va, uint64_t *paddr)
 void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 {
 	lpae_t *ept;
-	unsigned long tmp;
+	uint64_t tmp;
 
 	// printf("EPT Violation : %s\n", info->reason == PREFETCH ? "prefetch" : "data");
 	// printf("PC : %x\n", el2_ctx->elr);
 	// printf("GVA : 0x%x\n", info->gva);
-	// printf("GPA : 0x%x\n", (unsigned long)info->gpa);
+	// printf("GPA : 0x%x\n", (uint64_t)info->gpa);
 	// printf("Register : R%d\n", info->hsr.dabt.reg);
 
 	ept = get_ept_entry(info->gpa);
@@ -200,12 +209,14 @@ void data_abort_handler(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 	{
 	}
 	*/
-	if (GICD_BASE_ADDR <= info->gpa && info->gpa <= (GICD_BASE_ADDR + 0x0010000)) {
+	if (GICD_BASE_ADDR <= info->gpa && info->gpa <= (GICD_BASE_ADDR + 0x0010000))
+	{
 		intc_handler(info, el2_ctx);
 		return;
 	}
-	
-	if (GICC_BASE_ADDR <= info->gpa && info->gpa <= (GICC_BASE_ADDR + 0x0010000)) {
+
+	if (GICC_BASE_ADDR <= info->gpa && info->gpa <= (GICC_BASE_ADDR + 0x0010000))
+	{
 		info->gpa = info->gpa + 0x30000;
 		handle_mmio(info, el2_ctx);
 		return;
@@ -242,70 +253,70 @@ int handle_mmio(ept_violation_info_t *info, trap_frame_t *el2_ctx)
 	// printf("operation gpa: 0x%x\n", gpa);
 	// if (MMIO_ARREA <= gpa && gpa <= (MMIO_ARREA + 4096))
 	// {
-		if (info->hsr.dabt.write)
+	if (info->hsr.dabt.write)
+	{
+		uint64_t reg_num;
+		volatile uint64_t *r;
+		volatile void *buf;
+		volatile uint64_t len;
+		volatile uint64_t *dst;
+
+		// 获取寄存器编号和 MMIO 操作的大小
+		reg_num = info->hsr.dabt.reg;
+		len = 1 << (info->hsr.dabt.size & 0x00000003);
+
+		// 计算目标缓冲区
+		r = &el2_ctx->r[reg_num];
+		buf = (void *)r;
+
+		// 从 MMIO 地址读取数据
+		dst = (uint64_t *)(uint64_t)gpa;
+		// printf("(%d bytes) 0x%x  R%d\n", (uint64_t)len, *dst, (uint64_t)reg_num);
+
+		// printf("old data: 0x%x\n", *dst);
+		//  将数据写入寄存器或进行其他必要的操作
+		if (reg_num != 30)
 		{
-			unsigned long reg_num;
-			volatile uint64_t *r;
-			volatile void *buf;
-			volatile unsigned long len;
-			volatile unsigned long *dst;
-
-			// 获取寄存器编号和 MMIO 操作的大小
-			reg_num = info->hsr.dabt.reg;
-			len = 1 << (info->hsr.dabt.size & 0x00000003);
-
-			// 计算目标缓冲区
-			r = &el2_ctx->r[reg_num];
-			buf = (void *)r;
-
-			// 从 MMIO 地址读取数据
-			dst = (unsigned long *)(unsigned long)gpa;
-			//printf("(%d bytes) 0x%x  R%d\n", (unsigned long)len, *dst, (unsigned long)reg_num);
-			
-			//printf("old data: 0x%x\n", *dst);
-			// 将数据写入寄存器或进行其他必要的操作
-			if (reg_num != 30)
-			{
-				*dst = *(unsigned long *)buf;
-			}
-			// 确保所有更改都能被看到
-			dsb(sy);
-			isb();
-			//printf("new data: 0x%x\n", *dst);
+			*dst = *(uint64_t *)buf;
 		}
-		else
+		// 确保所有更改都能被看到
+		dsb(sy);
+		isb();
+		// printf("new data: 0x%x\n", *dst);
+	}
+	else
+	{
+		uint64_t reg_num;
+		volatile uint64_t *r;
+		volatile void *buf;
+		volatile uint64_t *src;
+		volatile uint64_t len;
+		volatile uint64_t dat;
+		// spin_lock(&vcpu.lock);
+
+		reg_num = info->hsr.dabt.reg;
+		// r = (uint64_t *)select_user_reg(reg_num);
+		// r = &vcpu.pctx->r[reg_num];
+		r = &el2_ctx->r[reg_num];
+		len = 1 << (info->hsr.dabt.size & 0x00000003);
+		buf = (void *)r;
+
+		src = (uint64_t *)(uint64_t)gpa;
+		dat = *src;
+		// printf("(%d bytes) 0x%x R%d\n", (uint64_t)len, *src, (uint64_t)reg_num);
+
+		// printf("old data: 0x%x\n", *r);
+		if (reg_num != 30)
 		{
-			unsigned long reg_num;
-			volatile uint64_t *r;
-			volatile void *buf;
-			volatile unsigned long *src;
-			volatile unsigned long len;
-			volatile unsigned long dat;
-			// spin_lock(&vcpu.lock);
-
-			reg_num = info->hsr.dabt.reg;
-			// r = (uint64_t *)select_user_reg(reg_num);
-			// r = &vcpu.pctx->r[reg_num];
-			r = &el2_ctx->r[reg_num];
-			len = 1 << (info->hsr.dabt.size & 0x00000003);
-			buf = (void *)r;
-
-			src = (unsigned long *)(unsigned long)gpa;
-			dat = *src;
-			//printf("(%d bytes) 0x%x R%d\n", (unsigned long)len, *src, (unsigned long)reg_num);
-			
-			//printf("old data: 0x%x\n", *r);
-			if (reg_num != 30)
-			{
-				*(unsigned long *)buf = dat;
-			}
-			dsb(sy);
-			isb();
-			//printf("new data: 0x%x\n", *r);
-			
-			// spin_unlock(&vcpu.lock);
+			*(uint64_t *)buf = dat;
 		}
-		return 1;
+		dsb(sy);
+		isb();
+		// printf("new data: 0x%x\n", *r);
+
+		// spin_unlock(&vcpu.lock);
+	}
+	return 1;
 	// }
 
 	// return 0;

@@ -53,7 +53,7 @@ void vtcr_init(void)
 
 static void guest_trap_init(void)
 {
-    unsigned long hcr;
+    uint64_t hcr;
     hcr = read_hcr_el2();
     // WRITE_SYSREG(hcr | HCR_TGE, HCR_EL2);
     // hcr = READ_SYSREG(HCR_EL2);
@@ -71,8 +71,8 @@ extern void __guset_fs_end();
 void copy_guest(void)
 {
     size_t size = (size_t)(__guset_bin_end - __guset_bin_start);
-    unsigned long *from = (unsigned long *)__guset_bin_start;
-    unsigned long *to = (unsigned long *)GUEST_KERNEL_START;
+    uint64_t *from = (uint64_t *)__guset_bin_start;
+    uint64_t *to = (uint64_t *)GUEST_KERNEL_START;
     printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
     memcpy(to, from, size);
@@ -82,8 +82,8 @@ void copy_guest(void)
 void copy_dtb(void)
 {
     size_t size = (size_t)(__guset_dtb_end - __guset_dtb_start);
-    unsigned long *from = (unsigned long *)__guset_dtb_start;
-    unsigned long *to = (unsigned long *)GUEST_DTB_START;
+    uint64_t *from = (uint64_t *)__guset_dtb_start;
+    uint64_t *to = (uint64_t *)GUEST_DTB_START;
     printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
     memcpy(to, from, size);
@@ -93,8 +93,8 @@ void copy_dtb(void)
 void copy_fs(void)
 {
     size_t size = (size_t)(__guset_fs_end - __guset_fs_start);
-    unsigned long *from = (unsigned long *)__guset_fs_start;
-    unsigned long *to = (unsigned long *)GUEST_FS_START;
+    uint64_t *from = (uint64_t *)__guset_fs_start;
+    uint64_t *to = (uint64_t *)GUEST_FS_START;
     printf("Copy guest fs from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
     memcpy(to, from, size);
@@ -176,6 +176,7 @@ void hyper_main()
     printf("io, gic, timer, init ok...\n\n");
     
     vmm_init();
+    schedule_init();
 
     // 初始化一次就行
     vtcr_init();
@@ -188,7 +189,7 @@ void hyper_main()
 
     vm2();
     
-    schedule_init(); // 设置当前 task 为 task0（test_guest）
+    
     schedule_init_local();
     print_current_task_list();
 
