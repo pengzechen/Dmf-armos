@@ -54,15 +54,19 @@ void test_types()
         ;
 }
 
+spinlock_t print_lock;
+
 void task7()
 {
     while (1)
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('7');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 7: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('7');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -72,9 +76,11 @@ void task6()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('6');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 6: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('6');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -84,9 +90,11 @@ void task5()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('5');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 5: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('5');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -96,9 +104,11 @@ void task4()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('4');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 4: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('4');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -108,9 +118,11 @@ void task3()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('3');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 3: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('3');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -120,9 +132,11 @@ void task2()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('2');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 2: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('2');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
@@ -132,23 +146,14 @@ void task1()
     {
         for (uint64_t i = 0; i < 0xfffff; i++)
             ;
-        putc('1');
-        // putc('\n');
+        // spin_lock(&print_lock);
         // printf("task 1: get_current_cpu_id: %d\n", get_current_cpu_id());
+        putc('1');
+        // spin_unlock(&print_lock);
+        // putc('\n');
     }
 }
 
-void task0()
-{
-    while (1)
-    {
-        for (uint64_t i = 0; i < 0xfffff; i++)
-            ;
-        putc('0');
-        // putc('\n');
-        // printf("task 0: get_current_cpu_id: %d\n", get_current_cpu_id());
-    }
-}
 
 char task7_stack[8192] = {0};
 char task6_stack[8192] = {0};
@@ -168,15 +173,15 @@ void main_entry()
     if (get_current_cpu_id() == 0)
     {
         schedule_init();
-        create_task(task0, 0); //task0_stack + 4096);
-        create_task(task1, 0); //task1_stack + 4096);
-        create_task(task2, 0); //task2_stack + 4096);
-        create_task(task3, 0); //task3_stack + 4096);
-        create_task(task4, 0); //task4_stack + 4096);
-        create_task(task5, 0); //task5_stack + 4096);
-        create_task(task6, 0); //task6_stack + 4096);
-        create_task(task7, 0); //task7_stack + 4096);
+        create_task(task1, task1_stack + 4096);
+        create_task(task2, task2_stack + 4096);
+        create_task(task3, task3_stack + 4096);
+        create_task(task4, task4_stack + 4096);
+        // create_task(task5, 0); //task5_stack + 4096);
+        // create_task(task6, 0); //task6_stack + 4096);
+        // create_task(task7, 0); //task7_stack + 4096);
         print_current_task_list();
+        spinlock_init(&print_lock);
     }
     spin_lock(&lock);
     inited_cpu_num ++;

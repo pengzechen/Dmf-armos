@@ -72,7 +72,6 @@ vcpu_t *create_vcpu(void (*vcpu_entry)(), uint8_t vm_id)
     return (vcpu_t *)task;
 }
 
-
 void idel_task()
 {
     while (1)
@@ -85,11 +84,11 @@ void schedule_init()
     spinlock_init(&print_lock);
     list_init(&ready_list);
     list_init(&running_list);
-    #ifdef HV
+#ifdef HV
     create_vcpu(idel_task, 0);
-    #else
+#else
     create_task(idel_task, NULL);
-    #endif
+#endif
 }
 
 void schedule_init_local()
@@ -129,27 +128,50 @@ void _schedule(uint64_t *sp)
 
     // 找到下一个就绪的任务
     // 这里多个核不能同时计算
-    uint32_t next_task_id;
+    int next_task_id = -1;
     spin_lock(&lock);
     task_list[curr->id].state = READY;
-    next_task_id = (curr->id + 1) % task_count;
-    for (int i = 2;; i++)
+
+    // 从当前任务的下一个任务开始扫描到最后
+    for (int i = curr->id + 1; i < task_count; i++)
     {
-        // 跳过非就绪状态的任务
-        if (task_list[next_task_id].state != READY)
-            next_task_id = (curr->id + i) % task_count;
-        else
+        if (task_list[i].state == READY)
         {
-            task_list[next_task_id].state = RUNNING;
-            info->current_thread = &task_list[next_task_id];
+            next_task_id = i;
             break;
         }
     }
+
+    // 如果没有找到就绪任务，继续从头扫描到当前任务之前
+    if (next_task_id == -1)
+    {
+        for (int i = 1; i < curr->id; i++)
+        {
+            if (task_list[i].state == READY)
+            {
+                next_task_id = i;
+                break;
+            }
+        }
+    }
+    // printf("\ncore %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
+
     spin_unlock(&lock);
+    // 如果找到了就绪任务，则调度该任务
+    if (next_task_id != -1)
+    {
+        task_list[next_task_id].state = RUNNING;
+        info->current_thread = &task_list[next_task_id];
+    }
+    else
+    {
+        // 如果没有找到就绪任务，则调度 idle 任务
+        info->current_thread = &task_list[0];
+        next_task_id = 0;
+    }
 
     tcb_t *next_task = &task_list[next_task_id];
     tcb_t *prev_task = curr;
-    // printf("core %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
 
     if (sp == NULL)
         switch_context(prev_task, next_task);
