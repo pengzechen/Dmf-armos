@@ -45,4 +45,6 @@ tcb_t *create_task(void (*task_func)(), void *stack_top);
 vcpu_t * create_vcpu(void (*task_func)(), uint8_t);
 void schedule_init();
 void schedule_init_local();
+
+void idel_task();
 #endif // __TASK_H__

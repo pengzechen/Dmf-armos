@@ -193,7 +193,7 @@ void hyper_main()
     schedule_init_local();
     print_current_task_list();
 
-    guest_start(test_guest);
+    guest_start(idel_task);
 
     // while (1)
     //     ;
