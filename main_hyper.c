@@ -61,17 +61,17 @@ static void guest_trap_init(void)
     isb();
 }
 
-extern void __guset_bin_start();
-extern void __guset_bin_end();
-extern void __guset_dtb_start();
-extern void __guset_dtb_end();
-extern void __guset_fs_start();
-extern void __guset_fs_end();
+extern void __guest_bin_start();
+extern void __guest_bin_end();
+extern void __guest_dtb_start();
+extern void __guest_dtb_end();
+extern void __guest_fs_start();
+extern void __guest_fs_end();
 
 void copy_guest(void)
 {
-    size_t size = (size_t)(__guset_bin_end - __guset_bin_start);
-    uint64_t *from = (uint64_t *)__guset_bin_start;
+    size_t size = (size_t)(__guest_bin_end - __guest_bin_start);
+    uint64_t *from = (uint64_t *)__guest_bin_start;
     uint64_t *to = (uint64_t *)GUEST_KERNEL_START;
     printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
@@ -81,8 +81,8 @@ void copy_guest(void)
 
 void copy_dtb(void)
 {
-    size_t size = (size_t)(__guset_dtb_end - __guset_dtb_start);
-    uint64_t *from = (uint64_t *)__guset_dtb_start;
+    size_t size = (size_t)(__guest_dtb_end - __guest_dtb_start);
+    uint64_t *from = (uint64_t *)__guest_dtb_start;
     uint64_t *to = (uint64_t *)GUEST_DTB_START;
     printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
@@ -92,8 +92,8 @@ void copy_dtb(void)
 
 void copy_fs(void)
 {
-    size_t size = (size_t)(__guset_fs_end - __guset_fs_start);
-    uint64_t *from = (uint64_t *)__guset_fs_start;
+    size_t size = (size_t)(__guest_fs_end - __guest_fs_start);
+    uint64_t *from = (uint64_t *)__guest_fs_start;
     uint64_t *to = (uint64_t *)GUEST_FS_START;
     printf("Copy guest fs from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);

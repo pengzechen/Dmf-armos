@@ -25,10 +25,9 @@ guest_start:
 	eret
 
 
-.section .data.guset_bin
-	.incbin "../guest/nimbos/nimbos.bin"
+.section .data.guest_bin
 	// .incbin "../guest/testos/build/kernel.bin"
-	// .incbin "../guest/linux/linux.bin"
+	.incbin "../guest/linux/linux.bin"
 
 .section .data.guest_dtb
   	.incbin "../guest/linux/linux.dtb"

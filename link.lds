@@ -17,19 +17,19 @@ SECTIONS
 
     .data : {
         . = ALIGN((1 << 10));
-        __guset_bin_start = .;
-        *(.data.guset_bin)
-        __guset_bin_end = .;
+        __guest_bin_start = .;
+        *(.data.guest_bin)
+        __guest_bin_end = .;
         . = ALIGN((1 << 10));
 
-        __guset_dtb_start = .;
+        __guest_dtb_start = .;
         *(.data.guest_dtb)
-        __guset_dtb_end = .;
+        __guest_dtb_end = .;
         . = ALIGN((1 << 10));
 
-        __guset_fs_start = .;
+        __guest_fs_start = .;
         *(.data.guest_fs)
-        __guset_fs_end = .;
+        __guest_fs_end = .;
         . = ALIGN((1 << 10));
 
         *(.data)
