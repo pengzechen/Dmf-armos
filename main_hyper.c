@@ -164,7 +164,7 @@ void vm2() {
 }
 
 extern void test_guest();
-extern void guest_start();
+extern void guest_start(void * entry);
 
 void hyper_main()
 {
@@ -193,7 +193,7 @@ void hyper_main()
     schedule_init_local();
     print_current_task_list();
 
-    guest_start();
+    guest_start(test_guest);
 
     // while (1)
     //     ;
