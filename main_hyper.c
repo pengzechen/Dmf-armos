@@ -135,14 +135,20 @@ void mem_test() {
     *(uint64_t *)0x50000000 = 0x1234;
 }
 
+void vm1() {
+    extern void test_guest();
+    vcpu_t * first_vcpus[2] = {NULL};
+    first_vcpus[0] = create_vcpu(test_guest, 1);
+    vm_init(first_vcpus, 1);
+}
 
 void vm2() {
     // guest 中断初始化
     guest_trap_init();
 
     // guest 内存初始化
-    vtcr_init();
-    guest_ept_init();
+    //vtcr_init();
+    //guest_ept_init();
     mmio_map_gicd();
     mmio_map_gicc();
 
@@ -163,9 +169,7 @@ void vm2() {
     vm_init(vcpus, 1);
 }
 
-extern void test_guest();
 extern void guest_start(void * entry);
-
 void hyper_main()
 {
 
@@ -183,18 +187,11 @@ void hyper_main()
     // 初始化一次就行
     guest_ept_init();
 
-    vcpu_t * first_vcpus[2] = {NULL};
-    first_vcpus[0] = create_vcpu(test_guest, 1);
-    vm_init(first_vcpus, 1);
-
+    vm1();
     vm2();
-    
     
     schedule_init_local();
     print_current_task_list();
 
     guest_start(idel_task);
-
-    // while (1)
-    //     ;
 }

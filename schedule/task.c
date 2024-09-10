@@ -154,7 +154,6 @@ void _schedule(uint64_t *sp)
             }
         }
     }
-    // printf("\ncore %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
 
     spin_unlock(&lock);
     // 如果找到了就绪任务，则调度该任务
@@ -172,6 +171,7 @@ void _schedule(uint64_t *sp)
 
     tcb_t *next_task = &task_list[next_task_id];
     tcb_t *prev_task = curr;
+    // printf("\ncore %d switch prev_task %d to next_task %d\n", current_thread_info()->cpu, prev_task->id, next_task->id);
 
     if (sp == NULL)
         switch_context(prev_task, next_task);
