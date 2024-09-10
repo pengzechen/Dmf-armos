@@ -78,6 +78,12 @@ void idel_task()
         wfi();
 }
 
+/**
+ * 初始化调度器的相关数据结构。
+ *
+ * 该函数的目的是在系统启动时对调度器的数据结构进行初始化，确保它们处于可用状态。
+ * 它主要包括自旋锁和列表的初始化，以及创建一个空闲任务来确保系统总是有任务在运行。
+ */
 void schedule_init()
 {
     spinlock_init(&lock);
@@ -109,7 +115,7 @@ void print_current_task_list()
         if (task->id == 0)
             printf("[idel task] id: %x, elr: 0x%x\n", task->id, task->ctx.elr);
         else
-            printf("[task %d] id: %x, elr: 0x%x\n", task->id, task->id, task->ctx.elr);
+            printf("[task   %d] id: %x, elr: 0x%x\n", task->id, task->id, task->ctx.elr);
     }
     // printf("current task id: %d\n", current_task->id);
     printf("\n");

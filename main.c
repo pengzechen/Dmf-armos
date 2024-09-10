@@ -61,6 +61,23 @@ uint64_t stack_test(uint64_t i) {
     return res;
 }
 
+void task8()
+{
+    while (1)
+    {
+        for (uint64_t i = 0; i < 0xf; i++)
+        {
+            uint64_t tmp = stack_test(i);
+            
+            if ( tmp != i + 1 ) 
+            {
+                printf("task 8 stack error: get_current_cpu_id: %d\n", get_current_cpu_id());
+                // printf("\nstack error\n");
+            }
+        }
+    }
+}
+
 void task7()
 {
     while (1)
@@ -183,6 +200,7 @@ void task1()
 
 
 
+char task8_stack[16384] = {0};
 char task7_stack[16384] = {0};
 char task6_stack[16384] = {0};
 char task5_stack[16384] = {0};
@@ -194,6 +212,7 @@ char task1_stack[16384] = {0};
 int inited_cpu_num = 0;
 spinlock_t lock;
 
+extern void task_start(void * entry);
 void main_entry()
 {
     printf("main entry: get_current_cpu_id: %d\n", get_current_cpu_id());
@@ -222,9 +241,7 @@ void main_entry()
     enable_interrupts();
     
     // simple_console();
-
-    while (1)
-        ;
+    task_start(idel_task);
 }
 
 void kernel_main(void)

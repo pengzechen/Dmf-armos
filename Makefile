@@ -100,6 +100,8 @@ $(BUILD_DIR)/timer.o: timer/timer.c
 #  schedule
 $(BUILD_DIR)/task.o: schedule/task.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) schedule/task.c $(INCLUDE) -o $(BUILD_DIR)/task.o
+$(BUILD_DIR)/task.s.o: schedule/task.S
+	$(TOOL_PREFIX)gcc $(CFLAGS) schedule/task.S $(INCLUDE) -o $(BUILD_DIR)/task.s.o
 
 $(BUILD_DIR)/context.s.o: schedule/context.S
 	$(TOOL_PREFIX)gcc $(CFLAGS) schedule/context.S $(INCLUDE) -o $(BUILD_DIR)/context.s.o
@@ -130,7 +132,7 @@ $(BUILD_DIR)/list.o: lib/list.c
 	$(TOOL_PREFIX)gcc $(CFLAGS) lib/list.c $(INCLUDE) -o $(BUILD_DIR)/list.o
 
 
-$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/guest.s.o $(BUILD_DIR)/test_guest.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/uart_pl011_early.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o $(BUILD_DIR)/list.o
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(BUILD_DIR)/main_hyper.o $(BUILD_DIR)/boot.s.o $(BUILD_DIR)/guest.s.o $(BUILD_DIR)/test_guest.s.o $(BUILD_DIR)/exception.s.o $(BUILD_DIR)/exception.o $(BUILD_DIR)/io.o $(BUILD_DIR)/uart_pl011.o $(BUILD_DIR)/uart_pl011_early.o $(BUILD_DIR)/printf.o $(BUILD_DIR)/mmu.s.o $(BUILD_DIR)/page.o $(BUILD_DIR)/ept.o $(BUILD_DIR)/string.o $(BUILD_DIR)/exception_el3.s.o $(BUILD_DIR)/exception_el3.o $(BUILD_DIR)/exception_el2.o $(BUILD_DIR)/exception_el2.s.o $(BUILD_DIR)/gic.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/task.o $(BUILD_DIR)/task.s.o $(BUILD_DIR)/context.s.o $(BUILD_DIR)/spinlock.s.o $(BUILD_DIR)/vcpu.o $(BUILD_DIR)/hyper_ctx.s.o $(BUILD_DIR)/vgic.o $(BUILD_DIR)/vm.o $(BUILD_DIR)/list.o
 	$(TOOL_PREFIX)ld -T link.lds -o $(BUILD_DIR)/kernel.elf \
 	$(BUILD_DIR)/boot.s.o 			\
 	$(BUILD_DIR)/guest.s.o          \
@@ -155,6 +157,7 @@ $(BUILD_DIR)/kernel.elf: $(BUILD_DIR) $(BUILD_DIR)/main.o $(BUILD_DIR)/smp.o $(B
 	$(BUILD_DIR)/string.o 			\
 	$(BUILD_DIR)/timer.o  			\
 	$(BUILD_DIR)/task.o 			\
+	$(BUILD_DIR)/task.s.o           \
 	$(BUILD_DIR)/context.s.o 		\
 	$(BUILD_DIR)/spinlock.s.o       \
 	$(BUILD_DIR)/vcpu.o             \
