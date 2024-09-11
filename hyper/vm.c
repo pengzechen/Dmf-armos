@@ -56,10 +56,12 @@ void vmm_init()
 
 void vm_init(vcpu_t *vcpus[], uint32_t vcpu_num)
 {
+    uint8_t ids[4] = {0};
     // 设置vm中各个vcpu的指针指向创建的vcpu
     for (uint32_t i = 0; i < vcpu_num; i++)
     {
         vm_list[_vm_index].vcpus[i] = vcpus[i];
+        ids[i] = vcpus[i]->id;
     }
     vm_list[_vm_index].id = _vm_index;
     vm_list[_vm_index].vcpu_num = vcpu_num;
@@ -67,7 +69,11 @@ void vm_init(vcpu_t *vcpus[], uint32_t vcpu_num)
 
     interrupt_init(_vm_index);
 
-    printf("vm: %d (with: %d vcpu) init ok\n", _vm_index, vcpu_num);
+    printf("vm: %d (with: %d vcpu) init ok, vcpu ids: ", _vm_index, vcpu_num);
+    for (uint32_t i = 0; i < vcpu_num; i++) {
+        printf("%d ", ids[i]);
+    }
+    printf("\n");
 
     _vm_index++;
 }
@@ -77,10 +83,25 @@ void vm_init(vcpu_t *vcpus[], uint32_t vcpu_num)
 extern void restore_sysregs(vm_sysregs_t *);
 extern void save_sysregs(vm_sysregs_t *);
 
+#define VM_IN_OUT_DEBUG 1
+#if VM_IN_OUT_DEBUG
+static int in_id = -1;
+static int in_vmid =-1;
+
+static int out_id = -1;
+static int out_vmid = -1;
+#endif
 void vm_in()
 {
     struct thread_info *info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
+#if VM_IN_OUT_DEBUG
+    if (curr->id != in_id || curr->vm_id != in_vmid ) {
+        printf("==> [vm_in ]: current task id: %d, vm id: %d\n", curr->id, curr->vm_id);
+        in_id = curr->id;
+        in_vmid = curr->vm_id;
+    }
+#endif
     restore_sysregs(&vm_sys_reg[curr->vm_id]);
 }
 
@@ -88,5 +109,12 @@ void vm_out()
 {
     struct thread_info *info = current_thread_info();
     tcb_t *curr = (tcb_t *)info->current_thread;
+#if VM_IN_OUT_DEBUG
+    if (curr->id != out_id || curr->vm_id != out_vmid ) {
+        printf("==> [vm_out]: current task id: %d, vm id: %d\n", curr->id, curr->vm_id);
+        out_id = curr->id;
+        out_vmid = curr->vm_id;
+    }
+#endif
     save_sysregs(&vm_sys_reg[curr->vm_id]);
 }
