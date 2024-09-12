@@ -32,6 +32,11 @@ SECTIONS
         __guest_fs_end = .;
         . = ALIGN((1 << 10));
 
+        __guest2_bin_start = .;
+        *(.data.guest2_bin)
+        __guest2_bin_end = .;
+        . = ALIGN((1 << 10));
+
         *(.data)
     }
 

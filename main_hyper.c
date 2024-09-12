@@ -68,39 +68,19 @@ extern void __guest_dtb_end();
 extern void __guest_fs_start();
 extern void __guest_fs_end();
 
-void copy_guest(void)
+extern void __guest2_bin_start();
+extern void __guest2_bin_end();
+
+void copy(void * src_start, void * src_end, void * dest)
 {
-    size_t size = (size_t)(__guest_bin_end - __guest_bin_start);
-    uint64_t *from = (uint64_t *)__guest_bin_start;
-    uint64_t *to = (uint64_t *)GUEST_KERNEL_START;
-    printf("Copy guest kernel image from %x to %x (%d bytes): 0x%x / 0x%x\n",
+    size_t size = (size_t)(src_end - src_start);
+    uint64_t *from = (uint64_t *)src_start;
+    uint64_t *to = (uint64_t *)dest;
+    printf("Copy data from %x to %x (%d bytes): 0x%x / 0x%x\n",
            from, to, size, from[0], from[1]);
     memcpy(to, from, size);
     printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
 }
-
-void copy_dtb(void)
-{
-    size_t size = (size_t)(__guest_dtb_end - __guest_dtb_start);
-    uint64_t *from = (uint64_t *)__guest_dtb_start;
-    uint64_t *to = (uint64_t *)GUEST_DTB_START;
-    printf("Copy guest dtb from %x to %x (%d bytes): 0x%x / 0x%x\n",
-           from, to, size, from[0], from[1]);
-    memcpy(to, from, size);
-    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
-}
-
-void copy_fs(void)
-{
-    size_t size = (size_t)(__guest_fs_end - __guest_fs_start);
-    uint64_t *from = (uint64_t *)__guest_fs_start;
-    uint64_t *to = (uint64_t *)GUEST_FS_START;
-    printf("Copy guest fs from %x to %x (%d bytes): 0x%x / 0x%x\n",
-           from, to, size, from[0], from[1]);
-    memcpy(to, from, size);
-    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
-}
-
 
 extern size_t cacheline_bytes;
 
@@ -135,10 +115,13 @@ void mem_test() {
     *(uint64_t *)0x50000000 = 0x1234;
 }
 
+
+extern void test_guest();
 void vm1() {
-    extern void test_guest();
+    copy(__guest2_bin_start, __guest2_bin_end, GUEST2_KERNEL_START);
     vcpu_t * first_vcpus[2] = {NULL};
-    first_vcpus[0] = create_vcpu(test_guest, 1);
+    first_vcpus[0] = create_vcpu(GUEST2_KERNEL_START, 1);
+    // first_vcpus[1] = create_vcpu(GUEST2_KERNEL_START, 1);
     vm_init(first_vcpus, 1);
 }
 
@@ -146,16 +129,10 @@ void vm2() {
     // guest 中断初始化
     guest_trap_init();
 
-    // guest 内存初始化
-    //vtcr_init();
-    //guest_ept_init();
-    mmio_map_gicd();
-    mmio_map_gicc();
-
     // guest 数据初始化
-    copy_dtb();
-    copy_guest();
-    copy_fs();
+    copy(__guest_bin_start, __guest_bin_end, GUEST_KERNEL_START);
+    copy(__guest_dtb_start, __guest_dtb_end, GUEST_DTB_START);
+    copy(__guest_fs_start, __guest_fs_end, GUEST_FS_START);
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
@@ -182,10 +159,11 @@ void hyper_main()
     vmm_init();
     schedule_init();
 
-    // 初始化一次就行
     vtcr_init();
-    // 初始化一次就行
     guest_ept_init();
+    mmio_map_gicd();
+    mmio_map_gicc();
+    
 
     vm1();
     vm2();
