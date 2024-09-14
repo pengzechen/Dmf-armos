@@ -90,7 +90,7 @@ typedef struct _vm_sysregs
 
 } vm_sysregs_t;
 
-extern vm_sysregs_t vm_sys_reg[VM_NUM_MAX];
+extern vm_sysregs_t vm_sys_reg[VCPU_NUM_MAX];
 
 struct vm_t {
     uint32_t id;

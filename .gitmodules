@@ -1,3 +1,7 @@
 [submodule "guest/nimbos"]
 	path = guest/nimbos
 	url = https://github.com/pengzechen/nimbos
+
+[submodule "guest/arceos"]
+	path = guest/arceos
+	url = https://github.com/arceos-org/arceos

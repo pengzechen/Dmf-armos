@@ -26,9 +26,7 @@ guest_start:
 
 
 .section .data.guest_bin
-	// .incbin "../guest/testos/build/kernel.bin"
 	.incbin "../guest/linux/linux.bin"
-	// .incbin "../guest/nimbos/nimbos-702.bin"
 
 .section .data.guest_dtb
   	.incbin "../guest/linux/linux.dtb"
@@ -38,5 +36,5 @@ guest_start:
 
 
 .section .data.guest2_bin
-	.incbin "../guest/nimbos/nimbos-502.bin"
-	// .incbin "../guest/linux/linux.bin"
+	// .incbin "../guest/nimbos/nimbos-502.bin"
+	.incbin "../guest/arceos/arceos.bin"

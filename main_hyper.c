@@ -120,7 +120,7 @@ extern void test_guest();
 void vm1() {
     copy(__guest2_bin_start, __guest2_bin_end, GUEST2_KERNEL_START);
     vcpu_t * first_vcpus[2] = {NULL};
-    first_vcpus[0] = create_vcpu(GUEST2_KERNEL_START, 1);
+	first_vcpus[0] = create_vcpu(GUEST2_KERNEL_START, 1);
     // first_vcpus[1] = create_vcpu(GUEST2_KERNEL_START, 1);
     vm_init(first_vcpus, 1);
 }
@@ -143,6 +143,7 @@ void vm2() {
     // guest vcpu 初始化
     vcpu_t * vcpus[2] = {NULL};
     vcpus[0] = create_vcpu((void *)GUEST_KERNEL_START, 2);
+    // vcpus[1] = create_vcpu((void *)GUEST_KERNEL_START, 2);
     vm_init(vcpus, 1);
 }
 
@@ -166,7 +167,7 @@ void hyper_main()
     
 
     vm1();
-    vm2();
+	// vm2();
     
     schedule_init_local();
     print_current_task_list();

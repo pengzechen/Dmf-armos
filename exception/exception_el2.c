@@ -36,6 +36,7 @@ void handle_sync_exception_el2(uint64_t *stack_pointer)
     else if (ec == 0x16)
     { // hvc
         print_info("            This is hvc call handler\n");
+		ctx_el2->r[0] = 0;
         return;
     }
     else if (ec == 0x17)

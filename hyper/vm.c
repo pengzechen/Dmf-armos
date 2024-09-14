@@ -15,7 +15,7 @@ static uint32_t _vgic_num = 0;
 vgicc_state_t _state[VCPU_NUM_MAX];
 static uint32_t _state_num = 0;
 
-vm_sysregs_t vm_sys_reg[VM_NUM_MAX];
+vm_sysregs_t vm_sys_reg[VCPU_NUM_MAX];
 
 struct vm_t vm_list[VM_NUM_MAX];
 static uint8_t _vm_index = 0;
@@ -83,7 +83,7 @@ void vm_init(vcpu_t *vcpus[], uint32_t vcpu_num)
 extern void restore_sysregs(vm_sysregs_t *);
 extern void save_sysregs(vm_sysregs_t *);
 
-#define VM_IN_OUT_DEBUG 1
+#define VM_IN_OUT_DEBUG 0
 #if VM_IN_OUT_DEBUG
 static int in_id = -1;
 static int in_vmid =-1;
@@ -102,7 +102,7 @@ void vm_in()
         in_vmid = curr->vm_id;
     }
 #endif
-    restore_sysregs(&vm_sys_reg[curr->vm_id]);
+    restore_sysregs(&vm_sys_reg[curr->id]);
 }
 
 void vm_out()
@@ -116,5 +116,5 @@ void vm_out()
         out_vmid = curr->vm_id;
     }
 #endif
-    save_sysregs(&vm_sys_reg[curr->vm_id]);
+    save_sysregs(&vm_sys_reg[curr->id]);
 }
