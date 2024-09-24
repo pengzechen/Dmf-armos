@@ -293,9 +293,10 @@ void vgic_inject(uint32_t vector)
     // printf("vgic inject vector: %d\n", vector);
     uint32_t mask = gic_make_virtual_hardware_interrupt(vector, vector, 0, 0);
 
-    // 降低优先级，host将收不到timer
+	// 降低优先级，host将收不到timer
     gic_set_ipriority(6, 0xf8000000);
     gic_set_ipriority(8, 0x0000f800);
+	// set_pendr(0, 0xffff);
 
     uint32_t is_empty = gic_elsr0();
     uint32_t is_active = gic_apr();

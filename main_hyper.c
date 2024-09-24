@@ -107,7 +107,8 @@ void mmio_map_gicc()
 }
 
 // map test addr "Not read or write"
-void mem_test() {
+void mem_test()
+{
     lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_ARREA);
     avr_entry->p2m.read = 0;
     avr_entry->p2m.write = 0;
@@ -117,22 +118,24 @@ void mem_test() {
 
 
 extern void test_guest();
-void vm1() {
-    copy(__guest2_bin_start, __guest2_bin_end, GUEST2_KERNEL_START);
+void vm1()
+{
+    copy(__guest2_bin_start, __guest2_bin_end, (void *)GUEST2_KERNEL_START);
     vcpu_t * first_vcpus[2] = {NULL};
-	first_vcpus[0] = create_vcpu(GUEST2_KERNEL_START, 1);
+	first_vcpus[0] = create_vcpu((void *)GUEST2_KERNEL_START, 1);
     // first_vcpus[1] = create_vcpu(GUEST2_KERNEL_START, 1);
     vm_init(first_vcpus, 1);
 }
 
-void vm2() {
+void vm2()
+{
     // guest 中断初始化
     guest_trap_init();
 
     // guest 数据初始化
-    copy(__guest_bin_start, __guest_bin_end, GUEST_KERNEL_START);
-    copy(__guest_dtb_start, __guest_dtb_end, GUEST_DTB_START);
-    copy(__guest_fs_start, __guest_fs_end, GUEST_FS_START);
+    copy(__guest_bin_start, __guest_bin_end, (void *)GUEST_KERNEL_START);
+    copy(__guest_dtb_start, __guest_dtb_end, (void *)GUEST_DTB_START);
+    copy(__guest_fs_start, __guest_fs_end, (void *)GUEST_FS_START);
 
     printf("\nHello Hyper:\nthere's some hyper tests: \n");
     printf("scrlr_el2: 0x%x\n", read_sctlr_el2());
@@ -166,8 +169,8 @@ void hyper_main()
     mmio_map_gicc();
     
 
-    vm1();
-	// vm2();
+    // vm1();
+	vm2();
     
     schedule_init_local();
     print_current_task_list();
