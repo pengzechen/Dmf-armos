@@ -1,6 +1,7 @@
 
 
 #include "io.h"
+#include "log.h"
 #include "gic.h"
 #include "timer.h"
 #include "mmu.h"
@@ -76,13 +77,10 @@ void copy(void * src_start, void * src_end, void * dest)
     size_t size = (size_t)(src_end - src_start);
     uint64_t *from = (uint64_t *)src_start;
     uint64_t *to = (uint64_t *)dest;
-    printf("Copy data from %x to %x (%d bytes): 0x%x / 0x%x\n",
-           from, to, size, from[0], from[1]);
     memcpy(to, from, size);
-    printf("Copy end : 0x%x / 0x%x\n", to[0], to[1]);
+    INFO("Copy data from %x to %x (%d bytes): [ 0x%x / 0x%x ] -> [ 0x%x / 0x%x ]", 
+        from, to, size, from[0], from[1], to[0], to[1]);
 }
-
-extern size_t cacheline_bytes;
 
 void mmio_map_gicd()
 {
@@ -99,7 +97,7 @@ void mmio_map_gicc()
 {
     for (int i = 0; i < 16; i++)
     {
-        lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICC + 0x1000 * i); // 0800 0000 - 0801 0000  gicd
+        lpae_t *avr_entry = get_ept_entry((uint64_t)MMIO_AREA_GICC + 0x1000 * i); // 0801 0000 - 0802 0000  gicd
         avr_entry->p2m.read = 0;
         avr_entry->p2m.write = 0;
         apply_ept(avr_entry);
@@ -151,14 +149,15 @@ void vm2()
 }
 
 extern void guest_start(void * entry);
+
 void hyper_main()
 {
 
     io_early_init();
     gic_virtual_init();
     timer_init();
-    printf("cacheline_bytes: %d\n", cacheline_bytes);
-    printf("io, gic, timer, init ok...\n\n");
+    INFO("cacheline_bytes: %d\n", cacheline_bytes);
+    INFO("io, gic, timer, init ok...\n");
     
     vmm_init();
     schedule_init();
@@ -169,7 +168,7 @@ void hyper_main()
     mmio_map_gicc();
     
 
-    // vm1();
+    vm1();
 	vm2();
     
     schedule_init_local();

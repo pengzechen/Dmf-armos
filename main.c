@@ -1,6 +1,7 @@
 
 #include "aj_types.h"
 #include "io.h"
+#include "log.h"
 #include "smp.h"
 #include "psci.h"
 #include "gic.h"
